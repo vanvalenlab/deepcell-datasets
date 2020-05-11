@@ -1,0 +1,25 @@
+version: "3"
+services:
+  app:
+    build: .
+    volumes:
+      - /home/rc/deepcell-datasets/deepcell_datasets:/usr/local/lib/python3.5/dist-packages/deepcell-datasets/
+      - /home/rc/deepcell-datasets/notebooks:/notebooks
+      - /deepcell_data:/data
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    ports:
+      - 93:8888
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./mongo-data:/data/db
+    ports:
+      - 27017:27017
