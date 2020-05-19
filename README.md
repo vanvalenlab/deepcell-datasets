@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/vanvalenlab/deepcell-datasets.svg?branch=master)](https://travis-ci.com/vanvalenlab/deepcell-datasets)
 [![Coverage Status](https://coveralls.io/repos/github/vanvalenlab/deepcell-datasets/badge.svg?branch=master)](https://coveralls.io/github/vanvalenlab/deepcell-datasets?branch=master)
 
-DeepCell Datasets is a collection of data engineering, management, and registry tools for the management of optical microscopy images and its associated metadata. This Master Data Management allows for a single entry point for access to the lab's raw data and provides to means to pair them with crowdsourced annotations to create custom training data for [DeepCell](https://github.com/vanvalenlab/deepcell-tf).
+DeepCell Datasets is a collection of data engineering and versioning tools for the management of optical microscopy images and its associated metadata. This Master Data Management allows for a single entry point for access to the lab's raw data and provides to means to pair them with crowdsourced annotations to create custom training data for [DeepCell](https://github.com/vanvalenlab/deepcell-tf).
 
 Read the documentation at
 

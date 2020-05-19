@@ -8,19 +8,15 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/* && \
     /usr/local/bin/pip install --upgrade pip
 
-WORKDIR /notebooks
+WORKDIR /usr/src/app
 
 # Copy the requirements.txt and install the dependencies
-COPY setup.py requirements.txt /opt/deepcell-datasets/
-RUN pip install -r /opt/deepcell-datasets/requirements.txt
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the package code and its scripts
-COPY deepcell_datasets /opt/deepcell-datasets/deepcell_datasets
+COPY . .
 
-# Install deepcell_datasets via setup.py
-RUN pip install /opt/deepcell-datasets
+EXPOSE 5000
 
-# Copy over toolbox notebooks
-COPY notebooks/ /notebooks/
-
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--allow-root"]
+CMD ["/bin/sh", "-c", "python application.py"]

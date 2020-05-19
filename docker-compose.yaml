@@ -3,17 +3,15 @@ services:
   app:
     build: .
     volumes:
-      - /home/rc/deepcell-datasets/deepcell_datasets:/usr/local/lib/python3.5/dist-packages/deepcell-datasets/
-      - /home/rc/deepcell-datasets/notebooks:/notebooks
       - /deepcell_data:/data
     links:
-      - mongo
+      - db
     depends_on:
-      - mongo
+      - db
     ports:
-      - 93:8888
+      - 5000:5000
 
-  mongo:
+  db:
     image: mongo
     restart: always
     environment:
