@@ -57,13 +57,13 @@ def update_specimen(name):
     return '', 200
 
 
-@app.route('/all_specimen/<name>', methods=['DELETE'])
+@bp.route('/all_specimen/<name>', methods=['DELETE'])
 def delete_specimen(name):
     SpecimenType.objects.get(name=name).delete()
     return '', 200
 
 
-@app.route('/all_specimen/<name>')
+@bp.route('/all_specimen/<name>')
 def get_specimen(name):
     all_specimen = SpecimenType.objects.get(name=name).to_json()
     return Response(all_specimen, mimetype="application/json", status=200)
