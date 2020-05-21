@@ -18,7 +18,7 @@ from flask import current_app
 from flask import Response
 
 
-from database.models import Specimen_Type
+from database.models import SpecimenType
 
 
 bp = Blueprint('deepcell-datasets', __name__)  # pylint: disable=C0103
@@ -26,43 +26,45 @@ bp = Blueprint('deepcell-datasets', __name__)  # pylint: disable=C0103
 
 @bp.route('/health')
 def health():
-    '''Returns success if the application is ready.'''
+    """Returns success if the application is ready."""
     return jsonify({'message': 'success'})
 
 
 @bp.route('/', methods=['GET', 'POST'])
-def form():
-    '''Request HTML landing page to be rendered.'''
+def index():
+    """Request HTML landing page to be rendered."""
     return render_template('index.html')
 
 
 @bp.route('/all_specimen')
 def get_all_specimen():
-    all_specimen = Specimen_Type.objects().to_json()
+    all_specimen = SpecimenType.objects().to_json()
+    # return jsonify({'all_specimen': all_specimen}), 200
     return Response(all_specimen, mimetype="application/json", status=200)
 
 
 @bp.route('/all_specimen', methods=['POST'])
+def create_specimen(name):
     body = request.get_json()
-    specimen = Specimen_Type(**body).save()
+    specimen = SpecimenType(**body).save()
     name = specimen.name
-    return {'name': str(name)}, 200
+    return jsonify({'name': str(name)}), 200
 
 
 @bp.route('/all_specimen/<name>', methods=['PUT'])
 def update_specimen(name):
     body = request.get_json()
-    Specimen_Type.objects.get(name=name).update(**body)
+    SpecimenType.objects.get(name=name).update(**body)
     return '', 200
 
 
-@app.route('/all_specimen/<name>', methods=['DELETE'])
+@bp.route('/all_specimen/<name>', methods=['DELETE'])
 def delete_specimen(name):
-    Specimen_Type.objects.get(name=name).delete()
+    SpecimenType.objects.get(name=name).delete()
     return '', 200
 
 
-@app.route('/all_specimen/<name>')
+@bp.route('/all_specimen/<name>')
 def get_specimen(name):
-    all_specimen = Specimen_Type.objects.get(name=name).to_json()
+    all_specimen = SpecimenType.objects.get(name=name).to_json()
     return Response(all_specimen, mimetype="application/json", status=200)

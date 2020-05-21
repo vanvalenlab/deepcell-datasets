@@ -4,7 +4,7 @@
 from .db import db
 
 
-class Specimen_Type(db.Document):
+class SpecimenType(db.Document):
     # username = StringField(min_length=4, required=True, unique=True)
     # password = StringField(min_length=8, required=True)
 
