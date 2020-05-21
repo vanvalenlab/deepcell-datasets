@@ -10,6 +10,12 @@ services:
       - db
     ports:
       - 5000:5000
+    environment:
+      MONGODB_DB: ''
+      MONGODB_HOST: ''
+      MONGODB_PORT: 27017
+      MONGODB_USERNAME: ''
+      MONGODB_PASSWORD: ''
 
   db:
     image: mongo
