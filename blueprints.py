@@ -39,6 +39,7 @@ def index():
 @bp.route('/all_specimen')
 def get_all_specimen():
     all_specimen = SpecimenType.objects().to_json()
+    # return jsonify({'all_specimen': all_specimen}), 200
     return Response(all_specimen, mimetype="application/json", status=200)
 
 
@@ -47,7 +48,7 @@ def create_specimen(name):
     body = request.get_json()
     specimen = SpecimenType(**body).save()
     name = specimen.name
-    return {'name': str(name)}, 200
+    return jsonify({'name': str(name)}), 200
 
 
 @bp.route('/all_specimen/<name>', methods=['PUT'])
