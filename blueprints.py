@@ -31,7 +31,7 @@ def health():
 
 
 @bp.route('/', methods=['GET', 'POST'])
-def form():
+def index():
     """Request HTML landing page to be rendered."""
     return render_template('index.html')
 
