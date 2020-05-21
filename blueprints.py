@@ -43,6 +43,7 @@ def get_all_specimen():
 
 
 @bp.route('/all_specimen', methods=['POST'])
+def create_specimen(name):
     body = request.get_json()
     specimen = SpecimenType(**body).save()
     name = specimen.name
