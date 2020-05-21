@@ -18,7 +18,7 @@ from flask import current_app
 from flask import Response
 
 
-from database.models import Specimen_Type
+from database.models import SpecimenType
 
 
 bp = Blueprint('deepcell-datasets', __name__)  # pylint: disable=C0103
@@ -38,13 +38,13 @@ def form():
 
 @bp.route('/all_specimen')
 def get_all_specimen():
-    all_specimen = Specimen_Type.objects().to_json()
+    all_specimen = SpecimenType.objects().to_json()
     return Response(all_specimen, mimetype="application/json", status=200)
 
 
 @bp.route('/all_specimen', methods=['POST'])
     body = request.get_json()
-    specimen = Specimen_Type(**body).save()
+    specimen = SpecimenType(**body).save()
     name = specimen.name
     return {'name': str(name)}, 200
 
@@ -52,17 +52,17 @@ def get_all_specimen():
 @bp.route('/all_specimen/<name>', methods=['PUT'])
 def update_specimen(name):
     body = request.get_json()
-    Specimen_Type.objects.get(name=name).update(**body)
+    SpecimenType.objects.get(name=name).update(**body)
     return '', 200
 
 
 @app.route('/all_specimen/<name>', methods=['DELETE'])
 def delete_specimen(name):
-    Specimen_Type.objects.get(name=name).delete()
+    SpecimenType.objects.get(name=name).delete()
     return '', 200
 
 
 @app.route('/all_specimen/<name>')
 def get_specimen(name):
-    all_specimen = Specimen_Type.objects.get(name=name).to_json()
+    all_specimen = SpecimenType.objects.get(name=name).to_json()
     return Response(all_specimen, mimetype="application/json", status=200)
