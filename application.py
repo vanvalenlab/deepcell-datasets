@@ -6,7 +6,7 @@ from __future__ import print_function
 import logging
 from logging.config import dictConfig
 
-from flask import Flask, request, Response
+from flask import Flask
 from flask.logging import default_handler
 
 import config

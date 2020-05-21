@@ -15,6 +15,8 @@ from flask import render_template
 from flask import request
 from flask import redirect
 from flask import current_app
+from flask import Response
+
 
 from database.models import Specimen_Type
 
