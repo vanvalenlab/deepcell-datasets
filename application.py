@@ -6,15 +6,13 @@ from __future__ import print_function
 import logging
 from logging.config import dictConfig
 
-from flask import jsonfiy
 from flask import Flask, request, Response
 from flask.logging import default_handler
 
 import config
 from blueprints import bp
 
-from database.db import db
-from database.models import Images
+from database.db import initialize_db
 
 class ReverseProxied(object):
     def __init__(self, app):
@@ -57,10 +55,7 @@ def create_app():
 
     app.jinja_env.auto_reload = True
 
-    db.app = app  # setting context
-    db.init_app(app)
-
-    db.create_all()
+    initialize_db(app)
 
     app.register_blueprint(bp)
 
@@ -72,4 +67,3 @@ application = create_app()  # pylint: disable=C0103
 if __name__ == '__main__':
     configure_logging()
     application.run('0.0.0.0', port=config.PORT, debug=config.DEBUG)
-
