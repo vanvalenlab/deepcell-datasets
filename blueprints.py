@@ -26,13 +26,13 @@ bp = Blueprint('deepcell-datasets', __name__)  # pylint: disable=C0103
 
 @bp.route('/health')
 def health():
-    '''Returns success if the application is ready.'''
+    """Returns success if the application is ready."""
     return jsonify({'message': 'success'})
 
 
 @bp.route('/', methods=['GET', 'POST'])
 def form():
-    '''Request HTML landing page to be rendered.'''
+    """Request HTML landing page to be rendered."""
     return render_template('index.html')
 
 
