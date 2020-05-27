@@ -32,13 +32,15 @@ from __future__ import print_function
 import logging
 from logging.config import dictConfig
 
-from flask import Flask, request, Response
+from flask import Flask
+from flask_mongoengine import MongoEngine
 from flask.logging import default_handler
 
 import config
 from blueprints import bp
 
-from database.db import initialize_db
+from database import db
+
 
 class ReverseProxied(object):
     def __init__(self, app):
@@ -51,24 +53,26 @@ class ReverseProxied(object):
         return self.app(environ, start_response)
 
 
-def configure_logging():
-    """Set up logging format and instantiate loggers"""
-    # Set up logging
-    dictConfig({
-        'version': 1,
-        'formatters': {'default': {
-            'format': '[%(asctime)s]:[%(levelname)s]:[%(name)s]: %(message)s',
-        }},
-        'handlers': {'wsgi': {
-            'class': 'logging.StreamHandler',
-            'stream': 'ext://flask.logging.wsgi_errors_stream',
-            'formatter': 'default'
-        }},
-        'root': {
-            'level': 'INFO',
-            'handlers': ['wsgi']
-        }
-    })
+def initialize_logger():
+    """Set up logger format and level"""
+    formatter = logging.Formatter(
+        '[%(asctime)s]:[%(levelname)s]:[%(name)s]: %(message)s')
+
+    default_handler.setFormatter(formatter)
+    default_handler.setLevel(logging.DEBUG)
+
+    wsgi_handler = logging.StreamHandler(
+        stream='ext://flask.logging.wsgi_errors_stream')
+    wsgi_handler.setFormatter(formatter)
+    wsgi_handler.setLevel(logging.DEBUG)
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(default_handler)
+
+    # 3rd party loggers
+    logging.getLogger('botocore').setLevel(logging.INFO)
+    logging.getLogger('urllib3').setLevel(logging.INFO)
 
 
 def create_app():
@@ -76,12 +80,22 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object('config')
+    # app.config["MONGODB_SETTINGS"] = {"DB": "Deepcell_Datasets"}
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
 
     app.jinja_env.auto_reload = True
 
-    initialize_db(app)
+    for k in app.config.keys():
+        print(k, app.config[k])
+
+    import os
+    for k in os.environ.keys():
+        print(k, os.environ[k])
+
+    db.initialize_db(app)
+    # db = MongoEngine(app)
+    # db.init_app(app)
 
     app.register_blueprint(bp)
 
@@ -91,5 +105,5 @@ def create_app():
 application = create_app()  # pylint: disable=C0103
 
 if __name__ == '__main__':
-    configure_logging()
+    initialize_logger()
     application.run('0.0.0.0', port=config.PORT, debug=config.DEBUG)
