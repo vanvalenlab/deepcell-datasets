@@ -80,22 +80,12 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object('config')
-    # app.config["MONGODB_SETTINGS"] = {"DB": "Deepcell_Datasets"}
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
 
     app.jinja_env.auto_reload = True
 
-    for k in app.config.keys():
-        print(k, app.config[k])
-
-    import os
-    for k in os.environ.keys():
-        print(k, os.environ[k])
-
     db.initialize_db(app)
-    # db = MongoEngine(app)
-    # db.init_app(app)
 
     app.register_blueprint(bp)
 
