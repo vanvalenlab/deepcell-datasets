@@ -4,11 +4,11 @@
 from .db import db
 
 
-class Specimen_Type(db.Document):
+class SpecimenType(db.Document):
     # username = StringField(min_length=4, required=True, unique=True)
     # password = StringField(min_length=8, required=True)
 
-    name = db.StringField(required=True, unique=True)  # Specimen Name
+    spec_name = db.StringField(required=True, unique=True)  # Specimen Name
 
     # For each specimen it will be one "row" per .tif stack
     spec_type = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293

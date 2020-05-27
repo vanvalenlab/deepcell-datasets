@@ -2,14 +2,20 @@ version: "3"
 services:
   app:
     build: .
-    volumes:
-      - /deepcell_data:/data
+    # volumes:
+    #   - /deepcell_data:/data
     links:
       - db
     depends_on:
       - db
     ports:
       - 5000:5000
+    environment:
+      MONGODB_DB: ${MONGODB_DB:-database}
+      MONGODB_HOST: ${MONGODB_HOST:-localhost}
+      MONGODB_PORT: ${MONGODB_PORT:-27017}
+      MONGODB_USERNAME: ${MONGODB_USERNAME:-root}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-password}
 
   db:
     image: mongo
@@ -17,7 +23,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: database
     volumes:
-      - ./mongo-data:/data/db
+      - ./DCD_DB:/data/db
     ports:
       - 27017:27017
