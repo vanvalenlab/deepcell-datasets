@@ -21,7 +21,7 @@ from flask import Response
 from database.models import SpecimenType
 
 
-bp = Blueprint('deepcell-datasets', __name__)  # pylint: disable=C0103
+bp = Blueprint('Deepcell_Datasets', __name__)  # pylint: disable=C0103
 
 
 @bp.route('/health')
