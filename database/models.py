@@ -30,20 +30,39 @@
 
 from .db import db
 
+# This collection will hold information about each specimen type in our ontology
+class Experiment(db.document):
+    _id = db.StringField(required=True, unique=True) # Experiment ID or DOI
 
-class SpecimenType(db.Document):
-    # username = StringField(min_length=4, required=True, unique=True)
-    # password = StringField(min_length=8, required=True)
+# For each specimen it will be one "row" per .tif stackRaw data
+class Specimen(db.Document):
 
-    spec_name = db.StringField(required=True, unique=True)  # Specimen Name
-
-    # For each specimen it will be one "row" per .tif stack
+    exp_id = db.ReferenceField(Experiment)  # experiment ID or DOI
     spec_type = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
     channel_marker = db.ListField(db.StringField(), required=True) # e.g. 0: H2B-mClover, ...
-    exp_id = db.StringField(required=True)  # experiment ID or DOI
+    data_origin = db.EmbeddedDocumentField(RawDataOrigin)
+
+    meta = {'allow_inheritance': True}
+
+class DynamicSpecimen(Specimen):
+    time_step = db.StringField(required=True)
+
+class ThreeDimSpecimen(Specimen):
+    z_step = db.StringField(required=True)
+
+class RawDataOrigin(db.EmbeddedDocument):
+    facility = db.StringField()
+    collected_by = db.StringField()
 
 
     # def save(self, force_insert=False, validate=True, clean=True,
     # 		 write_concern=None, cascade=None, cascade_kwargs=None,
     # 		 _refs=None, save_condition=None, signal_kwargs=None, **kwargs):
     # 	pass
+
+
+# Training data
+    #EmailField = aws address
+
+
+# Crowdsourcing
