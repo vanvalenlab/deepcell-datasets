@@ -44,7 +44,7 @@ from flask import current_app
 from flask import Response
 
 
-from database.models import SpecimenType
+from database.models import Specimen
 
 
 bp = Blueprint('Deepcell_Datasets', __name__)  # pylint: disable=C0103
