@@ -56,41 +56,41 @@ def health():
     return jsonify({'message': 'success'})
 
 
-@bp.route('/', methods=['GET', 'POST'])
-def index():
-    """Request HTML landing page to be rendered."""
-    return render_template('index.html')
+# TODO: Web interface for wet lab
+# @bp.route('/', methods=['GET', 'POST'])
+# def index():
+#     """Request HTML landing page to be rendered."""
+#     return render_template('index.html')
 
 
 @bp.route('/all_specimen')
 def get_all_specimen():
-    all_specimen = SpecimenType.objects().to_json()
-    # return jsonify({'all_specimen': all_specimen}), 200
+    all_specimen = Specimen.objects().to_json()
     return Response(all_specimen, mimetype="application/json", status=200)
 
 
 @bp.route('/all_specimen', methods=['POST'])
-def create_specimen(name):
+def create_specimen():
     body = request.get_json()
-    specimen = SpecimenType(**body).save()
-    name = specimen.name
-    return jsonify({'name': str(name)}), 200
+    specimen = Specimen(**body).save()
+    exp_id = specimen.exp_id
+    return {'exp_id': str(exp_id)}, 200
 
 
-@bp.route('/all_specimen/<name>', methods=['PUT'])
-def update_specimen(name):
+@bp.route('/all_specimen/<exp_id>', methods=['PUT'])
+def update_specimen(exp_id):
     body = request.get_json()
-    SpecimenType.objects.get(name=name).update(**body)
+    Specimen.objects.get(exp_id=exp_id).update(**body)
     return '', 200
 
 
-@bp.route('/all_specimen/<name>', methods=['DELETE'])
-def delete_specimen(name):
-    SpecimenType.objects.get(name=name).delete()
+@bp.route('/all_specimen/<exp_id>', methods=['DELETE'])
+def delete_specimen(exp_id):
+    specimen = Specimen.objects.get(exp_id=exp_id).delete()
     return '', 200
 
 
-@bp.route('/all_specimen/<name>')
-def get_specimen(name):
-    all_specimen = SpecimenType.objects.get(name=name).to_json()
+@bp.route('/all_specimen/<exp_id>')
+def get_specimen(exp_id):
+    all_specimen = Specimen.objects.get_or_404(exp_id=exp_id).to_json()
     return Response(all_specimen, mimetype="application/json", status=200)

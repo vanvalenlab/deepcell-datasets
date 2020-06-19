@@ -86,6 +86,7 @@ def create_app():
     app.jinja_env.auto_reload = True
 
     db.initialize_db(app)
+    #db.connect('Deepcell_Datasets') ?
 
     app.register_blueprint(bp)
 
