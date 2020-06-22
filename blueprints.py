@@ -57,10 +57,10 @@ def health():
 
 
 # TODO: Web interface for wet lab
-# @bp.route('/', methods=['GET', 'POST'])
-# def index():
-#     """Request HTML landing page to be rendered."""
-#     return render_template('index.html')
+@bp.route('/', methods=['GET', 'POST'])
+def index():
+    """Request HTML landing page to be rendered."""
+    return render_template('index.html')
 
 
 @bp.route('/all_specimen')
