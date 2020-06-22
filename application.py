@@ -34,6 +34,7 @@ from logging.config import dictConfig
 
 from flask import Flask
 from flask_mongoengine import MongoEngine
+from flask_debugtoolbar import DebugToolbarExtension
 from flask.logging import default_handler
 
 import config
@@ -80,6 +81,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object('config')
+    #app.config['DEBUG_TB_PANELS'] = ['flask_mongoengine.panels.MongoDebugPanel']
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
 
@@ -89,6 +91,8 @@ def create_app():
     #db.connect('Deepcell_Datasets') ?
 
     app.register_blueprint(bp)
+
+    #toolbar = DebugToolbarExtension(app)
 
     return app
 

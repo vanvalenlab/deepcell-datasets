@@ -65,6 +65,8 @@ def health():
 
 @bp.route('/all_specimen')
 def get_all_specimen():
+#def get_all_specimen(page=1):
+    #paginated_all_specimen = Specimen.objects.paginate(page=page, per_page=10)
     all_specimen = Specimen.objects().to_json()
     return Response(all_specimen, mimetype="application/json", status=200)
 
