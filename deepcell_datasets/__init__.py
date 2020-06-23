@@ -29,10 +29,46 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from flask import Flask
+# from flask_debugtoolbar import DebugToolbarExtension
+
+from deepcell_datasets import config
+from deepcell_datasets import database
 from deepcell_datasets.general import general
 from deepcell_datasets.specimen import specimen
-from deepcell_datasets import config
-from deepcell_datasets import application
+
+
+class ReverseProxied(object):
+    """Reverse proxy for serving static files over https"""
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        scheme = environ.get('HTTP_X_FORWARDED_PROTO')
+        if scheme:
+            environ['wsgi.url_scheme'] = scheme
+        return self.app(environ, start_response)
+
+
+def create_app():
+    """Factory to create the Flask application"""
+    app = Flask(__name__)
+
+    app.config.from_object(config)
+
+    app.wsgi_app = ReverseProxied(app.wsgi_app)
+
+    app.jinja_env.auto_reload = True
+
+    database.db.initialize_db(app)
+
+    app.register_blueprint(general.general_bp)
+    app.register_blueprint(specimen.specimen_bp)
+
+    # toolbar = DebugToolbarExtension(app)
+
+    return app
+
 
 del absolute_import
 del division

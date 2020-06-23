@@ -31,25 +31,10 @@ from __future__ import print_function
 
 import logging
 
-from flask import Flask
 from flask.logging import default_handler
-# from flask_debugtoolbar import DebugToolbarExtension
 
-from deepcell_datasets.general import general_bp
-from deepcell_datasets.specimen import specimen_bp
-from deepcell_datasets.database import db
 from deepcell_datasets import config
-
-
-class ReverseProxied(object):
-    def __init__(self, app):
-        self.app = app
-
-    def __call__(self, environ, start_response):
-        scheme = environ.get('HTTP_X_FORWARDED_PROTO')
-        if scheme:
-            environ['wsgi.url_scheme'] = scheme
-        return self.app(environ, start_response)
+from deepcell_datasets import create_app
 
 
 def initialize_logger():
@@ -72,28 +57,6 @@ def initialize_logger():
     # 3rd party loggers
     logging.getLogger('botocore').setLevel(logging.INFO)
     logging.getLogger('urllib3').setLevel(logging.INFO)
-
-
-def create_app():
-    """Factory to create the Flask application"""
-    app = Flask(__name__)
-
-    app.config.from_object('config')
-    # app.config['DEBUG_TB_PANELS'] = ['flask_mongoengine.panels.MongoDebugPanel']
-
-    app.wsgi_app = ReverseProxied(app.wsgi_app)
-
-    app.jinja_env.auto_reload = True
-
-    db.initialize_db(app)
-    # db.connect('Deepcell_Datasets')  # ?
-
-    app.register_blueprint(general_bp)
-    app.register_blueprint(specimen_bp)
-
-    # toolbar = DebugToolbarExtension(app)
-
-    return app
 
 
 if __name__ == '__main__':
