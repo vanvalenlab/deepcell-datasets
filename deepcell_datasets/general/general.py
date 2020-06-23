@@ -30,7 +30,8 @@ from flask import jsonify
 from flask import render_template
 
 
-general_bp = Blueprint('general_bp', __name__)  # pylint: disable=C0103
+general_bp = Blueprint('general_bp', __name__,  # pylint: disable=C0103
+                       template_folder='templates')
 
 
 @general_bp.route('/health')
@@ -43,4 +44,4 @@ def health():
 @general_bp.route('/', methods=['GET'])
 def index():
     """Request HTML landing page to be rendered."""
-    return render_template('index.html')
+    return render_template('general/index.html')
