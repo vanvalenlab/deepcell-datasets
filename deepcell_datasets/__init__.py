@@ -58,8 +58,8 @@ def create_app():
 
     database.db.initialize_db(app)
 
-    app.register_blueprint(general.general_bp)
-    app.register_blueprint(specimen.specimen_bp)
+    app.register_blueprint(general.general_bp, url_prefix='/')
+    app.register_blueprint(specimen.specimen_bp, url_prefix='/specimen')
 
     # toolbar = DebugToolbarExtension(app)
 
