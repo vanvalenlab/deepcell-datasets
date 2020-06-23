@@ -28,7 +28,7 @@
 # from mongoengine.document import Document
 # from mongoengine.fields import ListField, StringField
 
-from .db import db
+from deepcell_datasets.database.db import db
 
 # This collection will hold information about each specimen type in our ontology
 class Experiments(db.Document):
