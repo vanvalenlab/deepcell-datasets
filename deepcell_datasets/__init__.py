@@ -25,10 +25,6 @@
 # ==============================================================================
 """DeepCell Datasets Module"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from flask import Flask
 # from flask_debugtoolbar import DebugToolbarExtension
 
@@ -68,8 +64,3 @@ def create_app():
     # toolbar = DebugToolbarExtension(app)
 
     return app
-
-
-del absolute_import
-del division
-del print_function
