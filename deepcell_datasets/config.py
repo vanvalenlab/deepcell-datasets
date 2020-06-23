@@ -44,10 +44,9 @@ MONGODB_SETTINGS = {
 
 # DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
 
-
-#MONGODB_DB = decouple.config('MONGODB_DB', cast=str, default='test')
+# Flask mongoengine makes uri from the DB name, host, and port
+# MONGODB_DB = decouple.config('MONGODB_DB', cast=str, default='test')
 # MONGODB_HOST = config('MONGODB_HOST')
 # MONGODB_PORT = config('MONGODB_PORT', cast=int, default=27017)
 # MONGODB_USERNAME = config('MONGODB_USERNAME')
 # MONGODB_PASSWORD = config('MONGODB_PASSWORD')
-# Flask mongoengine makes uri from the DB name, host, and port
