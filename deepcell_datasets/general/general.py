@@ -29,84 +29,22 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import base64
-import distutils
-import json
-import os
-import re
-
 from flask import Blueprint
 from flask import jsonify
 from flask import render_template
-from flask import request
-from flask import redirect
-from flask import current_app
-from flask import Response
 
 
-from database.models import Specimen
+general_bp = Blueprint('general_bp', __name__)  # pylint: disable=C0103
 
 
-bp = Blueprint('Deepcell_Datasets', __name__)  # pylint: disable=C0103
-
-
-@bp.route('/health')
+@general_bp.route('/health')
 def health():
     """Returns success if the application is ready."""
     return jsonify({'message': 'success'})
 
 
 # TODO: Web interface for wet lab
-@bp.route('/', methods=['GET', 'POST'])
+@general_bp.route('/', methods=['GET'])
 def index():
     """Request HTML landing page to be rendered."""
     return render_template('index.html')
-
-
-@bp.route('/all_specimen')
-def get_all_specimen():
-#def get_all_specimen(page=1):
-    #paginated_all_specimen = Specimen.objects.paginate(page=page, per_page=10)
-    all_specimen = Specimen.objects().to_json()
-    return Response(all_specimen, mimetype="application/json")
-
-
-@bp.route('/all_specimen', methods=['POST'])
-def create_specimen():
-    """
-    Function to create a new specimen
-    """
-    try:
-        # Create new specimen
-        try:
-            body = request.get_json()
-        except:
-            # Bad request as request body is not available
-            return jsonify({}), 400
-
-        specimen = Specimen(**body).save()
-        exp_id = specimen.exp_id
-        return jsonify({'exp_id': str(exp_id)})
-
-    except:
-        # Error while trying to create resource
-        return jsonify({}), 500
-
-
-@bp.route('/all_specimen/<exp_id>', methods=['PUT'])
-def update_specimen(exp_id):
-    body = request.get_json()
-    Specimen.objects.get(exp_id=exp_id).update(**body)
-    return jsonify({})
-
-
-@bp.route('/all_specimen/<exp_id>', methods=['DELETE'])
-def delete_specimen(exp_id):
-    specimen = Specimen.objects.get(exp_id=exp_id).delete()
-    return jsonify({})
-
-
-@bp.route('/all_specimen/<exp_id>')
-def get_specimen(exp_id):
-    all_specimen = Specimen.objects.get_or_404(exp_id=exp_id).to_json()
-    return Response(all_specimen, mimetype="application/json")

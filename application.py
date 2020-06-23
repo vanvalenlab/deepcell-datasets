@@ -30,17 +30,15 @@ from __future__ import division
 from __future__ import print_function
 
 import logging
-from logging.config import dictConfig
 
 from flask import Flask
-from flask_mongoengine import MongoEngine
-from flask_debugtoolbar import DebugToolbarExtension
 from flask.logging import default_handler
+# from flask_debugtoolbar import DebugToolbarExtension
 
-import config
-from blueprints import bp
-
-from database import db
+from deepcell_datasets.general import general_bp
+from deepcell_datasets.specimen import specimen_bp
+from deepcell_datasets.database import db
+from deepcell_datasets import config
 
 
 class ReverseProxied(object):
@@ -81,24 +79,24 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object('config')
-    #app.config['DEBUG_TB_PANELS'] = ['flask_mongoengine.panels.MongoDebugPanel']
+    # app.config['DEBUG_TB_PANELS'] = ['flask_mongoengine.panels.MongoDebugPanel']
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
 
     app.jinja_env.auto_reload = True
 
     db.initialize_db(app)
-    #db.connect('Deepcell_Datasets') ?
+    # db.connect('Deepcell_Datasets')  # ?
 
-    app.register_blueprint(bp)
+    app.register_blueprint(general_bp)
+    app.register_blueprint(specimen_bp)
 
-    #toolbar = DebugToolbarExtension(app)
+    # toolbar = DebugToolbarExtension(app)
 
     return app
 
 
-application = create_app()  # pylint: disable=C0103
-
 if __name__ == '__main__':
+    application = create_app()  # pylint: disable=C0103
     initialize_logger()
     application.run('0.0.0.0', port=config.PORT, debug=config.DEBUG)
