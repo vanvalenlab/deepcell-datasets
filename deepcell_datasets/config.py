@@ -46,6 +46,8 @@ MONGODB_SETTINGS = {
     'PASSWORD' : decouple.config('MONGODB_PASSWORD')
 }
 
+# DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
+
 
 #MONGODB_DB = decouple.config('MONGODB_DB', cast=str, default='test')
 # MONGODB_HOST = config('MONGODB_HOST')
