@@ -68,31 +68,45 @@ def get_all_specimen():
 #def get_all_specimen(page=1):
     #paginated_all_specimen = Specimen.objects.paginate(page=page, per_page=10)
     all_specimen = Specimen.objects().to_json()
-    return Response(all_specimen, mimetype="application/json", status=200)
+    return Response(all_specimen, mimetype="application/json")
 
 
 @bp.route('/all_specimen', methods=['POST'])
 def create_specimen():
-    body = request.get_json()
-    specimen = Specimen(**body).save()
-    exp_id = specimen.exp_id
-    return {'exp_id': str(exp_id)}, 200
+    """
+    Function to create a new specimen
+    """
+    try:
+        # Create new specimen
+        try:
+            body = request.get_json()
+        except:
+            # Bad request as request body is not available
+            return jsonify({}), 400
+
+        specimen = Specimen(**body).save()
+        exp_id = specimen.exp_id
+        return jsonify({'exp_id': str(exp_id)})
+
+    except:
+        # Error while trying to create resource
+        return jsonify({}), 500
 
 
 @bp.route('/all_specimen/<exp_id>', methods=['PUT'])
 def update_specimen(exp_id):
     body = request.get_json()
     Specimen.objects.get(exp_id=exp_id).update(**body)
-    return '', 200
+    return jsonify({})
 
 
 @bp.route('/all_specimen/<exp_id>', methods=['DELETE'])
 def delete_specimen(exp_id):
     specimen = Specimen.objects.get(exp_id=exp_id).delete()
-    return '', 200
+    return jsonify({})
 
 
 @bp.route('/all_specimen/<exp_id>')
 def get_specimen(exp_id):
     all_specimen = Specimen.objects.get_or_404(exp_id=exp_id).to_json()
-    return Response(all_specimen, mimetype="application/json", status=200)
+    return Response(all_specimen, mimetype="application/json")
