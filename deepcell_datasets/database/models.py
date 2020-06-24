@@ -28,11 +28,12 @@
 # from mongoengine.document import Document
 # from mongoengine.fields import ListField, StringField
 
-from .db import db
+from deepcell_datasets.database.db import db
 
 # This collection will hold information about each specimen type in our ontology
 class Experiments(db.Document):
     _id = db.StringField(required=True, unique=True) # Experiment ID or DOI
+
 
 # Embedded documents for detailed info that needs context("contains" relationship)
 class RawDataOrigin(db.EmbeddedDocument):
@@ -41,11 +42,13 @@ class RawDataOrigin(db.EmbeddedDocument):
     date_collected = db.DateTimeField()
     doi = db.StringField()
 
+
 class Methods(db.EmbeddedDocument):
     subtype = db.StringField()
     culture = db.StringField()
     labeling = db.StringField()
     imaging = db.StringField()
+
 
 class ImagingParameters(db.EmbeddedDocument):
     microscope = db.StringField()
@@ -56,9 +59,11 @@ class ImagingParameters(db.EmbeddedDocument):
     pixel_size = db.StringField()
     exposure_time = db.StringField()
 
+
 class Dimensions(db.EmbeddedDocument):
     x = db.IntField(required=True)
     y = db.IntField(required=True)
+
 
 # For each specimen it will be one "row" per .tif stack
 # Raw data
@@ -78,8 +83,10 @@ class Specimen(db.Document):
 
     meta = {'allow_inheritance': True}
 
+
 class DynamicSpecimen(Specimen):
     time_step = db.StringField(required=True)
+
 
 class ThreeDimSpecimen(Specimen):
     z_step = db.StringField(required=True)

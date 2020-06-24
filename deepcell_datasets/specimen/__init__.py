@@ -23,17 +23,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Database for DeepCell MDM"""
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-from flask_mongoengine import MongoEngine
-
-
-db = MongoEngine()
-
-
-def initialize_db(app):
-    db.init_app(app)
+"""DeepCell Datasets: Specimen Blueprint"""
