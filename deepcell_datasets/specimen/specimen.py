@@ -37,22 +37,19 @@ from deepcell_datasets.database.models import Specimen
 specimen_bp = Blueprint('specimen_bp', __name__)  # pylint: disable=C0103
 
 
-# TODO: Web interface for wet lab
-@specimen_bp.route('/', methods=['GET', 'POST'])
-def index():
-    """Request HTML landing page to be rendered."""
-    return render_template('index.html')
-
-
-@specimen_bp.route('/all_specimen')
+@specimen_bp.route('/')
 def get_all_specimen():
 #def get_all_specimen(page=1):
     #paginated_all_specimen = Specimen.objects.paginate(page=page, per_page=10)
-    all_specimen = Specimen.objects().to_json()
-    return Response(all_specimen, mimetype="application/json")
+    try:
+        all_specimen = Specimen.objects().to_json()
+        return Response(all_specimen, mimetype="application/json")
+    except Exception as err:  # TODO: pick the type of exception.
+        # Bad request as request object is not available
+        return jsonify({'error': str(err)}), 400
 
 
-@specimen_bp.route('/all_specimen', methods=['POST'])
+@specimen_bp.route('/', methods=['POST'])
 def create_specimen():
     """Create a new specimen"""
     # Parse the request
@@ -71,20 +68,31 @@ def create_specimen():
         return jsonify({'error': str(err)}), 500
 
 
-@specimen_bp.route('/all_specimen/<exp_id>', methods=['PUT'])
+@specimen_bp.route('/<exp_id>', methods=['PUT'])
 def update_specimen(exp_id):
-    body = request.get_json()
-    Specimen.objects.get(exp_id=exp_id).update(**body)
-    return jsonify({})
+    try:
+        body = request.get_json()
+        Specimen.objects.get(exp_id=exp_id).update(**body)
+        return jsonify({})
+    except Exception as err:  # TODO: pick the type of exception.
+        # Error while trying to update resource
+        return jsonify({'error': str(err)}), 500
 
-
-@specimen_bp.route('/all_specimen/<exp_id>', methods=['DELETE'])
+@specimen_bp.route('/<exp_id>', methods=['DELETE'])
 def delete_specimen(exp_id):
-    specimen = Specimen.objects.get(exp_id=exp_id).delete()
-    return jsonify({})
+    try:
+        specimen = Specimen.objects.get(exp_id=exp_id).delete()
+        return jsonify({})
+    except Exception as err:  # TODO: pick the type of exception.
+        # Error while trying to delete resource
+        return jsonify({'error': str(err)}), 500
 
 
-@specimen_bp.route('/all_specimen/<exp_id>')
+@specimen_bp.route('/<exp_id>')
 def get_specimen(exp_id):
-    all_specimen = Specimen.objects.get_or_404(exp_id=exp_id).to_json()
-    return Response(all_specimen, mimetype="application/json")
+    try:
+        all_specimen = Specimen.objects.get_or_404(exp_id=exp_id).to_json()
+        return Response(all_specimen, mimetype="application/json")
+    except Exception as err:  # TODO: pick the type of exception.
+        # Bad Request
+        return jsonify({'error': str(err)}), 500
