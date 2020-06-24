@@ -30,9 +30,10 @@
 
 from deepcell_datasets.database.db import db
 
+
 # This collection will hold information about each specimen type in our ontology
 class Experiments(db.Document):
-    _id = db.StringField(required=True, unique=True) # Experiment ID or DOI
+    _id = db.StringField(required=True, unique=True)  # Experiment ID or DOI
 
 
 # Embedded documents for detailed info that needs context("contains" relationship)
@@ -68,10 +69,10 @@ class Dimensions(db.EmbeddedDocument):
 # For each specimen it will be one "row" per .tif stack
 # Raw data
 class Specimen(db.Document):
-
-    exp_id = db.ReferenceField(Experiments, reverse_delete_rule=db.CASCADE)  # experiment ID or DOI
-    spec_type = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
-    ontology_loc = db.ListField(db.StringField, required=True) #e.g. dynamic,2d..
+    # experiment ID or DOI
+    exp_id = db.ReferenceField(Experiments, reverse_delete_rule=db.CASCADE)  # e.g. cell, HEK293
+    spec_type = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
+    ontology_loc = db.ListField(db.StringField, required=True)
     num_frames = db.IntField(required=True)
     # Embedded documents for "contains" relationships
     data_origin = db.EmbeddedDocumentField(RawDataOrigin)
@@ -79,7 +80,7 @@ class Specimen(db.Document):
     imaging_params = db.EmbeddedDocumentField(ImagingParameters)
     dimensions = db.EmbeddedDocumentField(Dimensions)
     # DictField for data with unknown structure (how many channels)
-    channel_marker = db.DictField() # e.g. 0: H2B-mClover, ...
+    channel_marker = db.DictField()  # e.g. 0: H2B-mClover, ...
 
     meta = {'allow_inheritance': True}
 

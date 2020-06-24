@@ -46,7 +46,7 @@ MONGODB_SETTINGS = {
 
 # Flask mongoengine makes uri from the DB name, host, and port
 # MONGODB_DB = decouple.config('MONGODB_DB', cast=str, default='test')
-# MONGODB_HOST = config('MONGODB_HOST')
-# MONGODB_PORT = config('MONGODB_PORT', cast=int, default=27017)
-# MONGODB_USERNAME = config('MONGODB_USERNAME')
-# MONGODB_PASSWORD = config('MONGODB_PASSWORD')
+# MONGODB_HOST = decouple.config('MONGODB_HOST', default='localhost')
+# MONGODB_PORT = decouple.config('MONGODB_PORT', cast=int, default=27017)
+# MONGODB_USERNAME = decouple.config('MONGODB_USERNAME', default=None)
+# MONGODB_PASSWORD = decouple.config('MONGODB_PASSWORD', default=None)

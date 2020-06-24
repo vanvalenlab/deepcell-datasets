@@ -38,9 +38,8 @@ specimen_bp = Blueprint('specimen_bp', __name__)  # pylint: disable=C0103
 
 
 @specimen_bp.route('/')
-def get_all_specimen():
-#def get_all_specimen(page=1):
-    #paginated_all_specimen = Specimen.objects.paginate(page=page, per_page=10)
+def get_all_specimen():  # def get_all_specimen(page=1):
+    # paginated_all_specimen = Specimen.objects.paginate(page=page, per_page=10)
     try:
         all_specimen = Specimen.objects().to_json()
         return Response(all_specimen, mimetype="application/json")
@@ -77,6 +76,7 @@ def update_specimen(exp_id):
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to update resource
         return jsonify({'error': str(err)}), 500
+
 
 @specimen_bp.route('/<exp_id>', methods=['DELETE'])
 def delete_specimen(exp_id):
