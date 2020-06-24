@@ -69,10 +69,9 @@ class Dimensions(db.EmbeddedDocument):
 # For each specimen it will be one "row" per .tif stack
 # Raw data
 class Specimen(db.Document):
-    # experiment ID or DOI
-    exp_id = db.ReferenceField(Experiments, reverse_delete_rule=db.CASCADE)  # e.g. cell, HEK293
-    spec_type = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
-    ontology_loc = db.ListField(db.StringField, required=True)
+    exp_id = db.ReferenceField(Experiments, reverse_delete_rule=db.CASCADE)  # experiment ID or DOI
+    spec_type = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
+    ontology_loc = db.ListField(db.StringField, required=True)  # e.g. dynamic,2d..
     num_frames = db.IntField(required=True)
     # Embedded documents for "contains" relationships
     data_origin = db.EmbeddedDocumentField(RawDataOrigin)
