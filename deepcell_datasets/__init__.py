@@ -46,11 +46,14 @@ class ReverseProxied(object):
         return self.app(environ, start_response)
 
 
-def create_app():
+def create_app(**config_overrides):
     """Factory to create the Flask application"""
     app = Flask(__name__)
 
+    # Load config.
     app.config.from_object(config)
+    # apply overrides
+    app.config.update(config_overrides)
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
 
