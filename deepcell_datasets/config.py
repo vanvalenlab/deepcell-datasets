@@ -38,7 +38,7 @@ MONGODB_SETTINGS = {
     'DB': decouple.config('MONGODB_DB', default='test'),
     'HOST': decouple.config('MONGODB_HOST', default='localhost'),
     'PORT': decouple.config('MONGODB_PORT', cast=int, default=27017),
-    'USER': decouple.config('MONGODB_USERNAME', default=None),
+    'USERNAME': decouple.config('MONGODB_USERNAME', default=None),
     'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None)
 }
 
