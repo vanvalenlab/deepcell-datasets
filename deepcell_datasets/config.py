@@ -37,9 +37,7 @@ TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, defa
 MONGODB_SETTINGS = {
     'DB' : decouple.config('MONGODB_DB'),
     'HOST' : decouple.config('MONGODB_HOST'),
-    'PORT' : decouple.config('MONGODB_PORT', cast=int, default=27017),
-    'USERNAME' : decouple.config('MONGODB_USERNAME'),
-    'PASSWORD' : decouple.config('MONGODB_PASSWORD')
+    'PORT' : decouple.config('MONGODB_PORT', cast=int, default=27017)
 }
 
 # DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
