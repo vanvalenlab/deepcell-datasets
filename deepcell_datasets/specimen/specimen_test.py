@@ -23,30 +23,50 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Configuration options and environment variables."""
+"""Tests for the Specimen Blueprint."""
 
-import decouple
+from deepcell_datasets.testing_utils import app, client
 
 
-DEBUG = decouple.config('DEBUG', cast=bool, default=True)
-PORT = decouple.config('PORT', cast=int, default=5000)
+def test_get_all_specimen(client):
+    # database should be empty
+    response = client.get('/specimen/')
+    assert response.status_code == 200
+    assert response.json == []
+    # TODO: add specimen to database and get it again
 
-TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, default=True)
 
-# MONGODB_SETTINGS
-MONGODB_SETTINGS = {
-    'DB': decouple.config('MONGODB_DB', default='test'),
-    'HOST': decouple.config('MONGODB_HOST', default='localhost'),
-    'PORT': decouple.config('MONGODB_PORT', cast=int, default=27017),
-    'USERNAME': decouple.config('MONGODB_USERNAME', default=None),
-    'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None)
-}
+def test_get_specimen(client):
+    specimen_id = 5
+    response = client.get('/specimen/%s' % specimen_id)
+    assert response.status_code == 200
+    assert response.json
 
-# DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
 
-# Flask mongoengine makes uri from the DB name, host, and port
-# MONGODB_DB = decouple.config('MONGODB_DB', cast=str, default='test')
-# MONGODB_HOST = decouple.config('MONGODB_HOST', default='localhost')
-# MONGODB_PORT = decouple.config('MONGODB_PORT', cast=int, default=27017)
-# MONGODB_USERNAME = decouple.config('MONGODB_USERNAME', default=None)
-# MONGODB_PASSWORD = decouple.config('MONGODB_PASSWORD', default=None)
+def test_create_specimen(client):
+    spec_type = ['cell, HEK293']
+    ontology_loc = ['dynamic', '2d']
+    num_frames = 8
+    body = {
+        'spec_type': spec_type,
+        'ontology_loc': ontology_loc,
+        'num_frames': num_frames
+    }
+    response = client.post('/specimen/', json=body)
+    assert response.status_code == 200
+    assert response.json
+
+
+def test_update_specimen(client):
+    # no specimens in the collection
+    response = client.put('/specimen/')
+    assert response.status_code == 200
+    assert response.json
+
+
+def test_delete_specimen(client):
+    # no specimens in the collection
+    specimen_id = 5
+    response = client.delete('/specimen/%s' % specimen_id)
+    assert response.status_code == 200
+    assert response.json

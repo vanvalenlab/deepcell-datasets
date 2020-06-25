@@ -23,47 +23,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""DeepCell Datasets Module"""
+"""Tests for the General Blueprint."""
 
-from flask import Flask
-# from flask_debugtoolbar import DebugToolbarExtension
+from mongoengine import connect, disconnect, get_connection
 
-from deepcell_datasets import config
-from deepcell_datasets import database
-from deepcell_datasets.general import general
-from deepcell_datasets.specimen import specimen
+import pytest
+
+from deepcell_datasets import create_app
 
 
-class ReverseProxied(object):
-    """Reverse proxy for serving static files over https"""
-    def __init__(self, app):
-        self.app = app
+@pytest.fixture
+def app():
+    """set up and tear down a test application"""
 
-    def __call__(self, environ, start_response):
-        scheme = environ.get('HTTP_X_FORWARDED_PROTO')
-        if scheme:
-            environ['wsgi.url_scheme'] = scheme
-        return self.app(environ, start_response)
+    connect('mongoenginetest', host='mongomock://localhost', alias='testdb')
+
+    mongo_settings = {
+        'DB': 'mongoenginetest',
+        'HOST': 'mongomock://localhost',
+        'PORT': 27017,
+    }
+
+    yield create_app(
+        MONGODB_SETTINGS=mongo_settings,
+        TESTING=True,
+        CSRF_ENABLED=False,
+    )
+    disconnect()
 
 
-def create_app(**config_overrides):
-    """Factory to create the Flask application"""
-    app = Flask(__name__)
-
-    # Load config.
-    app.config.from_object(config)
-    # apply overrides
-    app.config.update(config_overrides)
-
-    app.wsgi_app = ReverseProxied(app.wsgi_app)
-
-    app.jinja_env.auto_reload = True
-
-    database.db.initialize_db(app)
-
-    app.register_blueprint(general.general_bp, url_prefix='/')
-    app.register_blueprint(specimen.specimen_bp, url_prefix='/specimen')
-
-    # toolbar = DebugToolbarExtension(app)
-
-    return app
+@pytest.fixture
+def client(app):
+    """get a test client for the test application"""
+    return app.test_client()
