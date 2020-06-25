@@ -29,6 +29,7 @@ from flask import Blueprint
 from flask import jsonify
 from flask import request
 from flask import Response
+from flask import current_app
 
 from deepcell_datasets.database.models import Specimen
 
@@ -63,6 +64,7 @@ def create_specimen():
         return jsonify({'exp_id': str(exp_id)})
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to create resource
+        current_app.logger.error('Encountered error: %s, err')
         return jsonify({'error': str(err)}), 500
 
 
