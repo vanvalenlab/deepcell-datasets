@@ -35,26 +35,20 @@ from deepcell_datasets import create_app
 @pytest.fixture
 def app():
     """set up and tear down a test application"""
-    # monkeypatch.setenv("MONGODB_DB", "testDb")
-    # monkeypatch.setenv("MONGODB_HOST", "testHost")
-    # monkeypatch.setenv("MONGODB_USERNAME", "testUser")
-    # monkeypatch.setenv("MONGODB_PASSWORD", "testPwd")
 
     connect('mongoenginetest', host='mongomock://localhost', alias='testdb')
 
     mongo_settings = {
         'DB': 'mongoenginetest',
         'HOST': 'mongomock://localhost',
-        'USERNAME': 'admin',
-        'PASSWORD': 'admin'
+        'PORT': 27017,
     }
 
-    app = create_app(
+    yield create_app(
         MONGODB_SETTINGS=mongo_settings,
         TESTING=True,
         CSRF_ENABLED=False,
     )
-    yield app
     disconnect()
 
 
