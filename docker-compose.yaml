@@ -14,16 +14,16 @@ services:
       MONGODB_DB: ${MONGODB_DB:-database}
       MONGODB_HOST: ${MONGODB_HOST:-mongo}
       MONGODB_PORT: ${MONGODB_PORT:-27017}
-      MONGODB_USERNAME: ${MONGODB_USERNAME:-root}
-      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-password}
+      # MONGODB_USERNAME: ${MONGODB_USERNAME:-root}
+      # MONGODB_PASSWORD: ${MONGODB_PASSWORD:-password}
 
   mongo:
     image: mongo
     restart: always
-    environment:
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-database}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-password}
+    # environment:
+    #   MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-database}
+    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
+    #   MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-password}
     volumes:
       - ./DCD_DB:/data/db
     ports:
