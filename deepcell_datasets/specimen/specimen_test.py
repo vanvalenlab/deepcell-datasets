@@ -53,7 +53,6 @@ def test_create_specimen(client):
         'num_frames': num_frames
     }
     response = client.post('/specimen/', json=body)
-    print(response.json)
     assert response.status_code == 200
     assert response.json
 
