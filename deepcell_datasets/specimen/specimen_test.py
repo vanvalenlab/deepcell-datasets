@@ -29,9 +29,11 @@ from deepcell_datasets.testing_utils import app, client
 
 
 def test_get_all_specimen(client):
-    response = client.get('/specimen')
+    # database should be empty
+    response = client.get('/specimen/')
     assert response.status_code == 200
-    assert response.json
+    assert response.json == []
+    # TODO: add specimen to database and get it again
 
 
 def test_get_specimen(client):
@@ -42,15 +44,23 @@ def test_get_specimen(client):
 
 
 def test_create_specimen(client):
-    # no specimens in the collection
-    response = client.post('/specimen')
+    spec_type = ['cell, HEK293']
+    ontology_loc = ['dynamic', '2d']
+    num_frames = 8
+    body = {
+        'spec_type': spec_type,
+        'ontology_loc': ontology_loc,
+        'num_frames': num_frames
+    }
+    response = client.post('/specimen/', json=body)
+    print(response.json)
     assert response.status_code == 200
     assert response.json
 
 
 def test_update_specimen(client):
     # no specimens in the collection
-    response = client.put('/specimen')
+    response = client.put('/specimen/')
     assert response.status_code == 200
     assert response.json
 
