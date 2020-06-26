@@ -35,7 +35,7 @@ from deepcell_datasets import create_app
 @pytest.fixture
 def app():
     """set up and tear down a test application"""
-
+    disconnect()  # TODO: why do we need to call this?
     connect('mongoenginetest', host='mongomock://localhost')
 
     mongo_settings = {

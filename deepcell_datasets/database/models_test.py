@@ -33,8 +33,9 @@ from deepcell_datasets.database import models
 
 @pytest.fixture()
 def mongodb():
-    connect('mongoenginetest', host='mongomock://localhost', alias='testdb')
-    yield get_connection('testdb')
+    disconnect()  # TODO: why do we need to call this?
+    db = connect('mongoenginetest', host='mongomock://localhost')
+    yield db
     disconnect()
 
 
