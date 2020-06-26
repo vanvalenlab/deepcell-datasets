@@ -25,8 +25,6 @@
 # ==============================================================================
 """Tests for the General Blueprint."""
 
-from deepcell_datasets.testing_utils import app, client
-
 
 def test_health(client):
     response = client.get('/health')

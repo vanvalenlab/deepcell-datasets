@@ -25,8 +25,6 @@
 # ==============================================================================
 """Tests for the Specimen Blueprint."""
 
-from deepcell_datasets.testing_utils import app, client
-
 
 def test_get_all_specimen(client):
     # database should be empty
