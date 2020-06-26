@@ -45,17 +45,20 @@ class TestSpecimen(object):
         spec_type = ['cell', 'HEK293']
         ontology_loc = ['dynamic', '2d']
         num_frames = 10
-        pers = models.Specimen(
+        specimen = models.Specimen(
             spec_type=spec_type,
             ontology_loc=ontology_loc,
             num_frames=num_frames,
+            exp_id='schema',
         )
-        pers.save()
+        specimen.save()
 
         fresh_specimen = models.Specimen.objects().first()
+        assert fresh_specimen is not None
         assert fresh_specimen.spec_type == spec_type
         assert fresh_specimen.ontology_loc == ontology_loc
         assert fresh_specimen.num_frames == num_frames
+        assert fresh_specimen.exp_id is not None
 
 
 class TestDynamicSpecimen(object):
@@ -65,13 +68,13 @@ class TestDynamicSpecimen(object):
         ontology_loc = ['dynamic', '2d']
         num_frames = 10
         time_step = 'this is a time step?'
-        pers = models.DynamicSpecimen(
+        specimen = models.DynamicSpecimen(
             spec_type=spec_type,
             ontology_loc=ontology_loc,
             num_frames=num_frames,
             time_step=time_step,
         )
-        pers.save()
+        specimen.save()
 
         fresh_specimen = models.DynamicSpecimen.objects().first()
         assert fresh_specimen.spec_type == spec_type
@@ -87,13 +90,13 @@ class TestThreeDimSpecimen(object):
         ontology_loc = ['static', '3d']
         num_frames = 10
         z_step = 'this is a z step?'
-        pers = models.ThreeDimSpecimen(
+        specimen = models.ThreeDimSpecimen(
             spec_type=spec_type,
             ontology_loc=ontology_loc,
             num_frames=num_frames,
             z_step=z_step,
         )
-        pers.save()
+        specimen.save()
 
         fresh_specimen = models.ThreeDimSpecimen.objects().first()
         assert fresh_specimen.spec_type == spec_type
