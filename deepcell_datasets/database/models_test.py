@@ -26,7 +26,7 @@
 """Tests for the Mongo Models."""
 
 import pytest
-from mongoengine import connect, disconnect, get_connection
+from mongoengine import connect, disconnect
 
 from deepcell_datasets.database import models
 
