@@ -56,15 +56,18 @@ def create_specimen():
         body = request.get_json()
     except Exception as err:  # TODO: pick the type of exception.
         # Bad request as request body is not available
+        current_app.logger.error('Encountered error: %s', err)
         return jsonify({'error': str(err)}), 400
 
     try:
         specimen = Specimen(**body).save()
+        current_app.logger.info('Specimen  %s saved succesfully', specimen)
         exp_id = specimen.exp_id
+        current_app.logger.info('exp_id %s extracted as key', exp_id)
         return jsonify({'exp_id': str(exp_id)})
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to create resource
-        current_app.logger.error('Encountered error: %s, err')
+        current_app.logger.error('Encountered error: %s', err)
         return jsonify({'error': str(err)}), 500
 
 
