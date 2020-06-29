@@ -45,6 +45,7 @@ def get_all_specimen():  # def get_all_specimen(page=1):
         return Response(all_specimen, mimetype="application/json")
     except Exception as err:  # TODO: pick the type of exception.
         # Bad request as request object is not available
+        current_app.logger.error('Encountered error: %s', err)
         return jsonify({'error': str(err)}), 400
 
 
@@ -80,6 +81,7 @@ def update_specimen(exp_id):
         return jsonify({})
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to update resource
+        current_app.logger.error('Encountered error: %s', err)
         return jsonify({'error': str(err)}), 500
 
 
@@ -90,6 +92,7 @@ def delete_specimen(exp_id):
         return jsonify({})
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to delete resource
+        current_app.logger.error('Encountered error: %s', err)
         return jsonify({'error': str(err)}), 500
 
 
@@ -100,4 +103,5 @@ def get_specimen(exp_id):
         return Response(all_specimen, mimetype="application/json")
     except Exception as err:  # TODO: pick the type of exception.
         # Bad Request
+        current_app.logger.error('Encountered error: %s', err)
         return jsonify({'error': str(err)}), 500

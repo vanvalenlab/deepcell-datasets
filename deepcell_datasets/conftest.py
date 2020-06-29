@@ -25,7 +25,7 @@
 # ==============================================================================
 """Tests for the General Blueprint."""
 
-from mongoengine import connect, disconnect, get_connection
+from mongoengine import connect, disconnect
 
 import pytest
 
@@ -35,13 +35,14 @@ from deepcell_datasets import create_app
 @pytest.fixture
 def app():
     """set up and tear down a test application"""
-
-    connect('mongoenginetest', host='mongomock://localhost', alias='testdb')
+    disconnect()  # TODO: why do we need to call this?
+    connect('mongoenginetest', host='mongomock://localhost')
 
     mongo_settings = {
         'DB': 'mongoenginetest',
         'HOST': 'mongomock://localhost',
-        'PORT': 27017,
+        # 'PORT': 27017,
+        'alias': 'testdb'
     }
 
     yield create_app(
@@ -50,9 +51,3 @@ def app():
         CSRF_ENABLED=False,
     )
     disconnect()
-
-
-@pytest.fixture
-def client(app):
-    """get a test client for the test application"""
-    return app.test_client()
