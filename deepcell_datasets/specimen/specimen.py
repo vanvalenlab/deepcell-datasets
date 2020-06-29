@@ -60,8 +60,9 @@ def create_specimen():
         return jsonify({'error': str(err)}), 400
 
     try:
+        current_app.logger.info('Body is %s ', body)
         specimen = Specimen(**body).save()
-        current_app.logger.info('Specimen  %s saved succesfully', specimen)
+        current_app.logger.info('Specimen %s saved succesfully', specimen)
         exp_id = specimen.exp_id
         current_app.logger.info('exp_id %s extracted as key', exp_id)
         return jsonify({'exp_id': str(exp_id)})

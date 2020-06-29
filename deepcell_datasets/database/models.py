@@ -33,7 +33,7 @@ from deepcell_datasets.database.db import db
 
 # This collection will hold information about each specimen type in our ontology
 class Experiment(db.Document):
-    _id = db.StringField(required=True, unique=True)  # Experiment ID or DOI
+    _id = db.StringField(primary_key=True, required=True, unique=True)  # Experiment ID or DOI
 
 
 # Embedded documents for detailed info that needs context("contains" relationship)
@@ -69,7 +69,7 @@ class Dimensions(db.EmbeddedDocument):
 # For each specimen it will be one "row" per .tif stack
 # Raw data
 class Specimen(db.Document):
-    exp_id = db.ReferenceField(Experiment, reverse_delete_rule=db.CASCADE)  # experiment ID or DOI
+    exp_id = db.ReferenceField(Experiment, required=True, reverse_delete_rule=db.CASCADE)  # experiment ID or DOI
     spec_type = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
     ontology_loc = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
     num_frames = db.IntField(required=True)
