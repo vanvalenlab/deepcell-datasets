@@ -59,50 +59,53 @@ class ImagingParameters(db.EmbeddedDocument):
 class Dimensions(db.EmbeddedDocument):
     x = db.IntField(required=True)
     y = db.IntField(required=True)
+    num_frames = db.IntField(required=True)
 
+
+class Specimen_Information(db.EmbeddedDocument):
+    tissues_types = db.ListField(db.StringField(), required=True)
+    cells_types = db.ListField(db.StringField(), required=True)
+    dynamic = db.BooleanField()
+    three_dim = db.BooleanField()
+
+class Experiments(db.Document):
+    data_origin = db.EmbeddedDocumentField(RawDataOrigin)  # Embedded documents for "contains" relationships
+    doi = db.StringField()  # Could be DOI or made from data_origin (user+date)
+    specimen_types = db.EmbeddedDocumentField(Specimen_Information)
+    methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
 
 # This collection will hold information about each specimen type in our ontology
-# For each specimen it will be one "row" per .tif stack
-# Raw data
 class Specimen(db.Document):
-    experiments = db.ListField(db.StringField())  # experiment ID or DOI
-    spec_type = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
+    # Some unique ID for a given specimen within the ontology
+    # Only the combination of spec_id and onto_loc is required to be unique
+    spec_id = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
     ontology_loc = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
-    num_frames = db.IntField(required=True)
-    # Embedded documents for "contains" relationships
-    data_origin = db.EmbeddedDocumentField(RawDataOrigin)
-    methods = db.EmbeddedDocumentField(Methods)
-    imaging_params = db.EmbeddedDocumentField(ImagingParameters)
-    dimensions = db.EmbeddedDocumentField(Dimensions)
+
+    #experiments = db.ListField(Experiments)  # experiment ID or DOI
+    experiments = db.ListField(db.StringField())  # experiment ID or DOI
     # DictField for data with unknown structure (how many channels)
     channel_marker = db.DictField()  # e.g. 0: H2B-mClover, ...
 
+# Each document in this collection equates to one .tif stack
+# Needs the Context of Sepcimen+Channel_Marker+Experiment to be useful
+class Sample(db.EmbeddedDocument):
+    # A unique ID can be formed from session and position
+    session = db.IntField(required=True)
+    position = db.IntField(required=True)
+    imaging_params = db.EmbeddedDocumentField(ImagingParameters)
+    dimensions = db.EmbeddedDocumentField(Dimensions)
+    time_step = db.StringField()
+    z_step = db.StringField()
+
     meta = {'allow_inheritance': True}
 
+# TODO: Use inheritance to clean the Samples up a bit
+# class DynamicSample(Sample):
+#     time_step = db.StringField(required=True)
 
+# class ThreeDimSample(Sample):
+#     z_step = db.StringField(required=True)
 
-class Experiments(db.Document):
-    exp_id = db.StringField(required=True) # Not Unique
-    # Each experiment should have the same methods
-    num_sessions = db.IntField(required=True)
-    num_positions = db.IntField(required=True)
-
-
-
-    # spc_type + exp_id + session + postion = 1 .tif file
-    # each type
-    # each could have diff imaging method
-
-
-
-
-
-class DynamicSpecimen(Specimen):
-    time_step = db.StringField(required=True)
-
-
-class ThreeDimSpecimen(Specimen):
-    z_step = db.StringField(required=True)
 
 
 # TODO: Training data

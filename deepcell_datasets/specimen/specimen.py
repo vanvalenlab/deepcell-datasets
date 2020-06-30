@@ -73,11 +73,11 @@ def create_specimen():
         return jsonify({'error': str(err)}), 500
 
 
-@specimen_bp.route('/<exp_id>', methods=['PUT'])
-def update_specimen(exp_id):
+@specimen_bp.route('/<specimen_id>', methods=['PUT'])
+def update_specimen(specimen_id):
     try:
         body = request.get_json()
-        Specimen.objects.get(exp_id=exp_id).update(**body)
+        Specimen.objects.get(id=specimen_id).update(**body)
         return jsonify({})
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to update resource
@@ -85,10 +85,10 @@ def update_specimen(exp_id):
         return jsonify({'error': str(err)}), 500
 
 
-@specimen_bp.route('/<exp_id>', methods=['DELETE'])
-def delete_specimen(exp_id):
+@specimen_bp.route('/<specimen_id>', methods=['DELETE'])
+def delete_specimen(specimen_id):
     try:
-        specimen = Specimen.objects.get(exp_id=exp_id).delete()
+        specimen = Specimen.objects.get(id=specimen_id).delete()
         return jsonify({})
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to delete resource
@@ -96,10 +96,10 @@ def delete_specimen(exp_id):
         return jsonify({'error': str(err)}), 500
 
 
-@specimen_bp.route('/<exp_id>')
-def get_specimen(exp_id):
+@specimen_bp.route('/<specimen_id>')
+def get_specimen(specimen_id):
     try:
-        all_specimen = Specimen.objects.get_or_404(exp_id=exp_id).to_json()
+        all_specimen = Specimen.objects.get_or_404(id=specimen_id).to_json()
         return Response(all_specimen, mimetype="application/json")
     except Exception as err:  # TODO: pick the type of exception.
         # Bad Request
