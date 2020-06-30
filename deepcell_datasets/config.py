@@ -23,43 +23,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Flask application entrypoint for DeepCell MDM"""
+"""Configuration options and environment variables."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-import logging
-
-from flask.logging import default_handler
-
-from deepcell_datasets import config
-from deepcell_datasets import create_app
+import decouple
 
 
-def initialize_logger():
-    """Set up logger format and level"""
-    formatter = logging.Formatter(
-        '[%(asctime)s]:[%(levelname)s]:[%(name)s]: %(message)s')
+DEBUG = decouple.config('DEBUG', cast=bool, default=True)
+PORT = decouple.config('PORT', cast=int, default=5000)
 
-    default_handler.setFormatter(formatter)
-    default_handler.setLevel(logging.DEBUG)
+TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, default=True)
 
-    wsgi_handler = logging.StreamHandler(
-        stream='ext://flask.logging.wsgi_errors_stream')
-    wsgi_handler.setFormatter(formatter)
-    wsgi_handler.setLevel(logging.DEBUG)
+# MONGODB_SETTINGS
+MONGODB_SETTINGS = {
+    'DB': decouple.config('MONGODB_DB', default='test'),
+    'HOST': decouple.config('MONGODB_HOST', default='localhost'),
+    'PORT': decouple.config('MONGODB_PORT', cast=int, default=27017),
+    'USERNAME': decouple.config('MONGODB_USERNAME', default=None),
+    'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None)
+}
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(default_handler)
+# DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
 
-    # 3rd party loggers
-    logging.getLogger('botocore').setLevel(logging.INFO)
-    logging.getLogger('urllib3').setLevel(logging.INFO)
-
-
-if __name__ == '__main__':
-    application = create_app()  # pylint: disable=C0103
-    initialize_logger()
-    application.run('0.0.0.0', port=config.PORT, debug=config.DEBUG)
+# Flask mongoengine makes uri from the DB name, host, and port
+# MONGODB_DB = decouple.config('MONGODB_DB', cast=str, default='test')
+# MONGODB_HOST = decouple.config('MONGODB_HOST', default='localhost')
+# MONGODB_PORT = decouple.config('MONGODB_PORT', cast=int, default=27017)
+# MONGODB_USERNAME = decouple.config('MONGODB_USERNAME', default=None)
+# MONGODB_PASSWORD = decouple.config('MONGODB_PASSWORD', default=None)

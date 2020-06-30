@@ -28,11 +28,8 @@
 # from mongoengine.document import Document
 # from mongoengine.fields import ListField, StringField
 
-from .db import db
+from deepcell_datasets.database.db import db
 
-# This collection will hold information about each specimen type in our ontology
-class Experiments(db.Document):
-    _id = db.StringField(required=True, unique=True) # Experiment ID or DOI
 
 # Embedded documents for detailed info that needs context("contains" relationship)
 class RawDataOrigin(db.EmbeddedDocument):
@@ -41,11 +38,13 @@ class RawDataOrigin(db.EmbeddedDocument):
     date_collected = db.DateTimeField()
     doi = db.StringField()
 
+
 class Methods(db.EmbeddedDocument):
     subtype = db.StringField()
     culture = db.StringField()
     labeling = db.StringField()
     imaging = db.StringField()
+
 
 class ImagingParameters(db.EmbeddedDocument):
     microscope = db.StringField()
@@ -56,33 +55,57 @@ class ImagingParameters(db.EmbeddedDocument):
     pixel_size = db.StringField()
     exposure_time = db.StringField()
 
+
 class Dimensions(db.EmbeddedDocument):
     x = db.IntField(required=True)
     y = db.IntField(required=True)
-
-# For each specimen it will be one "row" per .tif stack
-# Raw data
-class Specimen(db.Document):
-
-    exp_id = db.ReferenceField(Experiments, reverse_delete_rule=db.CASCADE)  # experiment ID or DOI
-    spec_type = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
-    ontology_loc = db.ListField(db.StringField, required=True) #e.g. dynamic,2d..
     num_frames = db.IntField(required=True)
-    # Embedded documents for "contains" relationships
-    data_origin = db.EmbeddedDocumentField(RawDataOrigin)
-    methods = db.EmbeddedDocumentField(Methods)
+
+
+class Specimen_Information(db.EmbeddedDocument):
+    tissues_types = db.ListField(db.StringField(), required=True)
+    cells_types = db.ListField(db.StringField(), required=True)
+    dynamic = db.BooleanField()
+    three_dim = db.BooleanField()
+
+class Experiments(db.Document):
+    data_origin = db.EmbeddedDocumentField(RawDataOrigin)  # Embedded documents for "contains" relationships
+    doi = db.StringField()  # Could be DOI or made from data_origin (user+date)
+    specimen_types = db.EmbeddedDocumentField(Specimen_Information)
+    methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
+
+# This collection will hold information about each specimen type in our ontology
+class Specimen(db.Document):
+    # Some unique ID for a given specimen within the ontology
+    # Only the combination of spec_id and onto_loc is required to be unique
+    spec_id = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
+    ontology_loc = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
+
+    #experiments = db.ListField(Experiments)  # experiment ID or DOI
+    experiments = db.ListField(db.StringField())  # experiment ID or DOI
+    # DictField for data with unknown structure (how many channels)
+    channel_marker = db.DictField()  # e.g. 0: H2B-mClover, ...
+
+# Each document in this collection equates to one .tif stack
+# Needs the Context of Sepcimen+Channel_Marker+Experiment to be useful
+class Sample(db.EmbeddedDocument):
+    # A unique ID can be formed from session and position
+    session = db.IntField(required=True)
+    position = db.IntField(required=True)
     imaging_params = db.EmbeddedDocumentField(ImagingParameters)
     dimensions = db.EmbeddedDocumentField(Dimensions)
-    # DictField for data with unknown structure (how many channels)
-    channel_marker = db.DictField() # e.g. 0: H2B-mClover, ...
+    time_step = db.StringField()
+    z_step = db.StringField()
 
     meta = {'allow_inheritance': True}
 
-class DynamicSpecimen(Specimen):
-    time_step = db.StringField(required=True)
+# TODO: Use inheritance to clean the Samples up a bit
+# class DynamicSample(Sample):
+#     time_step = db.StringField(required=True)
 
-class ThreeDimSpecimen(Specimen):
-    z_step = db.StringField(required=True)
+# class ThreeDimSample(Sample):
+#     z_step = db.StringField(required=True)
+
 
 
 # TODO: Training data

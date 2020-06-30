@@ -23,4 +23,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Master Data Management for DeepCell"""
+"""DeepCell Datasets: Specimen Blueprint"""

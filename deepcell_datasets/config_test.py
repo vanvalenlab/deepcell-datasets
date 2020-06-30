@@ -23,17 +23,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Database for DeepCell MDM"""
+"""Tests for the Flask application."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from mongoengine import disconnect
 
-from flask_mongoengine import MongoEngine
+import pytest
 
-
-db = MongoEngine()
+from deepcell_datasets import create_app
 
 
-def initialize_db(app):
-    db.init_app(app)
+def test_config(monkeypatch):
+    monkeypatch.setenv('MONGODB_USERNAME', 'testUser')
+    monkeypatch.setenv('MONGODB_PASSWORD', 'testPwd')
+
+    assert not create_app().testing
+    # Without calling disconnect(), we hit a ConnectionFailure:
+    # A different connection with alias `default` was  already registered.
+    # Use disconnect() first.
+    disconnect()  # TODO: how can we remove this?
+    assert create_app(TESTING=True).testing
