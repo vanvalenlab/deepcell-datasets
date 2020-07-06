@@ -25,46 +25,97 @@
 # ==============================================================================
 """Tests for the Specimen Blueprint."""
 
+import pytest
+
+from mongoengine import DoesNotExist
+
+from deepcell_datasets.database import models
+
+
+def new_specimen():
+    # TODO: clean up these created items after the test.
+    """Create new specimen with some static values"""
+    spec_id = ['cell', 'HEK293']
+    ontology_loc = ['dynamic', '2d']
+    specimen = models.Specimen(
+        spec_id=spec_id,
+        ontology_loc=ontology_loc
+    )
+    specimen.save()
+    return specimen
+
 
 def test_get_all_specimen(client):
     # database should be empty
     response = client.get('/specimen/')
     assert response.status_code == 200
     assert response.json == []
-    # TODO: add specimen to database and get it again
+
+    # create new specimen get all again.
+    specimen = new_specimen()
+    response = client.get('/specimen/')
+    assert len(response.json) == 1
+    assert response.json[0]['spec_id'] == specimen.spec_id
+    assert response.json[0]['ontology_loc'] == specimen.ontology_loc
 
 
 def test_get_specimen(client):
-    specimen_id = 5
-    response = client.get('/specimen/%s' % specimen_id)
+    specimen = new_specimen()
+    response = client.get('/specimen/%s' % specimen.id)
     assert response.status_code == 200
-    assert response.json
+    assert response.json['spec_id'] == specimen.spec_id
+    assert response.json['ontology_loc'] == specimen.ontology_loc
+
+    # test bad specimen ID
+    response = client.get('/specimen/%s' % 5)
+    assert response.status_code == 404
 
 
 def test_create_specimen(client):
-    spec_type = ['cell, HEK293']
+    spec_id = ['cell, HEK293']
     ontology_loc = ['dynamic', '2d']
-    num_frames = 8
     body = {
-        'spec_type': spec_type,
-        'ontology_loc': ontology_loc,
-        'num_frames': num_frames
+        'spec_id': spec_id,
+        'ontology_loc': ontology_loc
     }
     response = client.post('/specimen/', json=body)
     assert response.status_code == 200
-    assert response.json
+    unique_id = response.json['unique_id']
+    assert unique_id is not None
+    # test that the ID exists in the database
+    specimen = models.Specimen.objects.get(id=unique_id)
+    assert specimen.spec_id == spec_id
+    assert specimen.ontology_loc == ontology_loc
+    assert str(specimen.id) == str(unique_id)
+    # test bad body payload
+    bad_body = {'spec_id': spec_id}
+    response = client.post('/specimen/', json=bad_body)
+    assert response.status_code == 500
 
 
 def test_update_specimen(client):
-    # no specimens in the collection
-    response = client.put('/specimen/')
-    assert response.status_code == 200
-    assert response.json
+    specimen = new_specimen()
+    new_ontology = ['new', 'values']
+    payload = {
+        'ontology_loc': new_ontology
+    }
+    response = client.put('/specimen/%s' % specimen.id, json=payload)
+    assert response.status_code == 204
+    updated = models.Specimen.objects.get(id=specimen.id)
+    assert updated.ontology_loc == new_ontology
+
+    # test bad specimen ID
+    response = client.put('/specimen/%s' % 1, json=payload)
+    assert response.status_code == 404
 
 
 def test_delete_specimen(client):
-    # no specimens in the collection
-    specimen_id = 5
-    response = client.delete('/specimen/%s' % specimen_id)
-    assert response.status_code == 200
-    assert response.json
+    specimen = new_specimen()
+    response = client.delete('/specimen/%s' % specimen.id)
+    assert response.status_code == 204
+    with pytest.raises(DoesNotExist):
+        models.Specimen.objects.get(id=specimen.id)
+
+    # test bad specimen ID
+    response = client.delete('/specimen/%s' % specimen.id)
+    assert response.status_code == 404
