@@ -78,7 +78,7 @@ def update_specimen(specimen_id):
     try:
         body = request.get_json()
         Specimen.objects.get(id=specimen_id).update(**body)
-        return jsonify({})
+        return jsonify({}), 204  # successful update but no content
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to update resource
         current_app.logger.error('Encountered error: %s', err)
@@ -89,7 +89,7 @@ def update_specimen(specimen_id):
 def delete_specimen(specimen_id):
     try:
         specimen = Specimen.objects.get(id=specimen_id).delete()
-        return jsonify({})
+        return jsonify({}), 204  # successful update but no content
     except Exception as err:  # TODO: pick the type of exception.
         # Error while trying to delete resource
         current_app.logger.error('Encountered error: %s', err)
