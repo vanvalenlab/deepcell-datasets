@@ -61,45 +61,45 @@ class TestSpecimen(object):
         assert fresh_specimen.exp_id is not None
 
 
-class TestDynamicSpecimen(object):
-
-    def test_create_dynamic_specimen(self, mongodb):
-        spec_type = ['cell', 'HEK293']
-        ontology_loc = ['dynamic', '2d']
-        num_frames = 10
-        time_step = 'this is a time step?'
-        specimen = models.DynamicSpecimen(
-            spec_type=spec_type,
-            ontology_loc=ontology_loc,
-            num_frames=num_frames,
-            time_step=time_step,
-        )
-        specimen.save()
-
-        fresh_specimen = models.DynamicSpecimen.objects().first()
-        assert fresh_specimen.spec_type == spec_type
-        assert fresh_specimen.ontology_loc == ontology_loc
-        assert fresh_specimen.num_frames == num_frames
-        assert fresh_specimen.time_step == time_step
-
-
-class TestThreeDimSpecimen(object):
-
-    def test_create_dynamic_specimen(self, mongodb):
-        spec_type = ['cell', 'HEK293']
-        ontology_loc = ['static', '3d']
-        num_frames = 10
-        z_step = 'this is a z step?'
-        specimen = models.ThreeDimSpecimen(
-            spec_type=spec_type,
-            ontology_loc=ontology_loc,
-            num_frames=num_frames,
-            z_step=z_step,
-        )
-        specimen.save()
-
-        fresh_specimen = models.ThreeDimSpecimen.objects().first()
-        assert fresh_specimen.spec_type == spec_type
-        assert fresh_specimen.ontology_loc == ontology_loc
-        assert fresh_specimen.num_frames == num_frames
-        assert fresh_specimen.z_step == z_step
+# class TestDynamicSpecimen(object):
+#
+#     def test_create_dynamic_specimen(self, mongodb):
+#         spec_type = ['cell', 'HEK293']
+#         ontology_loc = ['dynamic', '2d']
+#         num_frames = 10
+#         time_step = 'this is a time step?'
+#         specimen = models.DynamicSpecimen(
+#             spec_type=spec_type,
+#             ontology_loc=ontology_loc,
+#             num_frames=num_frames,
+#             time_step=time_step,
+#         )
+#         specimen.save()
+#
+#         fresh_specimen = models.DynamicSpecimen.objects().first()
+#         assert fresh_specimen.spec_type == spec_type
+#         assert fresh_specimen.ontology_loc == ontology_loc
+#         assert fresh_specimen.num_frames == num_frames
+#         assert fresh_specimen.time_step == time_step
+#
+#
+# class TestThreeDimSpecimen(object):
+#
+#     def test_create_dynamic_specimen(self, mongodb):
+#         spec_type = ['cell', 'HEK293']
+#         ontology_loc = ['static', '3d']
+#         num_frames = 10
+#         z_step = 'this is a z step?'
+#         specimen = models.ThreeDimSpecimen(
+#             spec_type=spec_type,
+#             ontology_loc=ontology_loc,
+#             num_frames=num_frames,
+#             z_step=z_step,
+#         )
+#         specimen.save()
+#
+#         fresh_specimen = models.ThreeDimSpecimen.objects().first()
+#         assert fresh_specimen.spec_type == spec_type
+#         assert fresh_specimen.ontology_loc == ontology_loc
+#         assert fresh_specimen.num_frames == num_frames
+#         assert fresh_specimen.z_step == z_step
