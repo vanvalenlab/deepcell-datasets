@@ -31,6 +31,7 @@ from flask import request
 from flask import Response
 from flask import current_app
 from werkzeug.exceptions import HTTPException
+from mongoengine import ValidationError
 
 from deepcell_datasets.database.models import Specimen
 
@@ -47,6 +48,8 @@ def handle_exception(err):
     # pass through HTTP errors
     if isinstance(err, HTTPException):
         return err
+    elif isinstance(err, ValidationError):
+        return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
     return jsonify({'error': str(err)}), 500
 

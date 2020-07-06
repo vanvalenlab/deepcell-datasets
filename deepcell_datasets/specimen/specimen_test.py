@@ -90,7 +90,7 @@ def test_create_specimen(client):
     # test bad body payload
     bad_body = {'spec_id': spec_id}
     response = client.post('/specimen/', json=bad_body)
-    assert response.status_code == 500
+    assert response.status_code == 400
 
 
 def test_update_specimen(client):
