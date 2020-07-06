@@ -68,6 +68,7 @@ class Specimen_Information(db.EmbeddedDocument):
     dynamic = db.BooleanField()
     three_dim = db.BooleanField()
 
+
 class Experiments(db.Document):
     # Embedded documents for "contains" relationships
     data_origin = db.EmbeddedDocumentField(RawDataOrigin)
@@ -111,7 +112,6 @@ class Sample(db.EmbeddedDocument):
 
 # class ThreeDimSample(Sample):
 #     z_step = db.StringField(required=True)
-
 
 
 # TODO: Training data
