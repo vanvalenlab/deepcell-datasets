@@ -30,6 +30,7 @@ from flask import jsonify
 from flask import request
 from flask import Response
 from flask import current_app
+from werkzeug.exceptions import HTTPException
 
 from deepcell_datasets.database.models import Specimen
 
@@ -37,71 +38,52 @@ from deepcell_datasets.database.models import Specimen
 specimen_bp = Blueprint('specimen_bp', __name__)  # pylint: disable=C0103
 
 
+@specimen_bp.errorhandler(Exception)
+def handle_exception(err):
+    """Error handler
+
+    https://flask.palletsprojects.com/en/1.1.x/errorhandling/
+    """
+    # pass through HTTP errors
+    if isinstance(err, HTTPException):
+        return err
+    # now you're handling non-HTTP exceptions only
+    return jsonify({'error': str(err)}), 500
+
+
 @specimen_bp.route('/')
 def get_all_specimen():  # def get_all_specimen(page=1):
     # paginated_all_specimen = Specimen.objects.paginate(page=page, per_page=10)
-    try:
-        all_specimen = Specimen.objects().to_json()
-        return Response(all_specimen, mimetype="application/json")
-    except Exception as err:  # TODO: pick the type of exception.
-        # Bad request as request object is not available
-        current_app.logger.error('Encountered error: %s', err)
-        return jsonify({'error': str(err)}), 400
+    all_specimen = Specimen.objects().to_json()
+    return Response(all_specimen, mimetype='application/json')
 
 
 @specimen_bp.route('/', methods=['POST'])
 def create_specimen():
     """Create a new specimen"""
-    # Parse the request
-    try:
-        body = request.get_json()
-    except Exception as err:  # TODO: pick the type of exception.
-        # Bad request as request body is not available
-        current_app.logger.error('Encountered error: %s', err)
-        return jsonify({'error': str(err)}), 400
-
-    try:
-        current_app.logger.info('Body is %s ', body)
-        specimen = Specimen(**body).save()
-        current_app.logger.info('Specimen %s saved succesfully', specimen)
-        unique_id = specimen.id
-        current_app.logger.info('unique_id %s extracted as key', unique_id)
-        return jsonify({'unique_id': str(unique_id)})
-    except Exception as err:  # TODO: pick the type of exception.
-        # Error while trying to create resource
-        current_app.logger.error('Encountered error: %s', err)
-        return jsonify({'error': str(err)}), 500
+    body = request.get_json()
+    current_app.logger.info('Body is %s ', body)
+    specimen = Specimen(**body).save()
+    current_app.logger.info('Specimen %s saved succesfully', specimen)
+    unique_id = specimen.id
+    current_app.logger.info('unique_id %s extracted as key', unique_id)
+    return jsonify({'unique_id': str(unique_id)})
 
 
 @specimen_bp.route('/<specimen_id>', methods=['PUT'])
 def update_specimen(specimen_id):
-    try:
-        body = request.get_json()
-        Specimen.objects.get(id=specimen_id).update(**body)
-        return jsonify({}), 204  # successful update but no content
-    except Exception as err:  # TODO: pick the type of exception.
-        # Error while trying to update resource
-        current_app.logger.error('Encountered error: %s', err)
-        return jsonify({'error': str(err)}), 500
+    body = request.get_json()
+    Specimen.objects.get_or_404(id=specimen_id).update(**body)
+    return jsonify({}), 204  # successful update but no content
 
 
 @specimen_bp.route('/<specimen_id>', methods=['DELETE'])
 def delete_specimen(specimen_id):
-    try:
-        specimen = Specimen.objects.get(id=specimen_id).delete()
-        return jsonify({}), 204  # successful update but no content
-    except Exception as err:  # TODO: pick the type of exception.
-        # Error while trying to delete resource
-        current_app.logger.error('Encountered error: %s', err)
-        return jsonify({'error': str(err)}), 500
+    specimen = Specimen.objects.get_or_404(id=specimen_id).delete()
+    return jsonify({}), 204  # successful update but no content
 
 
 @specimen_bp.route('/<specimen_id>')
 def get_specimen(specimen_id):
-    try:
-        all_specimen = Specimen.objects.get_or_404(id=specimen_id).to_json()
-        return Response(all_specimen, mimetype="application/json")
-    except Exception as err:  # TODO: pick the type of exception.
-        # Bad Request
-        current_app.logger.error('Encountered error: %s', err)
-        return jsonify({'error': str(err)}), 500
+    specimen = Specimen.objects.get_or_404(id=specimen_id).to_json()
+    return Response(specimen, mimetype='application/json')
