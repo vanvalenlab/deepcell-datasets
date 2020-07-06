@@ -39,25 +39,34 @@ def mongodb():
     disconnect()
 
 
-class TestSpecimen(object):
+def test_specimen(mongodb):
+    # test create
+    spec_id = ['cell', 'HEK293']
+    ontology_loc = ['dynamic', '2d']
+    specimen = models.Specimen(
+        spec_id=spec_id,
+        ontology_loc=ontology_loc,
+    )
+    specimen.save()
 
-    def test_create_specimen(self, mongodb):
-        spec_id = ['cell', 'HEK293']
-        ontology_loc = ['dynamic', '2d']
-        num_frames = 10
-        specimen = models.Specimen(
-            spec_id=spec_id,
-            ontology_loc=ontology_loc,
-            # num_frames=num_frames,
-            # exp_id='schema',
-        )
-        specimen.save()
+    fresh_specimen = models.Specimen.objects().first()
+    assert fresh_specimen is not None
+    assert fresh_specimen.spec_id == spec_id
+    assert fresh_specimen.ontology_loc == ontology_loc
 
-        fresh_specimen = models.Specimen.objects().first()
-        assert fresh_specimen is not None
-        assert fresh_specimen.spec_id == spec_id
-        assert fresh_specimen.ontology_loc == ontology_loc
+    # test update
+    new_ontology_loc = ['new', 'ontology']
+    fresh_specimen.update(ontology_loc=new_ontology_loc)
+    updated_specimen = models.Specimen.objects().first()
 
+    assert updated_specimen.id == fresh_specimen.id
+    assert updated_specimen.spec_id == fresh_specimen.spec_id
+    assert updated_specimen.ontology_loc == new_ontology_loc
+
+    # test delete
+    updated_specimen.delete()
+    no_specimen = models.Specimen.objects().first()
+    assert no_specimen is None
 
 # class TestDynamicSpecimen(object):
 #
