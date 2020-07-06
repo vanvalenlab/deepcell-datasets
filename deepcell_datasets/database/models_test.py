@@ -42,23 +42,21 @@ def mongodb():
 class TestSpecimen(object):
 
     def test_create_specimen(self, mongodb):
-        spec_type = ['cell', 'HEK293']
+        spec_id = ['cell', 'HEK293']
         ontology_loc = ['dynamic', '2d']
         num_frames = 10
         specimen = models.Specimen(
-            spec_type=spec_type,
+            spec_id=spec_id,
             ontology_loc=ontology_loc,
-            num_frames=num_frames,
-            exp_id='schema',
+            # num_frames=num_frames,
+            # exp_id='schema',
         )
         specimen.save()
 
         fresh_specimen = models.Specimen.objects().first()
         assert fresh_specimen is not None
-        assert fresh_specimen.spec_type == spec_type
+        assert fresh_specimen.spec_id == spec_id
         assert fresh_specimen.ontology_loc == ontology_loc
-        assert fresh_specimen.num_frames == num_frames
-        assert fresh_specimen.exp_id is not None
 
 
 # class TestDynamicSpecimen(object):
