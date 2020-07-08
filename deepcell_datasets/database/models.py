@@ -68,27 +68,33 @@ class Specimen_Information(db.EmbeddedDocument):
     dynamic = db.BooleanField()
     three_dim = db.BooleanField()
 
+
 class Experiments(db.Document):
-    data_origin = db.EmbeddedDocumentField(RawDataOrigin)  # Embedded documents for "contains" relationships
+    # Embedded documents for "contains" relationships
+    data_origin = db.EmbeddedDocumentField(RawDataOrigin)
     doi = db.StringField()  # Could be DOI or made from data_origin (user+date)
     specimen_types = db.EmbeddedDocumentField(Specimen_Information)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
 
-# This collection will hold information about each specimen type in our ontology
+
 class Specimen(db.Document):
+    """Holds information about each specimen type in the ontology"""
     # Some unique ID for a given specimen within the ontology
     # Only the combination of spec_id and onto_loc is required to be unique
     spec_id = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
     ontology_loc = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
 
-    #experiments = db.ListField(Experiments)  # experiment ID or DOI
+    # experiments = db.ListField(Experiments)  # experiment ID or DOI
     experiments = db.ListField(db.StringField())  # experiment ID or DOI
     # DictField for data with unknown structure (how many channels)
     channel_marker = db.DictField()  # e.g. 0: H2B-mClover, ...
 
-# Each document in this collection equates to one .tif stack
-# Needs the Context of Sepcimen+Channel_Marker+Experiment to be useful
+
 class Sample(db.EmbeddedDocument):
+    """Each document in this collection equates to one .tif stack.
+
+    Needs the Context of Sepcimen+Channel_Marker+Experiment to be useful
+    """
     # A unique ID can be formed from session and position
     session = db.IntField(required=True)
     position = db.IntField(required=True)
@@ -99,13 +105,13 @@ class Sample(db.EmbeddedDocument):
 
     meta = {'allow_inheritance': True}
 
+
 # TODO: Use inheritance to clean the Samples up a bit
 # class DynamicSample(Sample):
 #     time_step = db.StringField(required=True)
 
 # class ThreeDimSample(Sample):
 #     z_step = db.StringField(required=True)
-
 
 
 # TODO: Training data
