@@ -28,7 +28,35 @@
 # from mongoengine.document import Document
 # from mongoengine.fields import ListField, StringField
 
+from flask_security import UserMixin, RoleMixin, MongoEngineUserDatastore
+
 from deepcell_datasets.database.db import db
+
+
+class Role(db.Document, RoleMixin):
+    """Role assigned to a User, defines access.
+
+    From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
+    """
+    name = db.StringField(max_length=80, unique=True)
+    description = db.StringField(max_length=255)
+
+
+class User(db.Document, UserMixin):
+    """A User account.
+
+    From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
+    """
+    email = db.StringField(max_length=255)
+    password = db.StringField(max_length=255)
+    active = db.BooleanField(default=True)
+    confirmed_at = db.DateTimeField()
+    roles = db.ListField(db.ReferenceField(Role), default=[])
+
+
+# TODO: this is NOT a model, but I'm not sure where to put it.
+user_datastore = MongoEngineUserDatastore(db, User, Role)
+# End flask-security setup.
 
 
 # Embedded documents for detailed info that needs context("contains" relationship)

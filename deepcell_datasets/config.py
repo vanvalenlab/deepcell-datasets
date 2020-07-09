@@ -33,7 +33,17 @@ PORT = decouple.config('PORT', cast=int, default=5000)
 
 TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, default=True)
 
-# MONGODB_SETTINGS
+# Flask-Security-Too settings
+# Generate a nice key using secrets.token_urlsafe()
+SECRET_KEY = decouple.config('SECRET_KEY', default='super-secret')
+# Bcrypt is set as default SECURITY_PASSWORD_HASH, which requires a salt
+# Generate a good salt using: secrets.SystemRandom().getrandbits(128)
+SECURITY_PASSWORD_SALT = decouple.config('SECURITY_PASSWORD_SALT', default='salt')
+
+ADMIN_EMAIL = decouple.config('ADMIN_EMAIL', default='admin@me.com')
+ADMIN_PASSWORD = decouple.config('ADMIN_PASSWORD', default='password')
+
+# flask-mongoengine settings
 MONGODB_SETTINGS = {
     'DB': decouple.config('MONGODB_DB', default='test'),
     'HOST': decouple.config('MONGODB_HOST', default='localhost'),

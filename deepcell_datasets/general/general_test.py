@@ -32,6 +32,58 @@ def test_health(client):
     assert response.json.get('message') == 'success'
 
 
+def test_login_logout(client, app):
+    response = response = client.post('/login', data=dict(
+        email=app.config['ADMIN_EMAIL'],
+        password=app.config['ADMIN_PASSWORD']
+    ), follow_redirects=True)
+    assert response.status_code == 200
+    # TODO: test correct page loads
+    assert '</body>' in response.data
+
+    response = client.get('/logout', follow_redirects=True)
+    assert response.status_code == 200
+    # TODO: test correct page loads
+    assert '</body>' in response.data
+
+    # TODO: bad username and bad password should have same failure message.
+
+    # test bad login email
+    response = response = client.post('/login', data=dict(
+        email=app.config['ADMIN_EMAIL'],
+        password='bad password'
+    ), follow_redirects=True)
+    assert response.status_code == 200
+    assert 'Invalid password' in response.data
+
+    # test bad login password
+    response = response = client.post('/login', data=dict(
+        email='invalidUser@me.com',
+        password=app.config['ADMIN_PASSWORD']
+    ), follow_redirects=True)
+    assert response.status_code == 200
+    assert 'Specified user does not exist' in response.data
+
+
+def test_secure(client, app):
+    # test user creds
+    email = app.config['ADMIN_EMAIL']
+    password = app.config['ADMIN_PASSWORD']
+
+    # test unauthenticated user is redirected to login page
+    response = client.get('/secure')
+    assert response.status_code == 302
+    assert '/login?' in response.location
+
+    # test successful login, redirected to /secure
+    response = client.post(response.location, data=dict(
+        email=email,
+        password=password
+    ), follow_redirects=True)
+    assert response.status_code == 200
+    assert response.json.get('message') == 'success'
+
+
 def test_index(client):
     response = client.get('/')
     assert response.status_code == 200
