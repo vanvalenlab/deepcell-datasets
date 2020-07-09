@@ -59,35 +59,15 @@ class Methods(db.EmbeddedDocument):
     imaging = db.StringField()
 
 
-class ModalityInformation(db.EmbeddedDocument):
-# These can't be selected from sets because there could always be a new one
-    imaging_modality = db.StringField(required=True)
-    compartment = db.StringField()
-    marker = db.StringField()
-
-
-class SpecimenInformation(db.EmbeddedDocument):
-    specimen = db.StringField()
-    modality = db.EmbeddedDocumentField(ModalityInformation)
-
-    # Create a custom list field to hold this information
-    # kinetics = {'static', 'dynamic'}
-    # spatial_dim = {'2d', '3d'}
-    # onto_loc = db.StringField(choices=codes.keys(), required = True)
-    # But until then use:
-    onto_loc = db.ListField(db.StringField())
-
-    # which image stacks belong to this subject (specimen + modality + compartment marker)
-    samples = db.ListField(db.ReferenceField('Samples'))  # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
-
-
 class Experiments(db.Document):
     created_by = db.EmbeddedDocumentField(Users) # Embedded documents for "contains" relationships
     doi = db.StringField()
     date_collected = db.DateTimeField()  # Date on microscope (date added automatically saved by mongodb)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
 
-    subjects = db.EmbeddedDocumentListField(SpecimenInformation) # Specimen + modality + compartment + marker
+    # subjects = db.EmbeddedDocumentListField(SpecimenInformation) # Specimen + modality + compartment + marker
+    # Which image stacks belong to this experiment
+    samples = db.ListField(db.ReferenceField('Samples'))  # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
 
 
 class ImagingParameters(db.EmbeddedDocument):
@@ -107,6 +87,13 @@ class Dimensions(db.EmbeddedDocument):
     t = db.IntField()
 
 
+class ModalityInformation(db.EmbeddedDocument):
+# These can't be selected from sets because there could always be a new one
+    imaging_modality = db.StringField(required=True)
+    compartment = db.StringField()
+    marker = db.StringField()
+
+
 # There needs to be a separate Sample collection because we care about searching on this axis
 # Each document in this collection equates to one .tif stack
 class Samples(db.Document):
@@ -118,8 +105,18 @@ class Samples(db.Document):
     time_step = db.StringField()
     z_step = db.StringField()
 
+    specimen = db.StringField()
+    modality = db.EmbeddedDocumentField(ModalityInformation)
+
+    # Create a custom list field to hold this information
+    # kinetics = {'static', 'dynamic'}
+    # spatial_dim = {'2d', '3d'}
+    # onto_loc = db.StringField(choices=codes.keys(), required = True)
+    # But until then use:
+    onto_loc = db.ListField(db.StringField())
+
     experiment = db.ReferenceField(Experiments)  # should be connected to Experiments
-    # exp_id alone is not sufficient - we need info on kinetcs+spatial_dim+modality+compartment+marker
+
 
 
 
