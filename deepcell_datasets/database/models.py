@@ -30,20 +30,61 @@
 
 from deepcell_datasets.database.db import db
 
+# Custom Fields
+# class OntoLoc(db.ListField):
+#     def __init__(self, correct_length=None, **kwargs):
+#         self.correct_length = correct_length
+#         super(OntoLoc, self).__init__(**kwargs)
 
-# Embedded documents for detailed info that needs context("contains" relationship)
-class RawDataOrigin(db.EmbeddedDocument):
-    facility = db.StringField()
-    collected_by = db.StringField()
-    date_collected = db.DateTimeField()
-    doi = db.StringField()
+#     def validate(self, value):
+#         super(OntoLoc, self).validate(value)
 
+#         if self.correct_length is not None and len(value) != self.correct_length:
+#             self.error('OntoLoc Information Incorrect')
+
+
+# Begin Data Models
+
+class Users(db.EmbeddedDocument):
+    first_name = db.StringField()
+    last_name = db.StringField()
+    facility = db.StringField()  # Could be Lab here
+    # Could include experiments (But only makes sense if it is a different collection)
 
 class Methods(db.EmbeddedDocument):
     subtype = db.StringField()
     culture = db.StringField()
     labeling = db.StringField()
     imaging = db.StringField()
+
+class ModalityInformation(db.EmbeddedDocument):
+# These can't be selected from sets because there could always be a new one
+    imaging_modality = db.StringField(required=True)
+    compartment = db.StringField()
+    marker = db.StringField()
+
+class SpecimenInformation(db.EmbeddedDocument):
+    specimen = db.StringField()
+    modality = db.EmbeddedDocumentField(ModalityInformation)
+
+    # Create a custom list field to hold this information
+    # kinetics = {'static', 'dynamic'}
+    # spatial_dim = {'2d', '3d'}
+    # onto_loc = db.StringField(choices=codes.keys(), required = True)
+    # But until then use:
+    onto_loc = db.ListField(db.StringField())
+
+    # which image stacks belong to this subject (specimen + modality + compartment marker)
+    samples = db.ListField(db.ReferenceField('Samples'))  # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
+
+
+class Experiments(db.Document):
+    created_by = db.EmbeddedDocumentField(Users) # Embedded documents for "contains" relationships
+    doi = db.StringField()
+    date_collected = db.DateTimeField()  # Date on microscope (date added automatically saved by mongodb)
+    methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
+
+    subjects = db.EmbeddedDocumentListField(SpecimenInformation) # Specimen + modality + compartment + marker
 
 
 class ImagingParameters(db.EmbeddedDocument):
@@ -59,43 +100,14 @@ class ImagingParameters(db.EmbeddedDocument):
 class Dimensions(db.EmbeddedDocument):
     x = db.IntField(required=True)
     y = db.IntField(required=True)
-    num_frames = db.IntField(required=True)
+    z = db.IntField()
+    t = db.IntField()
 
 
-class Specimen_Information(db.EmbeddedDocument):
-    tissues_types = db.ListField(db.StringField(), required=True)
-    cells_types = db.ListField(db.StringField(), required=True)
-    dynamic = db.BooleanField()
-    three_dim = db.BooleanField()
+# There needs to be a separate Sample collection because we care about searching on this axis
+# Each document in this collection equates to one .tif stack
+class Samples(db.Document):
 
-
-class Experiments(db.Document):
-    # Embedded documents for "contains" relationships
-    data_origin = db.EmbeddedDocumentField(RawDataOrigin)
-    doi = db.StringField()  # Could be DOI or made from data_origin (user+date)
-    specimen_types = db.EmbeddedDocumentField(Specimen_Information)
-    methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
-
-
-class Specimen(db.Document):
-    """Holds information about each specimen type in the ontology"""
-    # Some unique ID for a given specimen within the ontology
-    # Only the combination of spec_id and onto_loc is required to be unique
-    spec_id = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
-    ontology_loc = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
-
-    # experiments = db.ListField(Experiments)  # experiment ID or DOI
-    experiments = db.ListField(db.StringField())  # experiment ID or DOI
-    # DictField for data with unknown structure (how many channels)
-    channel_marker = db.DictField()  # e.g. 0: H2B-mClover, ...
-
-
-class Sample(db.EmbeddedDocument):
-    """Each document in this collection equates to one .tif stack.
-
-    Needs the Context of Sepcimen+Channel_Marker+Experiment to be useful
-    """
-    # A unique ID can be formed from session and position
     session = db.IntField(required=True)
     position = db.IntField(required=True)
     imaging_params = db.EmbeddedDocumentField(ImagingParameters)
@@ -103,22 +115,49 @@ class Sample(db.EmbeddedDocument):
     time_step = db.StringField()
     z_step = db.StringField()
 
-    meta = {'allow_inheritance': True}
+    experiment = db.ReferenceField(Experiments)  # should be connected to Experiments
+    # exp_id alone is not sufficient - we need info on kinetcs+spatial_dim+modality+compartment+marker
+
+
+
+
+
+
+
+# # Embedded documents for detailed info that needs context("contains" relationship)
+# class RawDataOrigin(db.EmbeddedDocument):
+#     facility = db.StringField()
+#     collected_by = db.StringField()
+#     date_collected = db.DateTimeField()
+#     doi = db.StringField()
+
+
+# class Specimen_Information(db.EmbeddedDocument):
+#     tissues_types = db.ListField(db.StringField(), required=True)
+#     cells_types = db.ListField(db.StringField(), required=True)
+#     dynamic = db.BooleanField()
+#     three_dim = db.BooleanField()
+
+
+# # This collection will hold information about each specimen type in our ontology
+# class Specimen(db.Document):
+#     # Some unique ID for a given specimen within the ontology
+#     # Only the combination of spec_id and onto_loc is required to be unique
+#     spec_id = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
+#     ontology_loc = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
+
+#     #experiments = db.ListField(Experiments)  # experiment ID or DOI
+#     experiments = db.ListField(db.StringField())  # experiment ID or DOI
+#     # DictField for data with unknown structure (how many channels)
+#     channel_marker = db.DictField()  # e.g. 0: H2B-mClover, ...
+
+#     meta = {'allow_inheritance': True}
 
 
 # TODO: Use inheritance to clean the Samples up a bit
-# class DynamicSample(Sample):
-#     time_step = db.StringField(required=True)
-
-# class ThreeDimSample(Sample):
 #     z_step = db.StringField(required=True)
+
 
 
 # TODO: Training data
     # cloud_storage_loc = db.URLField()  # aws address
-
-
-# TODO: Crowdsourcing
-    # How much of data has been sent to f8 and from which dirs
-    # a note section on dimensions and amount of raw image used
-    # (we sometimes crop out areas because theyre at the edge of dish, etc)
