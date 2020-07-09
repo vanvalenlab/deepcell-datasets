@@ -51,17 +51,20 @@ class Users(db.EmbeddedDocument):
     facility = db.StringField()  # Could be Lab here
     # Could include experiments (But only makes sense if it is a different collection)
 
+
 class Methods(db.EmbeddedDocument):
     subtype = db.StringField()
     culture = db.StringField()
     labeling = db.StringField()
     imaging = db.StringField()
 
+
 class ModalityInformation(db.EmbeddedDocument):
 # These can't be selected from sets because there could always be a new one
     imaging_modality = db.StringField(required=True)
     compartment = db.StringField()
     marker = db.StringField()
+
 
 class SpecimenInformation(db.EmbeddedDocument):
     specimen = db.StringField()
@@ -157,7 +160,16 @@ class Samples(db.Document):
 # TODO: Use inheritance to clean the Samples up a bit
 #     z_step = db.StringField(required=True)
 
+# class ThreeDimSample(Sample):
+#     z_step = db.StringField(required=True)
+
 
 
 # TODO: Training data
     # cloud_storage_loc = db.URLField()  # aws address
+
+
+# TODO: Crowdsourcing
+    # How much of data has been sent to f8 and from which dirs
+    # a note section on dimensions and amount of raw image used
+    # (we sometimes crop out areas because theyre at the edge of dish, etc)
