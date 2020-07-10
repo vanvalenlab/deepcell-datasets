@@ -23,99 +23,91 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Tests for the Specimen Blueprint."""
+"""Tests for the Experiment Blueprint."""
+
+import random
 
 import pytest
-
 from mongoengine import DoesNotExist
 
 from deepcell_datasets.database import models
 
 
-def new_specimen():
-    # TODO: clean up these created items after the test.
-    """Create new specimen with some static values"""
-    spec_id = ['cell', 'HEK293']
-    ontology_loc = ['dynamic', '2d']
-    specimen = models.Specimen(
-        spec_id=spec_id,
-        ontology_loc=ontology_loc
-    )
-    specimen.save()
-    return specimen
+def new_experiment():
+    """Create new experiment with some static values"""
+    doi = 'a doi value'
+    experiment = models.Experiments(doi=doi)
+    experiment.save()
+    return experiment
 
 
-def test_get_all_specimen(client):
+def test_get_all_experiment(client):
     # database should be empty
-    response = client.get('/specimen/')
+    response = client.get('/experiments/')
     assert response.status_code == 200
     assert response.json == []
 
-    # create new specimen get all again.
-    specimen = new_specimen()
-    response = client.get('/specimen/')
+    # create new experiment get all again.
+    experiment = new_experiment()
+    response = client.get('/experiments/')
     assert len(response.json) == 1
-    assert response.json[0]['spec_id'] == specimen.spec_id
-    assert response.json[0]['ontology_loc'] == specimen.ontology_loc
+    assert response.json[0]['doi'] == experiment.doi
+    experiment.delete()
 
 
-def test_get_specimen(client):
-    specimen = new_specimen()
-    response = client.get('/specimen/%s' % specimen.id)
+def test_get_experiment(client):
+    experiment = new_experiment()
+    response = client.get('/experiments/%s' % experiment.id)
     assert response.status_code == 200
-    assert response.json['spec_id'] == specimen.spec_id
-    assert response.json['ontology_loc'] == specimen.ontology_loc
+    assert response.json['doi'] == experiment.doi
 
-    # test bad specimen ID
-    response = client.get('/specimen/%s' % 5)
+    # test bad experiment ID
+    response = client.get('/experiments/%s' % 5)
     assert response.status_code == 404
+    experiment.delete()
 
 
-def test_create_specimen(client):
-    spec_id = ['cell, HEK293']
-    ontology_loc = ['dynamic', '2d']
-    body = {
-        'spec_id': spec_id,
-        'ontology_loc': ontology_loc
-    }
-    response = client.post('/specimen/', json=body)
+def test_create_experiment(client):
+    doi = str(random.randint(1, 1000))
+    body = {'doi': doi}
+    response = client.post('/experiments/', json=body)
     assert response.status_code == 200
     unique_id = response.json['unique_id']
     assert unique_id is not None
     # test that the ID exists in the database
-    specimen = models.Specimen.objects.get(id=unique_id)
-    assert specimen.spec_id == spec_id
-    assert specimen.ontology_loc == ontology_loc
-    assert str(specimen.id) == str(unique_id)
-    # test bad body payload
-    bad_body = {'spec_id': spec_id}
-    response = client.post('/specimen/', json=bad_body)
-    assert response.status_code == 400
+    experiment = models.Experiments.objects.get(id=unique_id)
+    assert experiment.doi == doi
+    assert str(experiment.id) == str(unique_id)
+    # TODO: test bad body payload, no required fields currently.
+    # bad_body = {'doi': None}
+    # response = client.post('/experiments/', json=bad_body)
+    # assert response.status_code == 400
+    experiment.delete()
 
 
-def test_update_specimen(client):
-    specimen = new_specimen()
-    new_ontology = ['new', 'values']
-    payload = {
-        'ontology_loc': new_ontology
-    }
-    response = client.put('/specimen/%s' % specimen.id, json=payload)
+def test_update_experiment(client):
+    experiment = new_experiment()
+    new_doi = 'a different DOI value'
+    payload = {'doi': new_doi}
+    response = client.put('/experiments/%s' % experiment.id, json=payload)
     assert response.status_code == 204
-    updated = models.Specimen.objects.get(id=specimen.id)
-    assert updated.ontology_loc == new_ontology
+    updated = models.Experiments.objects.get(id=experiment.id)
+    assert updated.doi == new_doi
 
-    # test bad specimen ID
-    response = client.put('/specimen/%s' % 1, json=payload)
+    # test bad experiment ID
+    response = client.put('/experiments/%s' % 1, json=payload)
     assert response.status_code == 404
+    experiment.delete()
 
 
-def test_delete_specimen(client):
-    specimen = new_specimen()
-    response = client.delete('/specimen/%s' % specimen.id)
+def test_delete_experiment(client):
+    experiment = new_experiment()
+    response = client.delete('/experiments/%s' % experiment.id)
     assert response.status_code == 204
     with pytest.raises(DoesNotExist):
-        models.Specimen.objects.get(id=specimen.id)
+        models.Experiments.objects.get(id=experiment.id)
 
-    # test bad specimen ID
-    response = client.delete('/specimen/%s' % specimen.id)
+    # test bad experiment ID
+    response = client.delete('/experiments/%s' % experiment.id)
     assert response.status_code == 404
+    experiment.delete()
