@@ -23,4 +23,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""DeepCell Datasets: Specimen Blueprint"""
+"""DeepCell Datasets: Samples Blueprint"""

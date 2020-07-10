@@ -31,7 +31,8 @@ from flask import Flask
 from deepcell_datasets import config
 from deepcell_datasets import database
 from deepcell_datasets.general import general
-from deepcell_datasets.specimen import specimen
+from deepcell_datasets.experiments import experiments
+from deepcell_datasets.samples import samples
 
 
 class ReverseProxied(object):
@@ -62,7 +63,8 @@ def create_app(**config_overrides):
     database.db.initialize_db(app)
 
     app.register_blueprint(general.general_bp, url_prefix='/')
-    app.register_blueprint(specimen.specimen_bp, url_prefix='/specimen/')
+    app.register_blueprint(experiments.experiments_bp, url_prefix='/experiments/')
+    app.register_blueprint(samples.samples_bp, url_prefix='/samples/')
 
     # toolbar = DebugToolbarExtension(app)
 
