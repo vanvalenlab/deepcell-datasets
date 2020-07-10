@@ -60,14 +60,15 @@ class Methods(db.EmbeddedDocument):
 
 
 class Experiments(db.Document):
-    created_by = db.EmbeddedDocumentField(Users) # Embedded documents for "contains" relationships
+    created_by = db.EmbeddedDocumentField(Users)  # Embedded documents for "contains" relationships
     doi = db.StringField()
     date_collected = db.DateTimeField()  # Date on microscope (date added automatically saved by mongodb)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
 
-    # subjects = db.EmbeddedDocumentListField(SpecimenInformation) # Specimen + modality + compartment + marker
+    # subjects = db.EmbeddedDocumentListField(SpecimenInformation)  # Specimen + modality + compartment + marker
     # Which image stacks belong to this experiment
-    samples = db.ListField(db.ReferenceField('Samples'))  # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
+    # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
+    samples = db.ListField(db.ReferenceField('Samples'))
 
 
 class ImagingParameters(db.EmbeddedDocument):
@@ -88,16 +89,17 @@ class Dimensions(db.EmbeddedDocument):
 
 
 class ModalityInformation(db.EmbeddedDocument):
-# These can't be selected from sets because there could always be a new one
+    # These can't be selected from sets because there could always be a new one
     imaging_modality = db.StringField(required=True)
     compartment = db.StringField()
     marker = db.StringField()
 
 
-# There needs to be a separate Sample collection because we care about searching on this axis
-# Each document in this collection equates to one .tif stack
 class Samples(db.Document):
+    """A single tiff stack or image file.
 
+    This must be a separate collection to facilitate searching across Samples.
+    """
     session = db.IntField(required=True)
     position = db.IntField(required=True)
     imaging_params = db.EmbeddedDocumentField(ImagingParameters)
