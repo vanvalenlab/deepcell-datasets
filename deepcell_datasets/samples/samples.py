@@ -82,7 +82,7 @@ def update_sample(sample_id):
 
 @samples_bp.route('/<sample_id>', methods=['DELETE'])
 def delete_sample(sample_id):
-    sample = Samples.objects.get_or_404(id=sample_id).delete()
+    Samples.objects.get_or_404(id=sample_id).delete()
     return jsonify({}), 204  # successful update but no content
 
 

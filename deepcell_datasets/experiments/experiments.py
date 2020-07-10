@@ -81,8 +81,8 @@ def update_experiment(experiment_id):
 
 
 @experiments_bp.route('/<experiment_id>', methods=['DELETE'])
-def delete_experiment(experiments_id):
-    experiment = Experiments.objects.get_or_404(id=experiment_id).delete()
+def delete_experiment(experiment_id):
+    Experiments.objects.get_or_404(id=experiment_id).delete()
     return jsonify({}), 204  # successful update but no content
 
 
