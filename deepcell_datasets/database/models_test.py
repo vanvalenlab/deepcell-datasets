@@ -39,74 +39,65 @@ def mongodb():
     disconnect()
 
 
-def test_specimen(mongodb):
-    # test create
-    spec_id = ['cell', 'HEK293']
-    ontology_loc = ['dynamic', '2d']
-    specimen = models.Specimen(
-        spec_id=spec_id,
-        ontology_loc=ontology_loc,
-    )
-    specimen.save()
+# TODO: test adding Session to an Experiment.
 
-    fresh_specimen = models.Specimen.objects().first()
-    assert fresh_specimen is not None
-    assert fresh_specimen.spec_id == spec_id
-    assert fresh_specimen.ontology_loc == ontology_loc
+
+def test_experiments(mongodb):
+    # test create
+    doi = 'a specific DOI number'
+    created_by = models.Users(
+        first_name='first',
+        last_name='last',
+        facility='test facility'
+    )
+    experiment = models.Experiments(doi=doi, created_by=created_by)
+    experiment.save()
+
+    # test read
+    fresh_experiment = models.Experiments.objects().first()
+    assert fresh_experiment is not None
+    assert fresh_experiment.doi == doi
+    assert fresh_experiment.created_by == created_by
 
     # test update
-    new_ontology_loc = ['new', 'ontology']
-    fresh_specimen.update(ontology_loc=new_ontology_loc)
-    updated_specimen = models.Specimen.objects().first()
+    new_doi = 'new doi value'
+    fresh_experiment.update(doi=new_doi)
+    updated_experiment = models.Experiments.objects().first()
 
-    assert updated_specimen.id == fresh_specimen.id
-    assert updated_specimen.spec_id == fresh_specimen.spec_id
-    assert updated_specimen.ontology_loc == new_ontology_loc
+    assert updated_experiment.id == fresh_experiment.id
+    assert updated_experiment.created_by == fresh_experiment.created_by
+    assert updated_experiment.doi == new_doi
 
     # test delete
-    updated_specimen.delete()
-    no_specimen = models.Specimen.objects().first()
-    assert no_specimen is None
+    updated_experiment.delete()
+    no_experiment = models.Experiments.objects().first()
+    assert no_experiment is None
 
-# class TestDynamicSpecimen(object):
-#
-#     def test_create_dynamic_specimen(self, mongodb):
-#         spec_type = ['cell', 'HEK293']
-#         ontology_loc = ['dynamic', '2d']
-#         num_frames = 10
-#         time_step = 'this is a time step?'
-#         specimen = models.DynamicSpecimen(
-#             spec_type=spec_type,
-#             ontology_loc=ontology_loc,
-#             num_frames=num_frames,
-#             time_step=time_step,
-#         )
-#         specimen.save()
-#
-#         fresh_specimen = models.DynamicSpecimen.objects().first()
-#         assert fresh_specimen.spec_type == spec_type
-#         assert fresh_specimen.ontology_loc == ontology_loc
-#         assert fresh_specimen.num_frames == num_frames
-#         assert fresh_specimen.time_step == time_step
-#
-#
-# class TestThreeDimSpecimen(object):
-#
-#     def test_create_dynamic_specimen(self, mongodb):
-#         spec_type = ['cell', 'HEK293']
-#         ontology_loc = ['static', '3d']
-#         num_frames = 10
-#         z_step = 'this is a z step?'
-#         specimen = models.ThreeDimSpecimen(
-#             spec_type=spec_type,
-#             ontology_loc=ontology_loc,
-#             num_frames=num_frames,
-#             z_step=z_step,
-#         )
-#         specimen.save()
-#
-#         fresh_specimen = models.ThreeDimSpecimen.objects().first()
-#         assert fresh_specimen.spec_type == spec_type
-#         assert fresh_specimen.ontology_loc == ontology_loc
-#         assert fresh_specimen.num_frames == num_frames
-#         assert fresh_specimen.z_step == z_step
+
+def test_samples(mongodb):
+    # test create
+    session = 1
+    position = 99
+
+    sample = models.Samples(session=session, position=position)
+    sample.save()
+
+    # test read
+    fresh_sample = models.Samples.objects().first()
+    assert fresh_sample is not None
+    assert fresh_sample.session == session
+    assert fresh_sample.position == position
+
+    # test update
+    new_session = session + 1
+    fresh_sample.update(session=new_session)
+    updated_sample = models.Samples.objects().first()
+
+    assert updated_sample.id == fresh_sample.id
+    assert updated_sample.position == fresh_sample.position
+    assert updated_sample.session == new_session
+
+    # test delete
+    updated_sample.delete()
+    no_sample = models.Samples.objects().first()
+    assert no_sample is None
