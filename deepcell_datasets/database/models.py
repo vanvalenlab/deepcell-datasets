@@ -54,7 +54,7 @@ class Role(db.Document, RoleMixin):
     description = db.StringField(max_length=255)
 
 
-class User(db.Document, UserMixin):
+class Users(db.Document, UserMixin):
     """A User account.
 
     From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
@@ -72,7 +72,7 @@ class User(db.Document, UserMixin):
 
 
 # TODO: this is NOT a model, but I'm not sure where to put it.
-user_datastore = MongoEngineUserDatastore(db, User, Role)
+user_datastore = MongoEngineUserDatastore(db, Users, Role)
 # End flask-security setup.
 
 # Begin Data Models
