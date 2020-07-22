@@ -81,7 +81,7 @@ class TestExperiments(object):
         exp = models.Experiments(doi=doi, created_by=created_by)
         exp.save()
 
-        fresh_experiment = models.Experiments.objects().first()
+        fresh_experiment = models.Experiments.objects(id=exp.id).first()
         assert fresh_experiment is not None
         assert fresh_experiment.doi == doi
         assert fresh_experiment.created_by == created_by
@@ -90,7 +90,7 @@ class TestExperiments(object):
     def test_update(self, experiment):
         new_doi = 'new doi value'
         experiment.update(doi=new_doi)
-        updated_experiment = models.Experiments.objects().first()
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
 
         assert updated_experiment.id == experiment.id
         assert updated_experiment.created_by == experiment.created_by
@@ -98,17 +98,17 @@ class TestExperiments(object):
 
     def test_update(self, experiment):
         experiment.delete()
-        no_experiment = models.Experiments.objects().first()
+        no_experiment = models.Experiments.objects(id=experiment.id).first()
         assert no_experiment is None
 
     def test_add_sample(self, experiment, sample):
         experiment.update(samples=[sample])
-        updated_experiment = models.Experiments.objects().first()
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
         assert updated_experiment.id == experiment.id
         assert len(updated_experiment.samples) == 1
         assert updated_experiment.samples[0].id == sample.id
 
-        updated_sample = models.Samples.objects().first()
+        updated_sample = models.Samples.objects(id=sample.id).first()
         assert updated_sample.experiment is not None
         assert updated_sample.experiment.id == updated_experiment.id
 
@@ -122,7 +122,7 @@ class TestSamples(object):
         sample = models.Samples(session=session, position=position)
         sample.save()
 
-        fresh_sample = models.Samples.objects().first()
+        fresh_sample = models.Samples.objects(id=sample.id).first()
         assert fresh_sample is not None
         assert fresh_sample.session == session
         assert fresh_sample.position == position
@@ -132,24 +132,24 @@ class TestSamples(object):
 
         sample.update(session=session)
 
-        updated_sample = models.Samples.objects().first()
+        updated_sample = models.Samples.objects(id=sample.id).first()
         assert updated_sample.id == sample.id
         assert updated_sample.position == sample.position
         assert updated_sample.session == session
 
     def test_delete(self, sample):
         sample.delete()
-        no_sample = models.Samples.objects().first()
+        no_sample = models.Samples.objects(id=sample.id).first()
         assert no_sample is None
 
     def test_add_experiment(self, experiment, sample):
         sample.update(experiment=experiment)
 
-        updated_sample = models.Samples.objects().first()
+        updated_sample = models.Samples.objects(id=sample.id).first()
         assert updated_sample.id == sample.id
         assert updated_sample.experiment.id == experiment.id
 
-        updated_experiment = models.Experiments.objects().first()
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
         assert updated_experiment.id == experiment.id
         assert len(updated_experiment.samples) == 1
         assert updated_experiment.samples[0].id == updated_sample.id
