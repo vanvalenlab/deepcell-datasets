@@ -66,9 +66,6 @@ class Experiments(db.Document):
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
 
     # subjects = db.EmbeddedDocumentListField(SpecimenInformation)  # Specimen + modality + compartment + marker
-    # Which image stacks belong to this experiment
-    # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
-    samples = db.ListField(db.ReferenceField('Samples'))
 
 
 class ImagingParameters(db.EmbeddedDocument):
