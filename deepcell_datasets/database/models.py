@@ -45,7 +45,7 @@ from deepcell_datasets.database.db import db
 #             self.error('OntoLoc Information Incorrect')
 
 
-class Role(db.Document, RoleMixin):
+class Roles(db.Document, RoleMixin):
     """Role assigned to a User, defines access.
 
     From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
@@ -63,7 +63,7 @@ class Users(db.Document, UserMixin):
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)
     confirmed_at = db.DateTimeField()
-    roles = db.ListField(db.ReferenceField(Role), default=[])
+    roles = db.ListField(db.ReferenceField(Roles), default=[])
 
     first_name = db.StringField()
     last_name = db.StringField()
@@ -72,7 +72,7 @@ class Users(db.Document, UserMixin):
 
 
 # TODO: this is NOT a model, but I'm not sure where to put it.
-user_datastore = MongoEngineUserDatastore(db, Users, Role)
+user_datastore = MongoEngineUserDatastore(db, Users, Roles)
 # End flask-security setup.
 
 # Begin Data Models
