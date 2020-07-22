@@ -101,17 +101,6 @@ class TestExperiments(object):
         no_experiment = models.Experiments.objects(id=experiment.id).first()
         assert no_experiment is None
 
-    def test_add_sample(self, experiment, sample):
-        experiment.update(samples=[sample])
-        updated_experiment = models.Experiments.objects(id=experiment.id).first()
-        assert updated_experiment.id == experiment.id
-        assert len(updated_experiment.samples) == 1
-        assert updated_experiment.samples[0].id == sample.id
-
-        updated_sample = models.Samples.objects(id=sample.id).first()
-        assert updated_sample.experiment is not None
-        assert updated_sample.experiment.id == updated_experiment.id
-
 
 class TestSamples(object):
 
@@ -143,13 +132,18 @@ class TestSamples(object):
         assert no_sample is None
 
     def test_add_experiment(self, experiment, sample):
-        sample.update(experiment=experiment)
+        sample.update(experiment=experiment.id)
 
         updated_sample = models.Samples.objects(id=sample.id).first()
         assert updated_sample.id == sample.id
         assert updated_sample.experiment.id == experiment.id
 
-        updated_experiment = models.Experiments.objects(id=experiment.id).first()
-        assert updated_experiment.id == experiment.id
-        assert len(updated_experiment.samples) == 1
-        assert updated_experiment.samples[0].id == updated_sample.id
+        updated_sample = models.Samples.objects(experiment=experiment.id).first()
+        assert updated_sample.id == sample.id
+        assert updated_sample.experiment.id == experiment.id
+
+        # remove the experiment, the sample.experiment should be None
+        # experiment.delete()
+        # updated_sample = models.Samples.objects(id=sample.id).first()
+        # assert updated_sample.id == sample.id
+        # assert updated_sample.experiment is None
