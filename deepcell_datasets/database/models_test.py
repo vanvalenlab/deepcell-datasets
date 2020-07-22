@@ -143,7 +143,7 @@ class TestSamples(object):
         assert updated_sample.experiment.id == experiment.id
 
         # remove the experiment, the sample.experiment should be None
-        # experiment.delete()
-        # updated_sample = models.Samples.objects(id=sample.id).first()
-        # assert updated_sample.id == sample.id
-        # assert updated_sample.experiment is None
+        experiment.delete()
+        updated_sample = models.Samples.objects(id=sample.id).first()
+        assert updated_sample.id == sample.id
+        assert updated_sample.experiment is None
