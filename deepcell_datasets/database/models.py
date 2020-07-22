@@ -85,7 +85,7 @@ class Methods(db.EmbeddedDocument):
 
 
 class Experiments(db.Document):
-    created_by = db.EmbeddedDocumentField(Users)  # Embedded documents for "contains" relationships
+    created_by = db.ReferenceField(Users)
     doi = db.StringField()
     date_collected = db.DateTimeField()  # Date on microscope (date added automatically saved by mongodb)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
