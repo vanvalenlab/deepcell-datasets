@@ -80,6 +80,7 @@ class TestExperiments(object):
             last_name='last',
             facility='test facility'
         )
+        created_by.save()
         exp = models.Experiments(doi=doi, created_by=created_by)
         exp.save()
 
