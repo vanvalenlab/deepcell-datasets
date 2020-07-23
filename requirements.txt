@@ -1,5 +1,6 @@
 bcrypt
 flask==1.1.1
 flask-mongoengine==0.9.5
+mongoengine<0.20.0
 python-decouple==3.1
 Flask-Security-Too>=3.4.3
