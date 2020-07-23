@@ -75,8 +75,8 @@ class Users(db.Document, UserMixin):
 user_datastore = MongoEngineUserDatastore(db, Users, Roles)
 # End flask-security setup.
 
-# Begin Data Models
 
+# Begin Data Models
 class Methods(db.EmbeddedDocument):
     subtype = db.StringField()
     culture = db.StringField()
@@ -87,10 +87,10 @@ class Methods(db.EmbeddedDocument):
 class Experiments(db.Document):
     created_by = db.ReferenceField(Users)
     doi = db.StringField()
-    date_collected = db.DateTimeField()  # Date on microscope (date added automatically saved by mongodb)
+    date_collected = db.DateTimeField()  # Date on microscope (date added auto-saved by mongo)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
-
-    # subjects = db.EmbeddedDocumentListField(SpecimenInformation)  # Specimen + modality + compartment + marker
+    # Specimen + modality + compartment + marker
+    # subjects = db.EmbeddedDocumentListField(SpecimenInformation)
 
 
 class ImagingParameters(db.EmbeddedDocument):
@@ -140,9 +140,6 @@ class Samples(db.Document):
     onto_loc = db.ListField(db.StringField())
     # each sample belongs to an Experiment
     experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
-
-
-
 
 
 
