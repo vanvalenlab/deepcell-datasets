@@ -62,6 +62,8 @@ def experiment(mongodb):
         last_name='last',
         facility='test facility'
     )
+    created_by.save()
+
     experiment = models.Experiments(doi=doi, created_by=created_by)
     experiment.save()
     yield experiment
