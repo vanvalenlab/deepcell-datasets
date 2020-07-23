@@ -25,6 +25,8 @@
 # ==============================================================================
 """Tests for the Mongo Models."""
 
+import random
+
 import pytest
 from mongoengine import connect, disconnect
 
@@ -39,11 +41,21 @@ def mongodb():
     disconnect()
 
 
-# TODO: test adding Session to an Experiment.
+@pytest.fixture()
+def sample(mongodb):
+    session = random.randint(1, 9999)
+    position = random.randint(1, 9999)
+
+    sample = models.Samples(session=session, position=position)
+
+    sample.save()
+    yield sample
+
+    sample.delete()
 
 
-def test_experiments(mongodb):
-    # test create
+@pytest.fixture()
+def experiment(mongodb):
     doi = 'a specific DOI number'
     created_by = models.Users(
         first_name='first',
@@ -54,52 +66,105 @@ def test_experiments(mongodb):
 
     experiment = models.Experiments(doi=doi, created_by=created_by)
     experiment.save()
+    yield experiment
 
-    # test read
-    fresh_experiment = models.Experiments.objects().first()
-    assert fresh_experiment is not None
-    assert fresh_experiment.doi == doi
-    assert fresh_experiment.created_by == created_by
-
-    # test update
-    new_doi = 'new doi value'
-    fresh_experiment.update(doi=new_doi)
-    updated_experiment = models.Experiments.objects().first()
-
-    assert updated_experiment.id == fresh_experiment.id
-    assert updated_experiment.created_by == fresh_experiment.created_by
-    assert updated_experiment.doi == new_doi
-
-    # test delete
-    updated_experiment.delete()
-    no_experiment = models.Experiments.objects().first()
-    assert no_experiment is None
+    experiment.delete()
 
 
-def test_samples(mongodb):
-    # test create
-    session = 1
-    position = 99
+class TestExperiments(object):
 
-    sample = models.Samples(session=session, position=position)
-    sample.save()
+    def test_create(self, mongodb):
+        doi = 'a specific DOI number'
+        created_by = models.Users(
+            first_name='first',
+            last_name='last',
+            facility='test facility'
+        )
+        created_by.save()
+        exp = models.Experiments(doi=doi, created_by=created_by)
+        exp.save()
 
-    # test read
-    fresh_sample = models.Samples.objects().first()
-    assert fresh_sample is not None
-    assert fresh_sample.session == session
-    assert fresh_sample.position == position
+        fresh_experiment = models.Experiments.objects(id=exp.id).first()
+        assert fresh_experiment is not None
+        assert fresh_experiment.doi == doi
+        assert fresh_experiment.created_by == created_by
+        assert fresh_experiment.id == exp.id
 
-    # test update
-    new_session = session + 1
-    fresh_sample.update(session=new_session)
-    updated_sample = models.Samples.objects().first()
+    def test_update(self, experiment):
+        new_doi = 'new doi value'
+        experiment.update(doi=new_doi)
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
 
-    assert updated_sample.id == fresh_sample.id
-    assert updated_sample.position == fresh_sample.position
-    assert updated_sample.session == new_session
+        assert updated_experiment.id == experiment.id
+        assert updated_experiment.created_by == experiment.created_by
+        assert updated_experiment.doi == new_doi
 
-    # test delete
-    updated_sample.delete()
-    no_sample = models.Samples.objects().first()
-    assert no_sample is None
+    def test_update(self, experiment):
+        experiment.delete()
+        no_experiment = models.Experiments.objects(id=experiment.id).first()
+        assert no_experiment is None
+
+    def test_remove_sample(self, experiment, sample):
+        sample.update(experiment=experiment)
+
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
+
+        # can find sample based on experiment ID.
+        updated_sample = models.Samples.objects(experiment=experiment.id).first()
+        assert updated_sample.experiment.id == updated_experiment.id
+
+        # now delete the sample, experiment should exist but not have the sample
+        updated_sample.delete()
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
+        assert updated_experiment.id == experiment.id
+
+        updated_sample = models.Samples.objects(experiment=experiment.id).first()
+        assert updated_sample is None
+
+
+class TestSamples(object):
+
+    def test_create(self, mongodb):
+        session = random.randint(1, 99)
+        position = random.randint(1, 99)
+
+        sample = models.Samples(session=session, position=position)
+        sample.save()
+
+        fresh_sample = models.Samples.objects(id=sample.id).first()
+        assert fresh_sample is not None
+        assert fresh_sample.session == session
+        assert fresh_sample.position == position
+
+    def test_update(self, sample):
+        session = random.randint(1, 9999)
+
+        sample.update(session=session)
+
+        updated_sample = models.Samples.objects(id=sample.id).first()
+        assert updated_sample.id == sample.id
+        assert updated_sample.position == sample.position
+        assert updated_sample.session == session
+
+    def test_delete(self, sample):
+        sample.delete()
+        no_sample = models.Samples.objects(id=sample.id).first()
+        assert no_sample is None
+
+    def test_add_experiment(self, experiment, sample):
+        sample.update(experiment=experiment.id)
+
+        updated_sample = models.Samples.objects(id=sample.id).first()
+        assert updated_sample.id == sample.id
+        assert updated_sample.experiment.id == experiment.id
+
+        updated_sample = models.Samples.objects(experiment=experiment.id).first()
+        assert updated_sample.id == sample.id
+        assert updated_sample.experiment.id == experiment.id
+
+        # remove the experiment, the sample.experiment should be None
+        experiment.delete()
+        updated_sample = models.Samples.objects(id=sample.id).first()
+        # using NULLIFY so the sample will still exist.
+        assert updated_sample.id == sample.id
+        assert updated_sample.experiment is None

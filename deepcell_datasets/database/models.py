@@ -91,9 +91,6 @@ class Experiments(db.Document):
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
 
     # subjects = db.EmbeddedDocumentListField(SpecimenInformation)  # Specimen + modality + compartment + marker
-    # Which image stacks belong to this experiment
-    # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
-    samples = db.ListField(db.ReferenceField('Samples'))
 
 
 class ImagingParameters(db.EmbeddedDocument):
@@ -141,8 +138,8 @@ class Samples(db.Document):
     # onto_loc = db.StringField(choices=codes.keys(), required = True)
     # But until then use:
     onto_loc = db.ListField(db.StringField())
-
-    experiment = db.ReferenceField(Experiments)  # should be connected to Experiments
+    # each sample belongs to an Experiment
+    experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
 
 
 
