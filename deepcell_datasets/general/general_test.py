@@ -84,6 +84,27 @@ def test_secure(client, app):
     assert response.json.get('message') == 'success'
 
 
+def test_admin(client, app):
+    # test user creds
+    email = app.config['ADMIN_EMAIL']
+    password = app.config['ADMIN_PASSWORD']
+
+    # test unauthenticated user is not allowed
+    response = client.get('/admin')
+    assert response.status_code == 403
+
+    # test successful login, redirected to /secure
+    response = client.post('/login', data=dict(
+        email=email,
+        password=password
+    ), follow_redirects=True)
+    assert response.status_code == 200
+
+    response = client.get('/admin')
+    assert response.status_code == 200
+    assert response.json.get('message') == 'success'
+
+
 def test_index(client):
     response = client.get('/')
     assert response.status_code == 200
