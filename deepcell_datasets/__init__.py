@@ -26,6 +26,7 @@
 """DeepCell Datasets Module"""
 
 from flask import Flask
+from flask_security import Security, hash_password
 # from flask_debugtoolbar import DebugToolbarExtension
 
 from deepcell_datasets import config
@@ -61,6 +62,24 @@ def create_app(**config_overrides):
     app.jinja_env.auto_reload = True
 
     database.db.initialize_db(app)
+
+    # Setup Flask-Security
+    security = Security()
+    security.init_app(app, database.models.user_datastore)
+
+    # Create an admin user
+    # TODO: is there a better way to do this?
+    @app.before_first_request
+    def create_admin_user():
+        database.models.user_datastore.create_user(
+            email=app.config['ADMIN_EMAIL'],
+            password=hash_password(app.config['ADMIN_PASSWORD']))
+
+        admin_role = database.models.user_datastore.find_or_create_role(name='admin')
+
+        database.models.user_datastore.add_role_to_user(
+            user=app.config['ADMIN_EMAIL'],
+            role=admin_role)
 
     app.register_blueprint(general.general_bp, url_prefix='/')
     app.register_blueprint(experiments.experiments_bp, url_prefix='/experiments/')

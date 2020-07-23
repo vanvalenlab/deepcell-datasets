@@ -29,6 +29,8 @@ from flask import Blueprint
 from flask import jsonify
 from flask import render_template
 
+from flask_security import auth_required, roles_required
+
 
 general_bp = Blueprint('general_bp', __name__,  # pylint: disable=C0103
                        template_folder='templates')
@@ -36,6 +38,20 @@ general_bp = Blueprint('general_bp', __name__,  # pylint: disable=C0103
 
 @general_bp.route('/health')
 def health():
+    """Returns success if the application is ready."""
+    return jsonify({'message': 'success'})
+
+
+@general_bp.route('/secure')
+@auth_required()
+def secure():
+    """Returns success if the application is ready."""
+    return jsonify({'message': 'success'})
+
+
+@general_bp.route('/admin')
+@roles_required('admin')
+def admin():
     """Returns success if the application is ready."""
     return jsonify({'message': 'success'})
 

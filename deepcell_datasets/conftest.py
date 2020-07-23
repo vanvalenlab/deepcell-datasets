@@ -25,10 +25,12 @@
 # ==============================================================================
 """Tests for the General Blueprint."""
 
+from flask_security import hash_password
 from mongoengine import connect, disconnect
 
 import pytest
 
+from deepcell_datasets.database.models import user_datastore
 from deepcell_datasets import create_app
 
 
@@ -48,6 +50,9 @@ def app():
     yield create_app(
         MONGODB_SETTINGS=mongo_settings,
         TESTING=True,
-        CSRF_ENABLED=False,
+        WTF_CSRF_ENABLED=False,
+        ADMIN_EMAIL='admin@me.com',
+        ADMIN_PASSWORD='password',
     )
+
     disconnect()

@@ -28,6 +28,8 @@
 # from mongoengine.document import Document
 # from mongoengine.fields import ListField, StringField
 
+from flask_security import UserMixin, RoleMixin, MongoEngineUserDatastore
+
 from deepcell_datasets.database.db import db
 
 # Custom Fields
@@ -43,14 +45,37 @@ from deepcell_datasets.database.db import db
 #             self.error('OntoLoc Information Incorrect')
 
 
-# Begin Data Models
+class Roles(db.Document, RoleMixin):
+    """Role assigned to a User, defines access.
 
-class Users(db.EmbeddedDocument):
+    From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
+    """
+    name = db.StringField(max_length=80, unique=True)
+    description = db.StringField(max_length=255)
+
+
+class Users(db.Document, UserMixin):
+    """A User account.
+
+    From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
+    """
+    email = db.StringField(max_length=255)
+    password = db.StringField(max_length=255)
+    active = db.BooleanField(default=True)
+    confirmed_at = db.DateTimeField()
+    roles = db.ListField(db.ReferenceField(Roles), default=[])
+
     first_name = db.StringField()
     last_name = db.StringField()
     facility = db.StringField()  # Could be Lab here
     # Could include experiments (But only makes sense if it is a different collection)
 
+
+# TODO: this is NOT a model, but I'm not sure where to put it.
+user_datastore = MongoEngineUserDatastore(db, Users, Roles)
+# End flask-security setup.
+
+# Begin Data Models
 
 class Methods(db.EmbeddedDocument):
     subtype = db.StringField()
@@ -60,15 +85,12 @@ class Methods(db.EmbeddedDocument):
 
 
 class Experiments(db.Document):
-    created_by = db.EmbeddedDocumentField(Users)  # Embedded documents for "contains" relationships
+    created_by = db.ReferenceField(Users)
     doi = db.StringField()
     date_collected = db.DateTimeField()  # Date on microscope (date added automatically saved by mongodb)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
 
     # subjects = db.EmbeddedDocumentListField(SpecimenInformation)  # Specimen + modality + compartment + marker
-    # Which image stacks belong to this experiment
-    # Should be sample_ids (referencing Sample - use '' to denote classes not defined yet)
-    samples = db.ListField(db.ReferenceField('Samples'))
 
 
 class ImagingParameters(db.EmbeddedDocument):
@@ -116,8 +138,8 @@ class Samples(db.Document):
     # onto_loc = db.StringField(choices=codes.keys(), required = True)
     # But until then use:
     onto_loc = db.ListField(db.StringField())
-
-    experiment = db.ReferenceField(Experiments)  # should be connected to Experiments
+    # each sample belongs to an Experiment
+    experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
 
 
 
