@@ -5,8 +5,6 @@
 
 DeepCell Datasets is a collection of data engineering and versioning tools for the management of optical microscopy images and its associated metadata. This Master Data Management allows for a single entry point for access to the lab's raw data and provides to means to pair them with crowdsourced annotations to create custom training data for [DeepCell](https://github.com/vanvalenlab/deepcell-tf).
 
-Read the documentation at
-
 ## Getting Started
 
 DeepCell Datasets uses `nvidia-docker` and `mongodb` to keep track of new images. A Flask API provides convenient access to the database.
