@@ -101,6 +101,23 @@ class TestExperiments(object):
         no_experiment = models.Experiments.objects(id=experiment.id).first()
         assert no_experiment is None
 
+    def test_remove_sample(self, experiment, sample):
+        sample.update(experiment=experiment)
+
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
+
+        # can find sample based on experiment ID.
+        updated_sample = models.Samples.objects(experiment=experiment.id).first()
+        assert updated_sample.experiment.id == updated_experiment.id
+
+        # now delete the sample, experiment should exist but not have the sample
+        updated_sample.delete()
+        updated_experiment = models.Experiments.objects(id=experiment.id).first()
+        assert updated_experiment.id == experiment.id
+
+        updated_sample = models.Samples.objects(experiment=experiment.id).first()
+        assert updated_sample is None
+
 
 class TestSamples(object):
 
@@ -145,5 +162,6 @@ class TestSamples(object):
         # remove the experiment, the sample.experiment should be None
         experiment.delete()
         updated_sample = models.Samples.objects(id=sample.id).first()
+        # using NULLIFY so the sample will still exist.
         assert updated_sample.id == sample.id
         assert updated_sample.experiment is None

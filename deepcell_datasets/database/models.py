@@ -25,9 +25,6 @@
 # ==============================================================================
 """DeepCell MDM Database Models"""
 
-# from mongoengine.document import Document
-# from mongoengine.fields import ListField, StringField
-
 from deepcell_datasets.database.db import db
 
 # Custom Fields
@@ -113,8 +110,8 @@ class Samples(db.Document):
     # onto_loc = db.StringField(choices=codes.keys(), required = True)
     # But until then use:
     onto_loc = db.ListField(db.StringField())
-
-    experiment = db.ReferenceField(Experiments)  # should be connected to Experiments
+    # each sample belongs to an Experiment
+    experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
 
 
 
