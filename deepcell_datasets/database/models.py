@@ -32,18 +32,6 @@ from flask_security import UserMixin, RoleMixin, MongoEngineUserDatastore
 
 from deepcell_datasets.database.db import db
 
-# Custom Fields
-# class OntoLoc(db.ListField):
-#     def __init__(self, correct_length=None, **kwargs):
-#         self.correct_length = correct_length
-#         super(OntoLoc, self).__init__(**kwargs)
-
-#     def validate(self, value):
-#         super(OntoLoc, self).validate(value)
-
-#         if self.correct_length is not None and len(value) != self.correct_length:
-#             self.error('OntoLoc Information Incorrect')
-
 
 class Roles(db.Document, RoleMixin):
     """Role assigned to a User, defines access.
@@ -75,8 +63,8 @@ class Users(db.Document, UserMixin):
 user_datastore = MongoEngineUserDatastore(db, Users, Roles)
 # End flask-security setup.
 
-# Begin Data Models
 
+# Begin Data Models
 class Methods(db.EmbeddedDocument):
     subtype = db.StringField()
     culture = db.StringField()
@@ -87,10 +75,10 @@ class Methods(db.EmbeddedDocument):
 class Experiments(db.Document):
     created_by = db.ReferenceField(Users)
     doi = db.StringField()
-    date_collected = db.DateTimeField()  # Date on microscope (date added automatically saved by mongodb)
+    date_collected = db.DateTimeField()  # Date on microscope (date added auto-saved by mongo)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
-
-    # subjects = db.EmbeddedDocumentListField(SpecimenInformation)  # Specimen + modality + compartment + marker
+    # Specimen + modality + compartment + marker
+    # subjects = db.EmbeddedDocumentListField(SpecimenInformation)
 
 
 class ImagingParameters(db.EmbeddedDocument):
@@ -141,11 +129,17 @@ class Samples(db.Document):
     # each sample belongs to an Experiment
     experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
 
+# Custom Fields
+# class OntoLoc(db.ListField):
+#     def __init__(self, correct_length=None, **kwargs):
+#         self.correct_length = correct_length
+#         super(OntoLoc, self).__init__(**kwargs)
 
+#     def validate(self, value):
+#         super(OntoLoc, self).validate(value)
 
-
-
-
+#         if self.correct_length is not None and len(value) != self.correct_length:
+#             self.error('OntoLoc Information Incorrect')
 
 
 # # Embedded documents for detailed info that needs context("contains" relationship)
@@ -163,7 +157,7 @@ class Samples(db.Document):
 #     three_dim = db.BooleanField()
 
 
-# # This collection will hold information about each specimen type in our ontology
+# This collection will hold information about each specimen type in our ontology
 # class Specimen(db.Document):
 #     # Some unique ID for a given specimen within the ontology
 #     # Only the combination of spec_id and onto_loc is required to be unique
@@ -183,7 +177,6 @@ class Samples(db.Document):
 
 # class ThreeDimSample(Sample):
 #     z_step = db.StringField(required=True)
-
 
 
 # TODO: Training data

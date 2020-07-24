@@ -99,7 +99,7 @@ class TestExperiments(object):
         assert updated_experiment.created_by == experiment.created_by
         assert updated_experiment.doi == new_doi
 
-    def test_update(self, experiment):
+    def test_delete(self, experiment):
         experiment.delete()
         no_experiment = models.Experiments.objects(id=experiment.id).first()
         assert no_experiment is None

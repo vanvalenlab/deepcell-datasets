@@ -39,12 +39,12 @@ def test_login_logout(client, app):
     ), follow_redirects=True)
     assert response.status_code == 200
     # TODO: test correct page loads
-    assert '</body>' in response.data
+    assert '</body>' in response.data.decode('utf8')
 
     response = client.get('/logout', follow_redirects=True)
     assert response.status_code == 200
     # TODO: test correct page loads
-    assert '</body>' in response.data
+    assert '</body>' in response.data.decode('utf8')
 
     # TODO: bad username and bad password should have same failure message.
 
@@ -54,7 +54,7 @@ def test_login_logout(client, app):
         password='bad password'
     ), follow_redirects=True)
     assert response.status_code == 200
-    assert 'Invalid password' in response.data
+    assert 'Invalid password' in response.data.decode('utf8')
 
     # test bad login password
     response = response = client.post('/login', data=dict(
@@ -62,7 +62,7 @@ def test_login_logout(client, app):
         password=app.config['ADMIN_PASSWORD']
     ), follow_redirects=True)
     assert response.status_code == 200
-    assert 'Specified user does not exist' in response.data
+    assert 'Specified user does not exist' in response.data.decode('utf8')
 
 
 def test_secure(client, app):
@@ -109,4 +109,4 @@ def test_index(client):
     response = client.get('/')
     assert response.status_code == 200
     # TODO: test HTML response?
-    assert '</body>' in response.data
+    assert '</body>' in response.data.decode('utf8')
