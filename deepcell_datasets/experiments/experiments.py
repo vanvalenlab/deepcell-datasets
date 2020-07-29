@@ -31,6 +31,8 @@ from flask import jsonify
 from flask import request
 from flask import Response
 from flask import current_app
+from flask import render_template
+from flask.ext.mongoengine.wtf import model_form
 from mongoengine import ValidationError
 
 from deepcell_datasets.database.models import Experiments
@@ -90,3 +92,13 @@ def delete_experiment(experiment_id):
 def get_experiment(experiment_id):
     experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
     return Response(experiment, mimetype='application/json')
+
+
+
+
+
+
+@experiments_bp.route('/raw_gui')
+def data_entry():
+    form = model_form(Experiments, exclude=('created_at'))(request.form)
+    return render_template('/experiments/gui.html', form=form)
