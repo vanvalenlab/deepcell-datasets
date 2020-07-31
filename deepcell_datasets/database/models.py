@@ -51,8 +51,17 @@ class Users(db.Document, UserMixin):
     email = db.StringField(max_length=255)
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)
-    confirmed_at = db.DateTimeField()
     roles = db.ListField(db.ReferenceField(Roles), default=[])
+
+    # Required for confirmable Users
+    confirmed_at = db.DateTimeField()
+
+    # Required fields for user login tracking: SECURITY_TRACKABLE
+    last_login_at = db.DateTimeField()
+    current_login_at = db.DateTimeField()
+    last_login_ip = db.StringField(max_length=64)
+    current_login_ip = db.StringField(max_length=64)
+    login_count = db.IntField()
 
     first_name = db.StringField()
     last_name = db.StringField()

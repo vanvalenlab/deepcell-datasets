@@ -33,12 +33,24 @@ PORT = decouple.config('PORT', cast=int, default=5000)
 
 TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, default=True)
 
-# Flask-Security-Too settings
+# Flask-Security-Too settings: https://tinyurl.com/y5d2n9ry
 # Generate a nice key using secrets.token_urlsafe()
 SECRET_KEY = decouple.config('SECRET_KEY', default='super-secret')
 # Bcrypt is set as default SECURITY_PASSWORD_HASH, which requires a salt
 # Generate a good salt using: secrets.SystemRandom().getrandbits(128)
 SECURITY_PASSWORD_SALT = decouple.config('SECURITY_PASSWORD_SALT', default='salt')
+# Enable new users to create accounts
+SECURITY_REGISTERABLE = True
+# Enable users to reset/recover their password
+SECURITY_RECOVERABLE = True
+SECURITY_RESET_PASSWORD_WITHIN = '3 days'
+# Enable users to change their password
+SECURITY_CHANGEABLE = True
+# Send an confirmation email, but allow login without it
+SECURITY_CONFIRMABLE = True
+SECURITY_LOGIN_WITHOUT_CONFIRMATION = True
+# Tracks basic user login statistics
+SECURITY_TRACKABLE = True
 
 ADMIN_EMAIL = decouple.config('ADMIN_EMAIL', default='admin@me.com')
 ADMIN_PASSWORD = decouple.config('ADMIN_PASSWORD', default='password')
