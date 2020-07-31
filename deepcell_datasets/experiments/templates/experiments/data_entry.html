@@ -1,5 +1,4 @@
-
-{% extends "experiments/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <main class="container">
@@ -10,21 +9,21 @@
     </h5>
     <p>
       Each sample contains all the relevant information related to dimensions and imaging parameters.
-      It also contains links to the associated image stack. While an experiment can contain multiple
-      samples, each sample belongs to only one experiment.
+      It also contains links to the associated image stack.
+      While an experiment can contain multiple samples, each sample belongs to only one experiment.
     </p>
   </div>
 
   <div class="formwrapper">
-  <h2 class="title">Experiment Information</h2>
-  <form method="POST" action="/">
-      <div class="form-field">{{ form.created_by.label }} {{ form.created_by }}</div>
-      <div class="form-field">{{ form.doi.label }} {{ form.doi }}</div>
-      <div class="form-field">{{ form.date_collected.label }} {{ form.date_collected }}</div>
-      <div class="form-field">{{ form.methods.label }} {{ form.methods }}</div>
-      {{ form.submit }}
-  </form>
-</div>
+    <h2 class="title">Experiment Information</h2>
+    <form method="POST" action="/">
+        <div class="form-field">{{ form.created_by.label }} {{ form.created_by }}</div>
+        <div class="form-field">{{ form.doi.label }} {{ form.doi }}</div>
+        <div class="form-field">{{ form.date_collected.label }} {{ form.date_collected }}</div>
+        <div class="form-field">{{ form.methods.label }} {{ form.methods }}</div>
+        {{ form.submit }}
+    </form>
+  </div>
 
 </main>
 {% endblock %}
