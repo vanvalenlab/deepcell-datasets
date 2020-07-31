@@ -15,16 +15,52 @@
     </p>
   </div>
 
-  <div class="formwrapper">
   <h2 class="title">Experiment Information</h2>
-  <form method="POST" action="/">
-      <div class="form-field">{{ form.created_by.label }} {{ form.created_by }}</div>
-      <div class="form-field">{{ form.doi.label }} {{ form.doi }}</div>
-      <div class="form-field">{{ form.date_collected.label }} {{ form.date_collected }}</div>
-      <div class="form-field">{{ form.methods.label }} {{ form.methods }}</div>
-      {{ form.submit }}
+  <form method="POST" role="form">
+
+    {{  form.csrf_token  }}
+
+    <legend><h3>Please fill out the following:</h3></legend>
+
+    {% if form.errors %}
+      <ul class="errors">
+          {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+              {% for error in field_errors %}
+                  <li>{{ form[field_name].label }}: {{ error }}</li>
+              {% endfor %}
+          {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="form-group">
+      {{ form.creator.label() }}
+      {{ form.creator(class='form-control', type='textinput') }}
+      <!--
+      <label for="creator">First Name</label>
+      <input type="text" id="creator" name="creator" class="form-control" value="">
+      -->
+    </div>
+
+    <div class="form-group">
+      {{ form.title.label() }}
+      {{ form.title(class='form-control', type='textinput') }}
+      <!--
+      <label for="title">Project Title</label>
+      <input type="text" id="title" name="title" class="form-control">
+      -->
+    </div>
+
+    <div class="form-group">
+      {{ form.idea.label() }}
+      {{ form.idea(class='form-control', type='textarea') }}
+      <!-- <label for="idea">Idea description</label>
+      <textarea name="idea" id="idea" class="form-control"></textarea>
+      -->
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Experiment</button>
+
   </form>
-</div>
 
 </main>
 {% endblock %}
