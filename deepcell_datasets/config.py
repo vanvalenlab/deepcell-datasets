@@ -53,7 +53,7 @@ MONGODB_SETTINGS = {
 }
 
 # TODO: This should be enabled when we move to production
-WTF_CSRF_ENABLED=False
+WTF_CSRF_ENABLED = False
 
 # DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
 
