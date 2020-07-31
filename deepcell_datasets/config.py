@@ -47,7 +47,7 @@ SECURITY_RESET_PASSWORD_WITHIN = '3 days'
 # Enable users to change their password
 SECURITY_CHANGEABLE = True
 # Send an confirmation email, but allow login without it
-SECURITY_CONFIRMABLE = True
+SECURITY_CONFIRMABLE = False  # TODO: need to set up a mail client if True.
 SECURITY_LOGIN_WITHOUT_CONFIRMATION = True
 # Tracks basic user login statistics
 SECURITY_TRACKABLE = True
