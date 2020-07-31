@@ -42,8 +42,10 @@ from deepcell_datasets.database.models import Experiments
 
 experiments_bp = Blueprint('experiments_bp', __name__)  # pylint: disable=C0103
 
+
 # TODO: It would be better for this to live in a 'forms' module
 ExperimentForm = model_form(Experiments)
+
 
 @experiments_bp.errorhandler(Exception)
 def handle_exception(err):
@@ -99,7 +101,9 @@ def get_experiment(experiment_id):
     experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
     return Response(experiment, mimetype='application/json')
 
+
 # Routes for HTML pages.
+
 
 @experiments_bp.route('/data_entry', methods=['GET', 'POST'])
 def add_experiment():
