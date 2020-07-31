@@ -32,6 +32,8 @@ from flask import request
 from flask import Response
 from flask import current_app
 from flask import render_template
+from flask import url_for, redirect
+
 from flask_mongoengine.wtf import model_form
 from mongoengine import ValidationError
 
@@ -40,6 +42,8 @@ from deepcell_datasets.database.models import Experiments
 
 experiments_bp = Blueprint('experiments_bp', __name__)  # pylint: disable=C0103
 
+# TODO: It would be better for this to live in a 'forms' module
+ExperimentForm = model_form(Experiments)
 
 @experiments_bp.errorhandler(Exception)
 def handle_exception(err):
@@ -98,7 +102,14 @@ def get_experiment(experiment_id):
 
 
 
-@experiments_bp.route('/raw_gui')
-def data_entry():
-    form = model_form(Experiments, exclude=('created_at'))(request.form)
-    return render_template('/experiments/gui.html', form=form)
+@experiments_bp.route('/data_entry', methods=['GET', 'POST'])
+def add_experiment():
+    form = ExperimentForm()
+    if form.validate_on_submit():
+        return redirect(url_for('success'))
+    return render_template('experiments/data_entry.html', form=form)
+
+
+@experiments_bp.route('/success')
+def success():
+   return 'Experiment Successfully Submitted'

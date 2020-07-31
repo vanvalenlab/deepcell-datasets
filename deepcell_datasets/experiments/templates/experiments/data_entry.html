@@ -14,5 +14,16 @@
     </p>
   </div>
 
+  <div class="formwrapper">
+  <h2 class="title">Experiment Information</h2>
+  <form method="POST" action="/">
+      <div class="form-field">{{ form.created_by.label }} {{ form.created_by }}</div>
+      <div class="form-field">{{ form.doi.label }} {{ form.doi }}</div>
+      <div class="form-field">{{ form.date_collected.label }} {{ form.date_collected }}</div>
+      <div class="form-field">{{ form.methods.label }} {{ form.methods }}</div>
+      {{ form.submit }}
+  </form>
+</div>
+
 </main>
 {% endblock %}

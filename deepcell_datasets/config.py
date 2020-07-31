@@ -52,6 +52,9 @@ MONGODB_SETTINGS = {
     'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None)
 }
 
+# TODO: This should be enabled when we move to production
+WTF_CSRF_ENABLED=False
+
 # DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
 
 # Flask mongoengine makes uri from the DB name, host, and port
