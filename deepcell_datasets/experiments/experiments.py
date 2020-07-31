@@ -40,7 +40,8 @@ from mongoengine import ValidationError
 from deepcell_datasets.database.models import Experiments
 
 
-experiments_bp = Blueprint('experiments_bp', __name__)  # pylint: disable=C0103
+experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
+                           template_folder='templates')
 
 
 # TODO: It would be better for this to live in a 'forms' module
