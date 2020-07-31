@@ -55,6 +55,9 @@ MONGODB_SETTINGS = {
 # TODO: This should be enabled when we move to production
 WTF_CSRF_ENABLED = False
 
+# Explain loading only if in DEBUG mode.
+EXPLAIN_TEMPLATE_LOADING = DEBUG
+
 # DEBUG_TB_PANELS = ['flask_mongoengine.panels.MongoDebugPanel']
 
 # Flask mongoengine makes uri from the DB name, host, and port
