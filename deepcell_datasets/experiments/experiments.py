@@ -40,10 +40,13 @@ from mongoengine import ValidationError
 from deepcell_datasets.database.models import Experiments
 
 
-experiments_bp = Blueprint('experiments_bp', __name__)  # pylint: disable=C0103
+experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
+                           template_folder='templates')
+
 
 # TODO: It would be better for this to live in a 'forms' module
 ExperimentForm = model_form(Experiments)
+
 
 @experiments_bp.errorhandler(Exception)
 def handle_exception(err):
@@ -57,6 +60,8 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
+    current_app.logger.error('Encountered unexpected %s: %s.',
+                             err.__class__.__name__, err)
     return jsonify({'error': str(err)}), 500
 
 
@@ -98,8 +103,7 @@ def get_experiment(experiment_id):
     return Response(experiment, mimetype='application/json')
 
 
-
-
+# Routes for HTML pages.
 
 
 @experiments_bp.route('/data_entry', methods=['GET', 'POST'])
@@ -112,4 +116,4 @@ def add_experiment():
 
 @experiments_bp.route('/success')
 def success():
-   return 'Experiment Successfully Submitted'
+    return 'Experiment Successfully Submitted'

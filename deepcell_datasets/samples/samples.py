@@ -36,7 +36,8 @@ from mongoengine import ValidationError
 from deepcell_datasets.database.models import Samples
 
 
-samples_bp = Blueprint('samples_bp', __name__)  # pylint: disable=C0103
+samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
+                       template_folder='templates')
 
 
 @samples_bp.errorhandler(Exception)
