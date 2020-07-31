@@ -97,10 +97,7 @@ def get_experiment(experiment_id):
     experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
     return Response(experiment, mimetype='application/json')
 
-
-
-
-
+# Routes for HTML pages.
 
 @experiments_bp.route('/data_entry', methods=['GET', 'POST'])
 def add_experiment():
