@@ -57,6 +57,8 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
+    current_app.logger.error('Encountered unexpected %s: %s.',
+                             err.__class__.__name__, err)
     return jsonify({'error': str(err)}), 500
 
 
