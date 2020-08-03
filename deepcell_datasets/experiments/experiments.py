@@ -104,13 +104,11 @@ def get_experiment(experiment_id):
 
 
 # Routes for HTML pages.
-
-
 @experiments_bp.route('/data_entry', methods=['GET', 'POST'])
 def add_experiment():
     form = ExperimentForm()
     if form.validate_on_submit():
-        return redirect(url_for('success'))
+        return redirect(url_for('experiments_bp.success'))
     return render_template('experiments/data_entry.html', form=form)
 
 
