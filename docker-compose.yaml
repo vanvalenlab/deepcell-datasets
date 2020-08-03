@@ -6,8 +6,10 @@ services:
     #   - /deepcell_data:/data
     links:
       - mongo
+      - mail
     depends_on:
       - mongo
+      - mail
     ports:
       - 5000:5000
     environment:
@@ -16,6 +18,10 @@ services:
       MONGODB_PORT: ${MONGODB_PORT:-27017}
       # MONGODB_USERNAME: ${MONGODB_USERNAME:-root}
       # MONGODB_PASSWORD: ${MONGODB_PASSWORD:-password}
+      MAIL_SERVER: ${MAIL_SERVER:-mail}
+      MAIL_PORT: ${MAIL_PORT:-25}
+      # MAIL_USERNAME: ${MAIL_USERNAME:-alice@example.com}
+      # MAIL_PASSWORD: ${MAIL_PASSWORD:-secretpassword}
 
   mongo:
     image: mongo
@@ -28,3 +34,15 @@ services:
       - ./DCD_DB:/data/db
     ports:
       - 27017:27017
+
+  mail:
+    image: bytemark/smtp
+    restart: always
+    ports:
+      - 587:587
+      - 25:25
+    # environment:
+    #   RELAY_HOST: localhost
+    #   RELAY_PORT: 587
+    #   RELAY_USERNAME: alice@example.com
+    #   RELAY_PASSWORD: secretpassword
