@@ -1,0 +1,19 @@
+<header>
+  <div class="navbar-fixed">
+    <nav class="z-depth-0">
+      <div class="nav-wrapper indigo">
+        <a href="/" class="brand-logo">DeepCell Datasets</a>
+        <ul id="nav-mobile" class="right hide-on-small-and-down">
+          {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for_security('logout') }}">{{ _('Logout') }}</a></li>
+          {% else %}
+          <li><a href="{{ url_for_security('register') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">{{ _('Sign up') }}</a></li>
+          <li><a href="{{ url_for_security('login') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">{{ _('Login') }}</a></li>
+          {% endif %}
+          <li><a href="http://deepcell.org" target="_blank">DeepCell <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+          <li><a href="https://github.com/vanvalenlab/deepcell-datasets" target="_blank"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
