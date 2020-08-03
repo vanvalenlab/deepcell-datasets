@@ -51,15 +51,15 @@ SECRET_KEY = decouple.config('SECRET_KEY', default='super-secret')
 SECURITY_PASSWORD_SALT = decouple.config('SECURITY_PASSWORD_SALT', default='salt')
 # Enable new users to create accounts
 SECURITY_REGISTERABLE = True
-SECURITY_SEND_REGISTER_EMAIL = False  # TODO: need to set up a mail client if True.
+SECURITY_SEND_REGISTER_EMAIL = True
 # Enable users to reset/recover their password
-SECURITY_RECOVERABLE = False  # TODO: need to set up a mail client if True.
+SECURITY_RECOVERABLE = True
 SECURITY_RESET_PASSWORD_WITHIN = '3 days'
 # Enable users to change their password
 SECURITY_CHANGEABLE = True
-SECURITY_SEND_PASSWORD_CHANGE_EMAIL = False  # TODO: need to set up a mail client if True.
+SECURITY_SEND_PASSWORD_CHANGE_EMAIL = True
 # Send an confirmation email, but allow login without it
-SECURITY_CONFIRMABLE = False  # TODO: need to set up a mail client if True.
+SECURITY_CONFIRMABLE = True
 SECURITY_LOGIN_WITHOUT_CONFIRMATION = True
 # Tracks basic user login statistics
 SECURITY_TRACKABLE = True
