@@ -1,23 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="section center-align">
-  <h5>
-    Select an experiment to load available samples and metadata
-  </h5>
-  <p>
-    Each sample contains all the relevant information related to dimensions and imaging parameters.
-    It also contains links to the associated image stack.
-    While an experiment can contain multiple samples, each sample belongs to only one experiment.
-  </p>
-</div>
-
-<h2 class="title">Experiment Information</h2>
+<h3 class="title">Experiment Information</h3>
 <form method="POST" role="form">
 
   {{  form.csrf_token  }}
 
-  <legend><h3>Please fill out the following:</h3></legend>
+  <legend><h5>Please fill out the following:</h5></legend>
 
   {% if form.errors %}
     <ul class="errors">
@@ -30,26 +19,26 @@
   {% endif %}
 
   <div class="form-group">
-    {{ form.creator.label() }}
-    {{ form.creator(class='form-control', type='textinput') }}
-    <!--
-    <label for="creator">First Name</label>
-    <input type="text" id="creator" name="creator" class="form-control" value="">
-    -->
+    {{ form.created_by.label() }}
+    {{ form.created_by(class='form-control', type='textinput') }}
+
+    <label for="created_by">User ID</label>
+    <input type="text" id="created_by" name="creator" class="form-control" value="">
+
   </div>
 
   <div class="form-group">
-    {{ form.title.label() }}
-    {{ form.title(class='form-control', type='textinput') }}
-    <!--
-    <label for="title">Project Title</label>
-    <input type="text" id="title" name="title" class="form-control">
-    -->
+    {{ form.doi.label() }}
+    {{ form.doi(class='form-control', type='textarea') }}
+
+    <label for="doi">DOI</label>
+    <input type="text" id="doi" name="Example DOI" class="form-control">
+
   </div>
 
   <div class="form-group">
-    {{ form.idea.label() }}
-    {{ form.idea(class='form-control', type='textarea') }}
+    {{ form.date_collected.label() }}
+    {{ form.date_collected(class='form-control', type='textinput') }}
     <!-- <label for="idea">Idea description</label>
     <textarea name="idea" id="idea" class="form-control"></textarea>
     -->
