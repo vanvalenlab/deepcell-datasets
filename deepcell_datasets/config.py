@@ -33,6 +33,16 @@ PORT = decouple.config('PORT', cast=int, default=5000)
 
 TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, default=True)
 
+# Flask-Mail settings: https://tinyurl.com/y3db5s3h
+MAIL_SERVER = decouple.config('MAIL_SERVER', default='localhost')
+MAIL_PORT = decouple.config('MAIL_PORT', default=25, cast=int)
+MAIL_USE_TLS = decouple.config('MAIL_USE_TLS', default=False, cast=bool)
+MAIL_USE_SSL = decouple.config('MAIL_USE_SSL', default=False, cast=bool)
+MAIL_USERNAME = decouple.config('MAIL_USERNAME', default=None)
+MAIL_PASSWORD = decouple.config('MAIL_PASSWORD', default=None)
+MAIL_DEFAULT_SENDER = decouple.config('MAIL_DEFAULT_SENDER', default='datasets@deepcell.org')
+MAIL_MAX_EMAILS = decouple.config('MAIL_MAX_EMAILS', default=None)
+
 # Flask-Security-Too settings: https://tinyurl.com/y5d2n9ry
 # Generate a nice key using secrets.token_urlsafe()
 SECRET_KEY = decouple.config('SECRET_KEY', default='super-secret')
