@@ -34,6 +34,8 @@ from flask import current_app
 from flask import render_template
 from flask import url_for, redirect
 
+from flask_login import current_user
+from flask_security import login_required
 from flask_mongoengine.wtf import model_form
 from mongoengine import ValidationError
 
@@ -105,11 +107,13 @@ def get_experiment(experiment_id):
 
 # Routes for HTML pages.
 @experiments_bp.route('/data_entry', methods=['GET', 'POST'])
+@login_required
 def add_experiment():
+    name=current_user.email
     form = ExperimentForm()
     if form.validate_on_submit():
         return redirect(url_for('experiments_bp.success'))
-    return render_template('experiments/data_entry.html', form=form)
+    return render_template('experiments/data_entry.html', form=form, name=name)
 
 
 @experiments_bp.route('/success')

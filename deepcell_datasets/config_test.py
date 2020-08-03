@@ -35,6 +35,8 @@ from deepcell_datasets import create_app
 def test_config(monkeypatch):
     monkeypatch.setenv('MONGODB_USERNAME', 'testUser')
     monkeypatch.setenv('MONGODB_PASSWORD', 'testPwd')
+    # Globally turn off authentication for unit tests
+    monkeypatch.setenv('LOGIN_DISABLED', 'True')
 
     assert not create_app().testing
     # Without calling disconnect(), we hit a ConnectionFailure:

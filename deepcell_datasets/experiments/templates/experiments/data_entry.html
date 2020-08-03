@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3 class="title">Experiment Information</h3>
+<h3 class="title center-align">Experiment Information</h3>
+<p>Note: You are currently logged in as {{ name }}</p>
+
 <form method="POST" role="form">
 
   {{  form.csrf_token  }}

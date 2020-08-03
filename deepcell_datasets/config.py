@@ -54,6 +54,12 @@ SECURITY_LOGIN_WITHOUT_CONFIRMATION = True
 # Tracks basic user login statistics
 SECURITY_TRACKABLE = True
 
+# TODO: Set to True for faster (non-user-related) dev
+LOGIN_DISABLED = False
+
+# TODO: This should be enabled when we move to production
+WTF_CSRF_ENABLED = False
+
 ADMIN_EMAIL = decouple.config('ADMIN_EMAIL', default='admin@me.com')
 ADMIN_PASSWORD = decouple.config('ADMIN_PASSWORD', default='password')
 
@@ -65,9 +71,6 @@ MONGODB_SETTINGS = {
     'USERNAME': decouple.config('MONGODB_USERNAME', default=None),
     'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None)
 }
-
-# TODO: This should be enabled when we move to production
-WTF_CSRF_ENABLED = False
 
 # Explain loading only if in DEBUG mode.
 EXPLAIN_TEMPLATE_LOADING = DEBUG
