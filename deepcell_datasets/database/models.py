@@ -65,9 +65,9 @@ class Users(db.Document, UserMixin):
 
     first_name = db.StringField()
     last_name = db.StringField()
-    lab_group = db.StringField() # e.g. DVV
+    lab_group = db.StringField()  # e.g. DVV
     facility = db.StringField()  # Could be building/institution/etc
-    experiments = db.ListField(db.StringField()) # experiment ID
+    experiments = db.ListField(db.StringField())  # experiment ID
 
 
 # TODO: this is NOT a model, but I'm not sure where to put it.

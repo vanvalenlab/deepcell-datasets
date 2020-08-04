@@ -2,7 +2,6 @@
 
 {% block content %}
 <h3 class="title center-align">Experiment Information</h3>
-<p>Note: You are currently logged in as {{ name }}</p>
 
 <form method="POST" role="form">
 
@@ -19,6 +18,36 @@
         {% endfor %}
     </ul>
   {% endif %}
+
+  <div class="row">
+    <div class="input-field col s12">
+      <input disabled value={{ current_user.email }} id="user_email" type="text">
+      <label for="user_email">User</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      {{ form.doi.label("DOI") }}
+      {{ form.doi(class='form-control', type='textinput') }}
+      <!--
+      <input id="doi" type="text" class="validate">
+      <label for="doi">DOI</label>
+      -->
+    </div>
+    <div class="input-field col s6">
+      <input class="datepicker" id="date_collected" name="date_collected" type="text">
+      <label for="date_collected">Date Collected</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="methods" type="text" class="validate">
+      <label for="methods">Methods</label>
+      <span class="helper-text" data-error="wrong" data-success="right">Helper text</span>
+    </div>
+  </div>
+
+<!--
 
   <div class="form-group">
     {{ form.created_by.label() }}
@@ -41,10 +70,12 @@
   <div class="form-group">
     {{ form.date_collected.label() }}
     {{ form.date_collected(class='form-control', type='textinput') }}
-    <!-- <label for="idea">Idea description</label>
+    <label for="idea">Idea description</label>
     <textarea name="idea" id="idea" class="form-control"></textarea>
-    -->
+
   </div>
+
+-->
 
   <button type="submit" class="btn btn-primary">Add Experiment</button>
 

@@ -47,6 +47,8 @@ experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
 
 
 # TODO: It would be better for this to live in a 'forms' module
+# Should this exclude created_by as we will add this through current_user?
+# ExperimentForm = model_form(Experiments, exclude=('created_by'))
 ExperimentForm = model_form(Experiments)
 
 
@@ -109,11 +111,10 @@ def get_experiment(experiment_id):
 @experiments_bp.route('/data_entry', methods=['GET', 'POST'])
 @login_required
 def add_experiment():
-    name=current_user.email
     form = ExperimentForm()
     if form.validate_on_submit():
         return redirect(url_for('experiments_bp.success'))
-    return render_template('experiments/data_entry.html', form=form, name=name)
+    return render_template('experiments/data_entry.html', form=form, current_user=current_user)
 
 
 @experiments_bp.route('/success')
