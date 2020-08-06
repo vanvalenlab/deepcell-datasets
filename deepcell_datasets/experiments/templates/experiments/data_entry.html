@@ -5,7 +5,9 @@
 
 <form method="POST" role="form">
 
+
   {{  form.csrf_token  }}
+
 
   <legend><h5>Please fill out the following:</h5></legend>
 
@@ -28,11 +30,7 @@
   <div class="row">
     <div class="input-field col s6">
       {{ form.doi.label("DOI") }}
-      {{ form.doi(class='form-control', type='textinput') }}
-      <!--
-      <input id="doi" type="text" class="validate">
-      <label for="doi">DOI</label>
-      -->
+      {{ form.doi() }}
     </div>
     <div class="input-field col s6">
       <input class="datepicker" id="date_collected" name="date_collected" type="text">
@@ -41,9 +39,35 @@
   </div>
   <div class="row">
     <div class="input-field col s12">
+      {{ form.methods.subtype.label("Sub-Type") }}
+      {{ form.methods.subtype() }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the cell line.</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.methods.culture.label("Culture") }}
+      {{ form.methods.culture() }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the culture protocol.</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.methods.labeling.label("Labeling") }}
+      {{ form.methods.labeling() }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the labeling methodology.</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.methods.imaging.label("Imaging") }}
+      {{ form.methods.imaging() }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the imaging technique/methodology.</span>
+<!--
       <input id="methods" type="text" class="validate">
       <label for="methods">Methods</label>
-      <span class="helper-text" data-error="wrong" data-success="right">Helper text</span>
+-->
+
     </div>
   </div>
 
