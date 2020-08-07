@@ -37,6 +37,8 @@ from flask import url_for, redirect
 from flask_login import current_user
 from flask_security import login_required
 from flask_mongoengine.wtf import model_form
+
+from flask_wtf import FlaskForm
 from wtforms import fields
 
 from mongoengine import ValidationError
@@ -52,10 +54,9 @@ experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
 # TODO: It would be better for this to live in a 'forms' module
 # Should this exclude created_by as we will add this through current_user
 # ExperimentForm = model_form(Experiments, exclude=('created_by'))
-ExperimentForm = model_form(Experiments,
-                            exclude=('created_by'),
-                            field_args={'doi': {'textarea': False}})
 # MethodsForm = fields.FormField(Methods)
+BaseExperimentForm = model_form(Experiments, exclude=('created_by'))
+ExperimentForm = model_form(Methods, BaseExperimentForm)
 
 
 @experiments_bp.errorhandler(Exception)
@@ -118,16 +119,17 @@ def get_experiment(experiment_id):
 @login_required
 def add_experiment():
     form = ExperimentForm()
-    # inline_form = MethodsForm()
     if form.validate_on_submit():
         # Do something with data
         current_app.logger.info('form errors: %s', form.errors)
         doi_information = request.form['doi']
         date_information = request.form['date_collected']
-        imaging_info = form.methods.imaging.data
+        imaging_info = request.form
+        subtype_info = request.form['methods-subtype']
         current_app.logger.info('doi information from form: %s', doi_information)
         current_app.logger.info('date information from form: %s', date_information)
         current_app.logger.info('method information from form: %s', imaging_info)
+        current_app.logger.info('method information from form: %s', subtype_info)
         return redirect(url_for('experiments_bp.success'))
     return render_template('experiments/data_entry.html',
                            form=form,

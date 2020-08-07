@@ -5,9 +5,9 @@
 
 <form method="POST" role="form">
 
-
+<!--
   {{  form.csrf_token  }}
-
+-->
 
   <legend><h5>Please fill out the following:</h5></legend>
 
@@ -63,10 +63,7 @@
       {{ form.methods.imaging.label("Imaging") }}
       {{ form.methods.imaging() }}
       <span class="helper-text" data-error="wrong" data-success="right">Describe the imaging technique/methodology.</span>
-<!--
-      <input id="methods" type="text" class="validate">
-      <label for="methods">Methods</label>
--->
+
 
     </div>
   </div>
