@@ -38,9 +38,6 @@ from flask_login import current_user
 from flask_security import login_required
 from flask_mongoengine.wtf import model_form
 
-from flask_wtf import FlaskForm
-from wtforms import fields
-
 from mongoengine import ValidationError
 
 from deepcell_datasets.database.models import Experiments
@@ -121,15 +118,27 @@ def add_experiment():
     form = ExperimentForm()
     if form.validate_on_submit():
         # Do something with data
-        current_app.logger.info('form errors: %s', form.errors)
-        doi_information = request.form['doi']
-        date_information = request.form['date_collected']
-        imaging_info = request.form
-        subtype_info = request.form['methods-subtype']
-        current_app.logger.info('doi information from form: %s', doi_information)
-        current_app.logger.info('date information from form: %s', date_information)
-        current_app.logger.info('method information from form: %s', imaging_info)
-        current_app.logger.info('method information from form: %s', subtype_info)
+        body_raw = request.form
+        current_app.logger.info('Form body is %s ', body_raw)
+
+        body_dict = nest_dict(body_raw.to_dict())
+        current_app.logger.info('Nested dict to save is %s ', body_dict)
+        experiment = Experiments(**body_dict).save()
+
+        current_app.logger.info('experiment %s saved succesfully', experiment)
+        unique_id = experiment.id
+        current_app.logger.info('unique_id %s extracted as key', unique_id)
+
+        # doi_information = request.form['doi']
+        # date_information = request.form['date_collected']
+        # imaging_info = request.form
+        # subtype_info = request.form['methods-subtype']
+        # current_app.logger.info('doi information from form: %s', doi_information)
+        # current_app.logger.info('date information from form: %s', date_information)
+        # current_app.logger.info('method information from form: %s', imaging_info)
+        # current_app.logger.info('method information from form: %s', subtype_info)
+
+
         return redirect(url_for('experiments_bp.success'))
     return render_template('experiments/data_entry.html',
                            form=form,
@@ -139,3 +148,34 @@ def add_experiment():
 @experiments_bp.route('/success')
 def success():
     return 'Experiment Successfully Submitted'
+
+
+# TODO: This should not live here permanently
+# Utility functions
+def nest_dict(flat_dict, sep='-'):
+    """Return nested dict by splitting the keys on a delimiter.
+
+    """
+
+    # Start a new dict to hold top level keys and take values for these top level keys
+    new_dict={}
+    hyphen_dict={}
+    eds = set()
+    for k, v in flat_dict.items():
+        if '-' not in k:
+            new_dict[k] = v
+        else:
+            hyphen_dict[k] = v
+            eds.add(k.split(sep)[0])
+
+    # Create a new nested dict for each embedded document
+    # And add these dicts to the correct top level key
+    ed_dict={}
+    for ed in eds:
+        ed_dict = {}
+        for k, v in hyphen_dict.items():
+            if ed == k.split(sep)[0]:
+                ed_dict[k.split(sep)[1]] = v
+        new_dict[ed] = ed_dict
+
+    return new_dict
