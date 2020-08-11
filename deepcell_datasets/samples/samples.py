@@ -31,13 +31,31 @@ from flask import jsonify
 from flask import request
 from flask import Response
 from flask import current_app
+from flask import render_template
+from flask import url_for, redirect
 from mongoengine import ValidationError
 
+from flask_login import current_user
+from flask_security import login_required
+from flask_mongoengine.wtf import model_form
+
 from deepcell_datasets.database.models import Samples
+from deepcell_datasets.database.models import ImagingParameters
+from deepcell_datasets.database.models import Dimensions
+from deepcell_datasets.database.models import ModalityInformation
 
 
 samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
                        template_folder='templates')
+
+
+# TODO: It would be better for this to live in a 'forms' module
+# Should this exclude created_by as we will add this through current_user
+BaseForm = model_form(Samples)
+BaseFormW_img = model_form(ImagingParameters, BaseForm)
+BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
+
+SampleForm = model_form(ModalityInformation, BaseFormW_img_dim)
 
 
 @samples_bp.errorhandler(Exception)
@@ -91,3 +109,65 @@ def delete_sample(sample_id):
 def get_sample(sample_id):
     sample = Samples.objects.get_or_404(id=sample_id).to_json()
     return Response(sample, mimetype='application/json')
+
+
+# Routes for HTML pages.
+@samples_bp.route('/data_entry/<exp_id>', methods=['GET', 'POST'])
+@login_required
+def add_sample(exp_id):
+    form = SampleForm()
+    if form.validate_on_submit():
+        # Do something with data
+        body_raw = request.form
+        current_app.logger.info('Form body is %s ', body_raw)
+
+        body_dict = nest_dict(body_raw.to_dict())
+        current_app.logger.info('Nested dict to save is %s ', body_dict)
+        sample = Samples(**body_dict).save()
+
+        current_app.logger.info('sample %s saved succesfully', sample)
+        unique_id = sample.id
+        current_app.logger.info('unique_id %s extracted as key', unique_id)
+
+
+        return redirect(url_for('samples_bp.success'))
+    return render_template('samples/data_entry.html',
+                           form=form,
+                           current_user=current_user,
+                           exp_id=exp_id)
+
+
+@samples_bp.route('/success')
+def success():
+    return 'Sample Successfully Submitted'
+
+
+# TODO: This shared utility should not live here permanently
+# Utility functions
+def nest_dict(flat_dict, sep='-'):
+    """Return nested dict by splitting the keys on a delimiter.
+
+    """
+
+    # Start a new dict to hold top level keys and take values for these top level keys
+    new_dict = {}
+    hyphen_dict = {}
+    eds = set()
+    for k, v in flat_dict.items():
+        if '-' not in k:
+            new_dict[k] = v
+        else:
+            hyphen_dict[k] = v
+            eds.add(k.split(sep)[0])
+
+    # Create a new nested dict for each embedded document
+    # And add these dicts to the correct top level key
+    ed_dict = {}
+    for ed in eds:
+        ed_dict = {}
+        for k, v in hyphen_dict.items():
+            if ed == k.split(sep)[0]:
+                ed_dict[k.split(sep)[1]] = v
+        new_dict[ed] = ed_dict
+
+    return new_dict

@@ -43,6 +43,8 @@ from mongoengine import ValidationError
 from deepcell_datasets.database.models import Experiments
 from deepcell_datasets.database.models import Methods
 
+from deepcell_datasets.samples.samples import samples_bp
+
 
 experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
                            template_folder='templates')
@@ -139,7 +141,7 @@ def add_experiment():
         # current_app.logger.info('method information from form: %s', subtype_info)
 
 
-        return redirect(url_for('experiments_bp.success'))
+        return redirect(url_for('samples_bp.add_sample', exp_id=unique_id))
     return render_template('experiments/data_entry.html',
                            form=form,
                            current_user=current_user)
@@ -158,8 +160,8 @@ def nest_dict(flat_dict, sep='-'):
     """
 
     # Start a new dict to hold top level keys and take values for these top level keys
-    new_dict={}
-    hyphen_dict={}
+    new_dict = {}
+    hyphen_dict = {}
     eds = set()
     for k, v in flat_dict.items():
         if '-' not in k:
@@ -170,7 +172,7 @@ def nest_dict(flat_dict, sep='-'):
 
     # Create a new nested dict for each embedded document
     # And add these dicts to the correct top level key
-    ed_dict={}
+    ed_dict = {}
     for ed in eds:
         ed_dict = {}
         for k, v in hyphen_dict.items():
