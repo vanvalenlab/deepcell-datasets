@@ -31,15 +31,62 @@
   </div>
 
   <div class="row">
-    <div class="input-field col s12">
+    <div class="col s12">
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the sample in terms of kinetics and spatial dimension.</span>
+    </div>
+    <div class="radio col s6">
 
-      {% for entry in form.onto_loc %}
-        {{ entry.label("Location in Ontology") }}
-        {{ entry() }}
-        }
-      {% endfor %}
+    <p>
+      <label for="static">
+        <input id="static" name="kinetics" type="radio" value="static" checked />
+        <span>Static</span>
+      </label>
+    </p>
+    <p>
+      <label for="dynamic">
+        <input id="dynamic" name="kinetics" type="radio" value="dynamic" />
+        <span>Dynamic</span>
+      </label>
+    </p>
 
-      <span class="helper-text" data-error="wrong" data-success="right">Describe the sample in terms of kinetics and spatial dimension (e.g. dynamic, 2d).</span>
+<!--
+      <p>
+        <input id="static" name="kinetics" type="radio" value="static">
+        <label for="static">static</label>
+      </p>
+      <p>
+        <input id="dynamic" name="kinetics" type="radio" value="dynamic">
+        <label for="dynamic">dynamic</label>
+      </p>
+
+  {% for subfield in form.kinetics %}
+    <p>
+        {{ subfield }}
+        {{ subfield.label }}
+    </p>
+  {% endfor %}
+-->
+    </div>
+    <div class="radio col s6">
+
+      <p>
+        <label for="2d">
+          <input id="2d" name="spatial_dim" type="radio" value="2d" checked />
+          <span>2D</span>
+        </label>
+      </p>
+      <p>
+        <label for="3d">
+          <input id="3d" name="spatial_dim" type="radio" value="3d" />
+          <span>3D</span>
+        </label>
+      </p>
+
+<!--
+      {{ form.spatial_dim.label("Spatial Dimension") }}
+      {{ form.spatial_dim(class="radio") }}
+-->
+
     </div>
   </div>
   <div class="row">
@@ -89,6 +136,9 @@
   </div>
 
   <div class="row">
+    <div class="col s12">
+      <span class="helper-text" data-error="wrong" data-success="right">Define the dimensions of the sample.</span>
+    </div>
     <div class="input-field col s3">
       {{ form.dimensions.x.label("x") }}
       {{ form.dimensions.x() }}

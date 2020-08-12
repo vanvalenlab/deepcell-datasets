@@ -51,7 +51,9 @@ samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
 
 # TODO: It would be better for this to live in a 'forms' module
 # Should this exclude created_by as we will add this through current_user
-BaseForm = model_form(Samples)
+BaseForm = model_form(Samples,
+                      field_args={'kinetics': {'radio': True},
+                                  'spatial_dim': {'radio': True}})
 BaseFormW_img = model_form(ImagingParameters, BaseForm)
 BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
 

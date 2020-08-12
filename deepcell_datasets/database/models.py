@@ -131,12 +131,10 @@ class Samples(db.Document):
     specimen = db.StringField()
     modality = db.EmbeddedDocumentField(ModalityInformation)
 
-    # Create a custom list field to hold this information
-    # kinetics = {'static', 'dynamic'}
-    # spatial_dim = {'2d', '3d'}
-    # onto_loc = db.StringField(choices=codes.keys(), required = True)
-    # But until then use:
-    onto_loc = db.ListField(db.StringField())
+    # location in the ontology
+    kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
+    spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
+
     # each sample belongs to an Experiment
     experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
 
