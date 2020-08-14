@@ -52,9 +52,8 @@ experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
 
 # TODO: It would be better for this to live in a 'forms' module
 # Should this exclude created_by as we will add this through current_user
-# ExperimentForm = model_form(Experiments, exclude=('created_by'))
-# MethodsForm = fields.FormField(Methods)
 BaseExperimentForm = model_form(Experiments, exclude=('created_by'))
+# MethodsForm = fields.FormField(Methods)
 ExperimentForm = model_form(Methods, BaseExperimentForm)
 
 
@@ -123,6 +122,8 @@ def add_experiment():
         body_raw = request.form
         current_app.logger.info('Form body is %s ', body_raw)
 
+        # TODO: USER information is missing and should be added
+
         body_dict = nest_dict(body_raw.to_dict())
         current_app.logger.info('Nested dict to save is %s ', body_dict)
         experiment = Experiments(**body_dict).save()
@@ -164,7 +165,9 @@ def nest_dict(flat_dict, sep='-'):
     hyphen_dict = {}
     eds = set()
     for k, v in flat_dict.items():
-        if '-' not in k:
+        if not v:
+            pass
+        elif '-' not in k:
             new_dict[k] = v
         else:
             hyphen_dict[k] = v

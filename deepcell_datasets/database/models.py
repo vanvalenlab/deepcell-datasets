@@ -97,9 +97,9 @@ class ImagingParameters(db.EmbeddedDocument):
     camera = db.StringField()
     magnification = db.FloatField(min_value=0)
     na = db.FloatField(min_value=0, max_value=5)
-    binning = db.StringField()
-    pixel_size = db.StringField()
-    exposure_time = db.StringField()
+    binning = db.StringField(max_length=1000)
+    pixel_size = db.StringField(max_length=255)
+    exposure_time = db.StringField(max_length=255)
 
 
 class Dimensions(db.EmbeddedDocument):
@@ -111,9 +111,9 @@ class Dimensions(db.EmbeddedDocument):
 
 class ModalityInformation(db.EmbeddedDocument):
     # These can't be selected from sets because there could always be a new one
-    imaging_modality = db.StringField(required=True)
-    compartment = db.StringField()
-    marker = db.StringField()
+    imaging_modality = db.StringField(max_length=1000, required=True)
+    compartment = db.StringField(max_length=1000)
+    marker = db.StringField(max_length=1000)
 
 
 class Samples(db.Document):
@@ -125,14 +125,14 @@ class Samples(db.Document):
     position = db.IntField(required=True)
     imaging_params = db.EmbeddedDocumentField(ImagingParameters)
     dimensions = db.EmbeddedDocumentField(Dimensions)
-    time_step = db.StringField()
-    z_step = db.StringField()
+    time_step = db.StringField(max_length=255)
+    z_step = db.StringField(max_length=255)
 
-    specimen = db.StringField()
+    specimen = db.StringField(max_length=1000)
     modality = db.EmbeddedDocumentField(ModalityInformation)
 
     # location in the ontology
-    kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
+    kinetics = db.StringField(choices=('static', 'dynamic'))
     spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
 
     # each sample belongs to an Experiment

@@ -5,9 +5,11 @@
 
 <form method="POST" role="form">
 
+
 <!--
   {{  form.csrf_token  }}
 -->
+
 <!-- TODO: It would be nice to use a macro to render all these
 -->
 
@@ -22,6 +24,7 @@
       {% endfor %}
     </ul>
   {% endif %}
+
 
   <div class="row">
     <div class="input-field col s12">
@@ -97,18 +100,15 @@
     </div>
   </div>
   <div class="row">
-    <div class="input-field col s12">
+    <div class="input-field col s3">
       {{ form.modality.imaging_modality.label("Imaging Modality") }}
       {{ form.modality.imaging_modality() }}
     </div>
-  </div>
-
-  <div class="row">
-    <div class="input-field col s6">
+    <div class="input-field col s3">
       {{ form.modality.compartment.label("Compartment of Interest") }}
       {{ form.modality.compartment() }}
     </div>
-    <div class="input-field col s6">
+    <div class="input-field col s3">
       {{ form.modality.marker.label("Marker") }}
       {{ form.modality.marker() }}
     </div>

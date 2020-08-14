@@ -51,9 +51,10 @@ samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
 
 # TODO: It would be better for this to live in a 'forms' module
 # Should this exclude created_by as we will add this through current_user
-BaseForm = model_form(Samples,
-                      field_args={'kinetics': {'radio': True},
-                                  'spatial_dim': {'radio': True}})
+# BaseForm = model_form(Samples,
+#                       field_args={'kinetics': {'radio': True},
+#                                   'spatial_dim': {'radio': True}})
+BaseForm = model_form(Samples)
 BaseFormW_img = model_form(ImagingParameters, BaseForm)
 BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
 
@@ -114,25 +115,35 @@ def get_sample(sample_id):
 
 
 # Routes for HTML pages.
+# TODO: This should likely be split into several routes allowing
+#       users the option to re-use information like scope, step, marker, etc.
+#       This could be down with checkbox and passing objects from one route
+#       to the next.
 @samples_bp.route('/data_entry/<exp_id>', methods=['GET', 'POST'])
 @login_required
 def add_sample(exp_id):
     form = SampleForm()
-    if form.validate_on_submit():
-        # Do something with data
-        body_raw = request.form
-        current_app.logger.info('Form body is %s ', body_raw)
+    # flask-mongoengine wtf validation fails for required fields
+    # TODO: likely a bug in flask-mongo but the following logic shouldnt stay
+    if form.is_submitted():
+        if not form.validate():
+            # TODO: This is here to remind us of the package bug:
+            current_app.logger.info('Form errors are %s ', form.errors)
+            # Do something with data
+            body_raw = request.form
+            current_app.logger.info('Form body is %s ', body_raw)
 
-        body_dict = nest_dict(body_raw.to_dict())
-        current_app.logger.info('Nested dict to save is %s ', body_dict)
-        sample = Samples(**body_dict).save()
+            body_dict = nest_dict(body_raw.to_dict())
+            current_app.logger.info('Nested dict to save is %s ', body_dict)
+            sample = Samples(**body_dict).save()
 
-        current_app.logger.info('sample %s saved succesfully', sample)
-        unique_id = sample.id
-        current_app.logger.info('unique_id %s extracted as key', unique_id)
+            current_app.logger.info('sample %s saved succesfully', sample)
+            unique_id = sample.id
+            current_app.logger.info('unique_id %s extracted as key', unique_id)
 
 
-        return redirect(url_for('samples_bp.success'))
+            return redirect(url_for('samples_bp.success'))
+
     return render_template('samples/data_entry.html',
                            form=form,
                            current_user=current_user,
@@ -156,7 +167,9 @@ def nest_dict(flat_dict, sep='-'):
     hyphen_dict = {}
     eds = set()
     for k, v in flat_dict.items():
-        if '-' not in k:
+        if not v:
+            pass
+        elif '-' not in k:
             new_dict[k] = v
         else:
             hyphen_dict[k] = v
