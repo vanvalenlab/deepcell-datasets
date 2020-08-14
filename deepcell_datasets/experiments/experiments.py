@@ -43,18 +43,21 @@ from mongoengine import ValidationError
 from deepcell_datasets.database.models import Experiments
 from deepcell_datasets.database.models import Methods
 
+from deepcell_datasets.experiments.forms import ExperimentForm
 from deepcell_datasets.samples.samples import samples_bp
+
+from deepcell_datasets.utils.misc_utils import nest_dict
 
 
 experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
                            template_folder='templates')
 
 
-# TODO: It would be better for this to live in a 'forms' module
-# Should this exclude created_by as we will add this through current_user
-BaseExperimentForm = model_form(Experiments, exclude=('created_by'))
-# MethodsForm = fields.FormField(Methods)
-ExperimentForm = model_form(Methods, BaseExperimentForm)
+# # TODO: It would be better for this to live in a 'forms' module
+# # Should this exclude created_by as we will add this through current_user
+# BaseExperimentForm = model_form(Experiments, exclude=('created_by'))
+# # MethodsForm = fields.FormField(Methods)
+# ExperimentForm = model_form(Methods, BaseExperimentForm)
 
 
 @experiments_bp.errorhandler(Exception)
@@ -74,42 +77,42 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-@experiments_bp.route('/')
-def get_experiments():  # def get_experiments(page=1):
-    # paginated_experiments = experiments.objects.paginate(page=page, per_page=10)
-    experiments = Experiments.objects().to_json()
-    return Response(experiments, mimetype='application/json')
+# @experiments_bp.route('/')
+# def get_experiments():  # def get_experiments(page=1):
+#     # paginated_experiments = experiments.objects.paginate(page=page, per_page=10)
+#     experiments = Experiments.objects().to_json()
+#     return Response(experiments, mimetype='application/json')
 
 
-@experiments_bp.route('/', methods=['POST'])
-def create_experiment():
-    """Create a new experiments"""
-    body = request.get_json()
-    current_app.logger.info('Body is %s ', body)
-    experiment = Experiments(**body).save()
-    current_app.logger.info('experiment %s saved succesfully', experiment)
-    unique_id = experiment.id
-    current_app.logger.info('unique_id %s extracted as key', unique_id)
-    return jsonify({'unique_id': str(unique_id)})
+# @experiments_bp.route('/', methods=['POST'])
+# def create_experiment():
+#     """Create a new experiments"""
+#     body = request.get_json()
+#     current_app.logger.info('Body is %s ', body)
+#     experiment = Experiments(**body).save()
+#     current_app.logger.info('experiment %s saved succesfully', experiment)
+#     unique_id = experiment.id
+#     current_app.logger.info('unique_id %s extracted as key', unique_id)
+#     return jsonify({'unique_id': str(unique_id)})
 
 
-@experiments_bp.route('/<experiment_id>', methods=['PUT'])
-def update_experiment(experiment_id):
-    body = request.get_json()
-    Experiments.objects.get_or_404(id=experiment_id).update(**body)
-    return jsonify({}), 204  # successful update but no content
+# @experiments_bp.route('/<experiment_id>', methods=['PUT'])
+# def update_experiment(experiment_id):
+#     body = request.get_json()
+#     Experiments.objects.get_or_404(id=experiment_id).update(**body)
+#     return jsonify({}), 204  # successful update but no content
 
 
-@experiments_bp.route('/<experiment_id>', methods=['DELETE'])
-def delete_experiment(experiment_id):
-    Experiments.objects.get_or_404(id=experiment_id).delete()
-    return jsonify({}), 204  # successful update but no content
+# @experiments_bp.route('/<experiment_id>', methods=['DELETE'])
+# def delete_experiment(experiment_id):
+#     Experiments.objects.get_or_404(id=experiment_id).delete()
+#     return jsonify({}), 204  # successful update but no content
 
 
-@experiments_bp.route('/<experiment_id>')
-def get_experiment(experiment_id):
-    experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
-    return Response(experiment, mimetype='application/json')
+# @experiments_bp.route('/<experiment_id>')
+# def get_experiment(experiment_id):
+#     experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
+#     return Response(experiment, mimetype='application/json')
 
 
 # Routes for HTML pages.
@@ -151,36 +154,3 @@ def add_experiment():
 @experiments_bp.route('/success')
 def success():
     return 'Experiment Successfully Submitted'
-
-
-# TODO: This should not live here permanently
-# Utility functions
-def nest_dict(flat_dict, sep='-'):
-    """Return nested dict by splitting the keys on a delimiter.
-
-    """
-
-    # Start a new dict to hold top level keys and take values for these top level keys
-    new_dict = {}
-    hyphen_dict = {}
-    eds = set()
-    for k, v in flat_dict.items():
-        if not v:
-            pass
-        elif '-' not in k:
-            new_dict[k] = v
-        else:
-            hyphen_dict[k] = v
-            eds.add(k.split(sep)[0])
-
-    # Create a new nested dict for each embedded document
-    # And add these dicts to the correct top level key
-    ed_dict = {}
-    for ed in eds:
-        ed_dict = {}
-        for k, v in hyphen_dict.items():
-            if ed == k.split(sep)[0]:
-                ed_dict[k.split(sep)[1]] = v
-        new_dict[ed] = ed_dict
-
-    return new_dict

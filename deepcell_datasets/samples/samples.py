@@ -44,21 +44,25 @@ from deepcell_datasets.database.models import ImagingParameters
 from deepcell_datasets.database.models import Dimensions
 from deepcell_datasets.database.models import ModalityInformation
 
+from deepcell_datasets.samples.forms import SampleForm
+
+from deepcell_datasets.utils.misc_utils import nest_dict
+
 
 samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
                        template_folder='templates')
 
 
-# TODO: It would be better for this to live in a 'forms' module
-# Should this exclude created_by as we will add this through current_user
-# BaseForm = model_form(Samples,
-#                       field_args={'kinetics': {'radio': True},
-#                                   'spatial_dim': {'radio': True}})
-BaseForm = model_form(Samples)
-BaseFormW_img = model_form(ImagingParameters, BaseForm)
-BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
+# # TODO: It would be better for this to live in a 'forms' module
+# # Should this exclude created_by as we will add this through current_user
+# # BaseForm = model_form(Samples,
+# #                       field_args={'kinetics': {'radio': True},
+# #                                   'spatial_dim': {'radio': True}})
+# BaseForm = model_form(Samples)
+# BaseFormW_img = model_form(ImagingParameters, BaseForm)
+# BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
 
-SampleForm = model_form(ModalityInformation, BaseFormW_img_dim)
+# SampleForm = model_form(ModalityInformation, BaseFormW_img_dim)
 
 
 @samples_bp.errorhandler(Exception)
@@ -76,42 +80,42 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-@samples_bp.route('/')
-def get_samples():  # def get_samples(page=1):
-    # paginated_samples = Samples.objects.paginate(page=page, per_page=10)
-    samples = Samples.objects().to_json()
-    return Response(samples, mimetype='application/json')
+# @samples_bp.route('/')
+# def get_samples():  # def get_samples(page=1):
+#     # paginated_samples = Samples.objects.paginate(page=page, per_page=10)
+#     samples = Samples.objects().to_json()
+#     return Response(samples, mimetype='application/json')
 
 
-@samples_bp.route('/', methods=['POST'])
-def create_sample():
-    """Create a new experiments"""
-    body = request.get_json()
-    current_app.logger.info('Body is %s ', body)
-    sample = Samples(**body).save()
-    current_app.logger.info('sample %s saved succesfully', sample)
-    unique_id = sample.id
-    current_app.logger.info('unique_id %s extracted as key', unique_id)
-    return jsonify({'unique_id': str(unique_id)})
+# @samples_bp.route('/', methods=['POST'])
+# def create_sample():
+#     """Create a new experiments"""
+#     body = request.get_json()
+#     current_app.logger.info('Body is %s ', body)
+#     sample = Samples(**body).save()
+#     current_app.logger.info('sample %s saved succesfully', sample)
+#     unique_id = sample.id
+#     current_app.logger.info('unique_id %s extracted as key', unique_id)
+#     return jsonify({'unique_id': str(unique_id)})
 
 
-@samples_bp.route('/<sample_id>', methods=['PUT'])
-def update_sample(sample_id):
-    body = request.get_json()
-    Samples.objects.get_or_404(id=sample_id).update(**body)
-    return jsonify({}), 204  # successful update but no content
+# @samples_bp.route('/<sample_id>', methods=['PUT'])
+# def update_sample(sample_id):
+#     body = request.get_json()
+#     Samples.objects.get_or_404(id=sample_id).update(**body)
+#     return jsonify({}), 204  # successful update but no content
 
 
-@samples_bp.route('/<sample_id>', methods=['DELETE'])
-def delete_sample(sample_id):
-    Samples.objects.get_or_404(id=sample_id).delete()
-    return jsonify({}), 204  # successful update but no content
+# @samples_bp.route('/<sample_id>', methods=['DELETE'])
+# def delete_sample(sample_id):
+#     Samples.objects.get_or_404(id=sample_id).delete()
+#     return jsonify({}), 204  # successful update but no content
 
 
-@samples_bp.route('/<sample_id>')
-def get_sample(sample_id):
-    sample = Samples.objects.get_or_404(id=sample_id).to_json()
-    return Response(sample, mimetype='application/json')
+# @samples_bp.route('/<sample_id>')
+# def get_sample(sample_id):
+#     sample = Samples.objects.get_or_404(id=sample_id).to_json()
+#     return Response(sample, mimetype='application/json')
 
 
 # Routes for HTML pages.
@@ -133,6 +137,9 @@ def add_sample(exp_id):
             body_raw = request.form
             current_app.logger.info('Form body is %s ', body_raw)
 
+            # We need to add in experiment ID information here
+            # Or inject value from form
+
             body_dict = nest_dict(body_raw.to_dict())
             current_app.logger.info('Nested dict to save is %s ', body_dict)
             sample = Samples(**body_dict).save()
@@ -153,36 +160,3 @@ def add_sample(exp_id):
 @samples_bp.route('/success')
 def success():
     return 'Sample Successfully Submitted'
-
-
-# TODO: This shared utility should not live here permanently
-# Utility functions
-def nest_dict(flat_dict, sep='-'):
-    """Return nested dict by splitting the keys on a delimiter.
-
-    """
-
-    # Start a new dict to hold top level keys and take values for these top level keys
-    new_dict = {}
-    hyphen_dict = {}
-    eds = set()
-    for k, v in flat_dict.items():
-        if not v:
-            pass
-        elif '-' not in k:
-            new_dict[k] = v
-        else:
-            hyphen_dict[k] = v
-            eds.add(k.split(sep)[0])
-
-    # Create a new nested dict for each embedded document
-    # And add these dicts to the correct top level key
-    ed_dict = {}
-    for ed in eds:
-        ed_dict = {}
-        for k, v in hyphen_dict.items():
-            if ed == k.split(sep)[0]:
-                ed_dict[k.split(sep)[1]] = v
-        new_dict[ed] = ed_dict
-
-    return new_dict
