@@ -23,13 +23,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Miscellaneous utility functions"""
+"""Utility functions"""
 
-# Parsing JSON body
+
 def nest_dict(flat_dict, sep='-'):
-    """Return nested dict by splitting the keys on a delimiter. Eliminates
-       any keys with empty strings as values.
+    """Return nested dict by splitting the keys on a delimiter.
 
+    Flask-wtf returns embedded document fields as a flattened dict, with
+    embedded document names embedded in the key. Any keys with empty values
+    will be removed.
+
+    For example, a document User may have an embedded document Comment.
+    Flask-wtf will return this in a form as "user-comment". This function
+    returns a nested dictionary like d["user"]["comment"].
+
+    Args:
+        flat_dict (dict): Flattened dict of embedded document fields.
+        sep (str): Seperator between nested keys.
+
+    Returns:
+        dict: Nested dictionary which better represents the embedded documents.
     """
 
     # Start a new dict to hold top level keys and take values for these top level keys

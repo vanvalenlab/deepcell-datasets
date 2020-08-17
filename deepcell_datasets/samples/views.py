@@ -32,26 +32,23 @@ from flask import request
 from flask import current_app
 from flask import render_template
 from flask import url_for, redirect
+from mongoengine import ValidationError
 
 from flask_login import current_user
 from flask_security import login_required
 
-from mongoengine import ValidationError
-
+from deepcell_datasets.database.models import Samples
 from deepcell_datasets.database.models import Experiments
 
-
-from deepcell_datasets.experiments.forms import ExperimentForm
-from deepcell_datasets.samples.samples import samples_bp
-
-from deepcell_datasets.utils.misc_utils import nest_dict
+from deepcell_datasets.samples.forms import SampleForm
+from deepcell_datasets.utils import nest_dict
 
 
-experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
-                           template_folder='templates')
+samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
+                       template_folder='templates')
 
 
-@experiments_bp.errorhandler(Exception)
+@samples_bp.errorhandler(Exception)
 def handle_exception(err):
     """Error handler
 
@@ -63,39 +60,48 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
-    current_app.logger.error('Encountered unexpected %s: %s.',
-                             err.__class__.__name__, err)
     return jsonify({'error': str(err)}), 500
 
 
 # Routes for HTML pages.
-@experiments_bp.route('/data_entry', methods=['GET', 'POST'])
+# TODO: This should likely be split into several routes allowing
+#       users the option to re-use information like scope, step, marker, etc.
+#       This could be down with checkbox and passing objects from one route
+#       to the next.
+@samples_bp.route('/data_entry/<exp_id>', methods=['GET', 'POST'])
 @login_required
-def add_experiment():
-    form = ExperimentForm()
-    if form.validate_on_submit():
-        body_raw = request.form
-        current_app.logger.info('Form body is %s ', body_raw)
-        body_dict = nest_dict(body_raw.to_dict())
-        # Add in current user information
-        body_dict['created_by'] = current_user._get_current_object()
+def add_sample(exp_id):
+    form = SampleForm()
+    # flask-mongoengine wtf validation fails for required fields
+    # TODO: likely a bug in flask-mongo but the following logic shouldnt stay
+    if form.is_submitted():
+        if not form.validate():
+            # TODO: This is here to remind us of the package bug:
+            current_app.logger.info('Form errors are %s ', form.errors)
+            # Do something with data
+            body_raw = request.form
+            current_app.logger.info('Form body is %s ', body_raw)
+            body_dict = nest_dict(body_raw.to_dict())
 
-        current_app.logger.info('Nested dict to save is %s ', body_dict)
-        experiment = Experiments(**body_dict).save()
+            # Add in Experiment ID information here
+            experiment = Experiments.objects.get_or_404(id=exp_id)
+            body_dict['experiment'] = experiment
 
-        current_app.logger.info('experiment %s saved succesfully', experiment)
-        unique_id = experiment.id
-        current_app.logger.info('unique_id %s extracted as key', unique_id)
+            current_app.logger.info('Nested dict to save is %s ', body_dict)
+            sample = Samples(**body_dict).save()
 
-        # TODO: It would be helpful to have the experiment added to the User
-        #       collection here
+            current_app.logger.info('sample %s saved succesfully', sample)
+            unique_id = sample.id
+            current_app.logger.info('unique_id %s extracted as key', unique_id)
 
-        return redirect(url_for('samples_bp.add_sample', exp_id=unique_id))
-    return render_template('experiments/data_entry.html',
+            return redirect(url_for('samples_bp.success'))
+
+    return render_template('samples/data_entry.html',
                            form=form,
-                           current_user=current_user)
+                           current_user=current_user,
+                           exp_id=exp_id)
 
 
-@experiments_bp.route('/success')
+@samples_bp.route('/success')
 def success():
-    return 'Experiment Successfully Submitted'
+    return 'Sample Successfully Submitted'
