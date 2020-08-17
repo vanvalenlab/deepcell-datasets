@@ -42,7 +42,8 @@ from deepcell_datasets.database.models import Experiments
 
 
 from deepcell_datasets.experiments.forms import ExperimentForm
-from deepcell_datasets.samples.samples import samples_bp
+
+from deepcell_datasets.samples.views import samples_bp
 
 from deepcell_datasets.utils import nest_dict
 
