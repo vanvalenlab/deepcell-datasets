@@ -91,7 +91,6 @@ def add_sample(exp_id):
             unique_id = sample.id
             current_app.logger.info('unique_id %s extracted as key', unique_id)
 
-
             return redirect(url_for('samples_bp.success'))
 
     return render_template('samples/data_entry.html',

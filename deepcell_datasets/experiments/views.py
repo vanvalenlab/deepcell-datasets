@@ -98,7 +98,6 @@ def add_experiment():
         # current_app.logger.info('method information from form: %s', imaging_info)
         # current_app.logger.info('method information from form: %s', subtype_info)
 
-
         return redirect(url_for('samples_bp.add_sample', exp_id=unique_id))
     return render_template('experiments/data_entry.html',
                            form=form,
