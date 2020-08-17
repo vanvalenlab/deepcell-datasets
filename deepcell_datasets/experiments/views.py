@@ -39,13 +39,9 @@ from flask_security import login_required
 from mongoengine import ValidationError
 
 from deepcell_datasets.database.models import Experiments
-
-
 from deepcell_datasets.experiments.forms import ExperimentForm
-
-from deepcell_datasets.samples.views import samples_bp
-
 from deepcell_datasets.utils import nest_dict
+from deepcell_datasets.samples.views import samples_bp
 
 
 experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
