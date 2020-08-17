@@ -82,9 +82,9 @@ def create_app(**config_overrides):
             role=admin_role)
 
     app.register_blueprint(general.general_bp, url_prefix='/')
-    app.register_blueprint(experiments.api.experiments_api_bp, url_prefix='/experiments')
+    app.register_blueprint(experiments.api.experiments_api_bp, url_prefix='/api/experiments')
     app.register_blueprint(experiments.views.experiments_bp, url_prefix='/experiments')
-    app.register_blueprint(samples.api.samples_api_bp, url_prefix='/samples')
+    app.register_blueprint(samples.api.samples_api_bp, url_prefix='/api/samples')
     app.register_blueprint(samples.views.samples_bp, url_prefix='/samples')
 
     # toolbar = DebugToolbarExtension(app)
