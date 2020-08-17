@@ -29,7 +29,6 @@
 # from mongoengine.fields import ListField, StringField
 
 from flask_security import UserMixin, RoleMixin, MongoEngineUserDatastore
-from flask_mongoengine.wtf import model_form
 
 from deepcell_datasets.database.db import db
 

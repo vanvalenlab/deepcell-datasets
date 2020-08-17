@@ -75,13 +75,12 @@ def handle_exception(err):
 def add_experiment():
     form = ExperimentForm()
     if form.validate_on_submit():
-        # Do something with data
         body_raw = request.form
         current_app.logger.info('Form body is %s ', body_raw)
-
-        # TODO: USER information is missing and should be added
-
         body_dict = nest_dict(body_raw.to_dict())
+        # Add in current user information
+        body_dict['created_by'] = current_user._get_current_object()
+
         current_app.logger.info('Nested dict to save is %s ', body_dict)
         experiment = Experiments(**body_dict).save()
 
@@ -89,14 +88,8 @@ def add_experiment():
         unique_id = experiment.id
         current_app.logger.info('unique_id %s extracted as key', unique_id)
 
-        # doi_information = request.form['doi']
-        # date_information = request.form['date_collected']
-        # imaging_info = request.form
-        # subtype_info = request.form['methods-subtype']
-        # current_app.logger.info('doi information from form: %s', doi_information)
-        # current_app.logger.info('date information from form: %s', date_information)
-        # current_app.logger.info('method information from form: %s', imaging_info)
-        # current_app.logger.info('method information from form: %s', subtype_info)
+        # TODO: It would be helpful to have the experiment added to the User
+        #       collection here
 
         return redirect(url_for('samples_bp.add_sample', exp_id=unique_id))
     return render_template('experiments/data_entry.html',
