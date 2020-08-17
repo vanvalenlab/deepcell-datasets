@@ -38,6 +38,8 @@ from flask_login import current_user
 from flask_security import login_required
 
 from deepcell_datasets.database.models import Samples
+from deepcell_datasets.database.models import Experiments
+
 from deepcell_datasets.samples.forms import SampleForm
 from deepcell_datasets.utils.misc_utils import nest_dict
 
@@ -79,11 +81,12 @@ def add_sample(exp_id):
             # Do something with data
             body_raw = request.form
             current_app.logger.info('Form body is %s ', body_raw)
-
-            # We need to add in experiment ID information here
-            # Or inject value from form
-
             body_dict = nest_dict(body_raw.to_dict())
+
+            # Add in Experiment ID information here
+            experiment = Experiments.objects.get_or_404(id=exp_id)
+            body_dict['experiment'] = experiment
+
             current_app.logger.info('Nested dict to save is %s ', body_dict)
             sample = Samples(**body_dict).save()
 
