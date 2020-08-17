@@ -89,20 +89,20 @@ def create_experiment():
     return jsonify({'unique_id': str(unique_id)})
 
 
-@api_bp.route('/<experiment_id>', methods=['PUT'])
+@api_bp.route('/experiments/<experiment_id>', methods=['PUT'])
 def update_experiment(experiment_id):
     body = request.get_json()
     Experiments.objects.get_or_404(id=experiment_id).update(**body)
     return jsonify({}), 204  # successful update but no content
 
 
-@api_bp.route('/<experiment_id>', methods=['DELETE'])
+@api_bp.route('/experiments/<experiment_id>', methods=['DELETE'])
 def delete_experiment(experiment_id):
     Experiments.objects.get_or_404(id=experiment_id).delete()
     return jsonify({}), 204  # successful update but no content
 
 
-@api_bp.route('/<experiment_id>')
+@api_bp.route('/experiments/<experiment_id>')
 def get_experiment(experiment_id):
     experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
     return Response(experiment, mimetype='application/json')
@@ -129,20 +129,20 @@ def create_sample():
 
 
 # TODO: This shouldnt stay '/' should have a prefix
-@api_bp.route('/<sample_id>', methods=['PUT'])
+@api_bp.route('/samples/<sample_id>', methods=['PUT'])
 def update_sample(sample_id):
     body = request.get_json()
     Samples.objects.get_or_404(id=sample_id).update(**body)
     return jsonify({}), 204  # successful update but no content
 
 
-@api_bp.route('/<sample_id>', methods=['DELETE'])
+@api_bp.route('/samples/<sample_id>', methods=['DELETE'])
 def delete_sample(sample_id):
     Samples.objects.get_or_404(id=sample_id).delete()
     return jsonify({}), 204  # successful update but no content
 
 
-@api_bp.route('/<sample_id>')
+@api_bp.route('/samples/<sample_id>')
 def get_sample(sample_id):
     sample = Samples.objects.get_or_404(id=sample_id).to_json()
     return Response(sample, mimetype='application/json')

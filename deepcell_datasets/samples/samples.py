@@ -29,7 +29,6 @@ from werkzeug.exceptions import HTTPException
 from flask import Blueprint
 from flask import jsonify
 from flask import request
-from flask import Response
 from flask import current_app
 from flask import render_template
 from flask import url_for, redirect
@@ -37,32 +36,14 @@ from mongoengine import ValidationError
 
 from flask_login import current_user
 from flask_security import login_required
-from flask_mongoengine.wtf import model_form
 
 from deepcell_datasets.database.models import Samples
-from deepcell_datasets.database.models import ImagingParameters
-from deepcell_datasets.database.models import Dimensions
-from deepcell_datasets.database.models import ModalityInformation
-
 from deepcell_datasets.samples.forms import SampleForm
-
 from deepcell_datasets.utils.misc_utils import nest_dict
 
 
 samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
                        template_folder='templates')
-
-
-# # TODO: It would be better for this to live in a 'forms' module
-# # Should this exclude created_by as we will add this through current_user
-# # BaseForm = model_form(Samples,
-# #                       field_args={'kinetics': {'radio': True},
-# #                                   'spatial_dim': {'radio': True}})
-# BaseForm = model_form(Samples)
-# BaseFormW_img = model_form(ImagingParameters, BaseForm)
-# BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
-
-# SampleForm = model_form(ModalityInformation, BaseFormW_img_dim)
 
 
 @samples_bp.errorhandler(Exception)
@@ -78,44 +59,6 @@ def handle_exception(err):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
     return jsonify({'error': str(err)}), 500
-
-
-# @samples_bp.route('/')
-# def get_samples():  # def get_samples(page=1):
-#     # paginated_samples = Samples.objects.paginate(page=page, per_page=10)
-#     samples = Samples.objects().to_json()
-#     return Response(samples, mimetype='application/json')
-
-
-# @samples_bp.route('/', methods=['POST'])
-# def create_sample():
-#     """Create a new experiments"""
-#     body = request.get_json()
-#     current_app.logger.info('Body is %s ', body)
-#     sample = Samples(**body).save()
-#     current_app.logger.info('sample %s saved succesfully', sample)
-#     unique_id = sample.id
-#     current_app.logger.info('unique_id %s extracted as key', unique_id)
-#     return jsonify({'unique_id': str(unique_id)})
-
-
-# @samples_bp.route('/<sample_id>', methods=['PUT'])
-# def update_sample(sample_id):
-#     body = request.get_json()
-#     Samples.objects.get_or_404(id=sample_id).update(**body)
-#     return jsonify({}), 204  # successful update but no content
-
-
-# @samples_bp.route('/<sample_id>', methods=['DELETE'])
-# def delete_sample(sample_id):
-#     Samples.objects.get_or_404(id=sample_id).delete()
-#     return jsonify({}), 204  # successful update but no content
-
-
-# @samples_bp.route('/<sample_id>')
-# def get_sample(sample_id):
-#     sample = Samples.objects.get_or_404(id=sample_id).to_json()
-#     return Response(sample, mimetype='application/json')
 
 
 # Routes for HTML pages.
