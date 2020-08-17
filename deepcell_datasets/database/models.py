@@ -50,13 +50,23 @@ class Users(db.Document, UserMixin):
     email = db.StringField(max_length=255)
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)
-    confirmed_at = db.DateTimeField()
     roles = db.ListField(db.ReferenceField(Roles), default=[])
+
+    # Required for confirmable Users
+    confirmed_at = db.DateTimeField()
+
+    # Required fields for user login tracking: SECURITY_TRACKABLE
+    last_login_at = db.DateTimeField()
+    current_login_at = db.DateTimeField()
+    last_login_ip = db.StringField(max_length=64)
+    current_login_ip = db.StringField(max_length=64)
+    login_count = db.IntField()
 
     first_name = db.StringField()
     last_name = db.StringField()
-    facility = db.StringField()  # Could be Lab here
-    # Could include experiments (But only makes sense if it is a different collection)
+    lab_group = db.StringField()  # e.g. DVV
+    facility = db.StringField()  # Could be building/institution/etc
+    experiments = db.ListField(db.StringField())  # experiment ID
 
 
 # TODO: this is NOT a model, but I'm not sure where to put it.
@@ -74,8 +84,8 @@ class Methods(db.EmbeddedDocument):
 
 class Experiments(db.Document):
     created_by = db.ReferenceField(Users)
-    doi = db.StringField()
-    date_collected = db.DateTimeField()  # Date on microscope (date added auto-saved by mongo)
+    doi = db.StringField(max_length=1000)
+    date_collected = db.StringField()  # Date on microscope (date added auto-saved by mongo)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
     # Specimen + modality + compartment + marker
     # subjects = db.EmbeddedDocumentListField(SpecimenInformation)
@@ -86,9 +96,9 @@ class ImagingParameters(db.EmbeddedDocument):
     camera = db.StringField()
     magnification = db.FloatField(min_value=0)
     na = db.FloatField(min_value=0, max_value=5)
-    binning = db.StringField()
-    pixel_size = db.StringField()
-    exposure_time = db.StringField()
+    binning = db.StringField(max_length=1000)
+    pixel_size = db.StringField(max_length=255)
+    exposure_time = db.StringField(max_length=255)
 
 
 class Dimensions(db.EmbeddedDocument):
@@ -100,9 +110,9 @@ class Dimensions(db.EmbeddedDocument):
 
 class ModalityInformation(db.EmbeddedDocument):
     # These can't be selected from sets because there could always be a new one
-    imaging_modality = db.StringField(required=True)
-    compartment = db.StringField()
-    marker = db.StringField()
+    imaging_modality = db.StringField(max_length=1000, required=True)
+    compartment = db.StringField(max_length=1000)
+    marker = db.StringField(max_length=1000)
 
 
 class Samples(db.Document):
@@ -114,18 +124,16 @@ class Samples(db.Document):
     position = db.IntField(required=True)
     imaging_params = db.EmbeddedDocumentField(ImagingParameters)
     dimensions = db.EmbeddedDocumentField(Dimensions)
-    time_step = db.StringField()
-    z_step = db.StringField()
+    time_step = db.StringField(max_length=255)
+    z_step = db.StringField(max_length=255)
 
-    specimen = db.StringField()
+    specimen = db.StringField(max_length=1000)
     modality = db.EmbeddedDocumentField(ModalityInformation)
 
-    # Create a custom list field to hold this information
-    # kinetics = {'static', 'dynamic'}
-    # spatial_dim = {'2d', '3d'}
-    # onto_loc = db.StringField(choices=codes.keys(), required = True)
-    # But until then use:
-    onto_loc = db.ListField(db.StringField())
+    # location in the ontology
+    kinetics = db.StringField(choices=('static', 'dynamic'))
+    spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
+
     # each sample belongs to an Experiment
     experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
 

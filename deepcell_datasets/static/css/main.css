@@ -1,0 +1,18 @@
+/* START Materialize Sticky Footer */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1 0 auto;
+}
+/* END Materialize Sticky Footer */
+
+/* START navbar CSS */
+.nav-wrapper {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+/* END navbar CSS */

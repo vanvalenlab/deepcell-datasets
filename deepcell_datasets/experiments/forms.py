@@ -23,24 +23,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Tests for the Flask application."""
+"""Forms for Experiments."""
 
-from mongoengine import disconnect
+from flask_mongoengine.wtf import model_form
 
-import pytest
+from deepcell_datasets.database.models import Experiments
+from deepcell_datasets.database.models import Methods
 
-from deepcell_datasets import create_app
-
-
-def test_config(monkeypatch):
-    monkeypatch.setenv('MONGODB_USERNAME', 'testUser')
-    monkeypatch.setenv('MONGODB_PASSWORD', 'testPwd')
-    # Globally turn off authentication for unit tests
-    monkeypatch.setenv('LOGIN_DISABLED', 'True')
-
-    assert not create_app().testing
-    # Without calling disconnect(), we hit a ConnectionFailure:
-    # A different connection with alias `default` was  already registered.
-    # Use disconnect() first.
-    disconnect()  # TODO: how can we remove this?
-    assert create_app(TESTING=True).testing
+BaseExperimentForm = model_form(Experiments, exclude=('created_by'))
+# MethodsForm = fields.FormField(Methods)
+ExperimentForm = model_form(Methods, BaseExperimentForm)

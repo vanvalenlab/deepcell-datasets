@@ -1,17 +1,20 @@
-
-{% extends "general/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
-<main class="container">
+<div class="section center-align">
+  <h5>
+    Select an experiment to load available samples and metadata
+  </h5>
+  <p>
+    Each sample contains all the relevant information related to dimensions and imaging parameters.
+    It also contains links to the associated image stack. While an experiment can contain multiple
+    samples, each sample belongs to only one experiment.
+  </p>
+</div>
+<div class="section center-align">
+	<a class="waves-effect waves-light btn" href="experiments/data_entry">
+		Add a new Experiment
+	</a>
+</div>
 
-  <div class="section center-align">
-    <h5>
-      Welcome to DeepCell Datasets
-    </h5>
-  </div>
-
-</main>
-{% endblock %}
-
-{% block extraJs %}
 {% endblock %}

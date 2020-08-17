@@ -35,11 +35,15 @@ from deepcell_datasets.database import models
 
 def new_sample():
     """Create new sample with some static values"""
+    # Defined required fields
     session = 1
     position = 2
+    spatial_dim = random.choice(['2d', '3d'])
+    # Create the sample
     sample = models.Samples(
         session=session,
-        position=position
+        position=position,
+        spatial_dim=spatial_dim
     )
     sample.save()
     return sample
@@ -47,13 +51,13 @@ def new_sample():
 
 def test_get_all_sample(client):
     # database should be empty
-    response = client.get('/samples/')
+    response = client.get('/api/samples/')
     assert response.status_code == 200
     assert response.json == []
 
     # create new sample get all again.
     sample = new_sample()
-    response = client.get('/samples/')
+    response = client.get('/api/samples/')
     assert len(response.json) == 1
     assert response.json[0]['session'] == sample.session
     assert response.json[0]['position'] == sample.position
@@ -62,13 +66,13 @@ def test_get_all_sample(client):
 
 def test_get_sample(client):
     sample = new_sample()
-    response = client.get('/samples/%s' % sample.id)
+    response = client.get('/api/samples/%s' % sample.id)
     assert response.status_code == 200
     assert response.json['session'] == sample.session
     assert response.json['position'] == sample.position
 
     # test bad sample ID
-    response = client.get('/samples/%s' % 5)
+    response = client.get('/api/samples/%s' % 5)
     assert response.status_code == 404
     sample.delete()
 
@@ -76,11 +80,13 @@ def test_get_sample(client):
 def test_create_sample(client):
     session = random.randint(1, 1000)
     position = random.randint(1, 1000)
+    spatial_dim = random.choice(['2d', '3d'])
     body = {
         'session': session,
-        'position': position
+        'position': position,
+        'spatial_dim': spatial_dim,
     }
-    response = client.post('/samples/', json=body)
+    response = client.post('/api/samples/', json=body)
     assert response.status_code == 200
     unique_id = response.json['unique_id']
     assert unique_id is not None
@@ -91,7 +97,7 @@ def test_create_sample(client):
     assert str(sample.id) == str(unique_id)
     # test bad body payload
     bad_body = {'session': 0}
-    response = client.post('/samples/', json=bad_body)
+    response = client.post('/api/samples/', json=bad_body)
     assert response.status_code == 400
 
 
@@ -99,25 +105,25 @@ def test_update_sample(client):
     sample = new_sample()
     new_session = random.randint(1, 1000)
     payload = {'session': new_session}
-    response = client.put('/samples/%s' % sample.id, json=payload)
+    response = client.put('/api/samples/%s' % sample.id, json=payload)
     assert response.status_code == 204
     updated = models.Samples.objects.get(id=sample.id)
     assert updated.session == new_session
 
     # test bad sample ID
-    response = client.put('/samples/%s' % 1, json=payload)
+    response = client.put('/api/samples/%s' % 1, json=payload)
     assert response.status_code == 404
     sample.delete()
 
 
 def test_delete_sample(client):
     sample = new_sample()
-    response = client.delete('/samples/%s' % sample.id)
+    response = client.delete('/api/samples/%s' % sample.id)
     assert response.status_code == 204
     with pytest.raises(DoesNotExist):
         models.Samples.objects.get(id=sample.id)
 
     # test bad sample ID
-    response = client.delete('/samples/%s' % sample.id)
+    response = client.delete('/api/samples/%s' % sample.id)
     assert response.status_code == 404
     sample.delete()

@@ -43,13 +43,13 @@ def new_experiment():
 
 def test_get_all_experiment(client):
     # database should be empty
-    response = client.get('/experiments/')
+    response = client.get('/api/experiments/')
     assert response.status_code == 200
     assert response.json == []
 
     # create new experiment get all again.
     experiment = new_experiment()
-    response = client.get('/experiments/')
+    response = client.get('/api/experiments/')
     assert len(response.json) == 1
     assert response.json[0]['doi'] == experiment.doi
     experiment.delete()
@@ -57,12 +57,12 @@ def test_get_all_experiment(client):
 
 def test_get_experiment(client):
     experiment = new_experiment()
-    response = client.get('/experiments/%s' % experiment.id)
+    response = client.get('/api/experiments/%s' % experiment.id)
     assert response.status_code == 200
     assert response.json['doi'] == experiment.doi
 
     # test bad experiment ID
-    response = client.get('/experiments/%s' % 5)
+    response = client.get('/api/experiments/%s' % 5)
     assert response.status_code == 404
     experiment.delete()
 
@@ -70,7 +70,7 @@ def test_get_experiment(client):
 def test_create_experiment(client):
     doi = str(random.randint(1, 1000))
     body = {'doi': doi}
-    response = client.post('/experiments/', json=body)
+    response = client.post('/api/experiments/', json=body)
     assert response.status_code == 200
     unique_id = response.json['unique_id']
     assert unique_id is not None
@@ -80,7 +80,7 @@ def test_create_experiment(client):
     assert str(experiment.id) == str(unique_id)
     # TODO: test bad body payload, no required fields currently.
     # bad_body = {'doi': None}
-    # response = client.post('/experiments/', json=bad_body)
+    # response = client.post('/api/experiments/', json=bad_body)
     # assert response.status_code == 400
     experiment.delete()
 
@@ -89,25 +89,25 @@ def test_update_experiment(client):
     experiment = new_experiment()
     new_doi = 'a different DOI value'
     payload = {'doi': new_doi}
-    response = client.put('/experiments/%s' % experiment.id, json=payload)
+    response = client.put('/api/experiments/%s' % experiment.id, json=payload)
     assert response.status_code == 204
     updated = models.Experiments.objects.get(id=experiment.id)
     assert updated.doi == new_doi
 
     # test bad experiment ID
-    response = client.put('/experiments/%s' % 1, json=payload)
+    response = client.put('/api/experiments/%s' % 1, json=payload)
     assert response.status_code == 404
     experiment.delete()
 
 
 def test_delete_experiment(client):
     experiment = new_experiment()
-    response = client.delete('/experiments/%s' % experiment.id)
+    response = client.delete('/api/experiments/%s' % experiment.id)
     assert response.status_code == 204
     with pytest.raises(DoesNotExist):
         models.Experiments.objects.get(id=experiment.id)
 
     # test bad experiment ID
-    response = client.delete('/experiments/%s' % experiment.id)
+    response = client.delete('/api/experiments/%s' % experiment.id)
     assert response.status_code == 404
     experiment.delete()

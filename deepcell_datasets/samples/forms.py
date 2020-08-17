@@ -23,24 +23,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Tests for the Flask application."""
+"""Forms for Saples."""
 
-from mongoengine import disconnect
+from flask_mongoengine.wtf import model_form
 
-import pytest
+from deepcell_datasets.database.models import Samples
+from deepcell_datasets.database.models import ImagingParameters
+from deepcell_datasets.database.models import Dimensions
+from deepcell_datasets.database.models import ModalityInformation
 
-from deepcell_datasets import create_app
+# Should this exclude created_by as we will add this through current_user
+# BaseForm = model_form(Samples,
+#                       field_args={'kinetics': {'radio': True},
+#                                   'spatial_dim': {'radio': True}})
+BaseForm = model_form(Samples)
+BaseFormW_img = model_form(ImagingParameters, BaseForm)
+BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
 
-
-def test_config(monkeypatch):
-    monkeypatch.setenv('MONGODB_USERNAME', 'testUser')
-    monkeypatch.setenv('MONGODB_PASSWORD', 'testPwd')
-    # Globally turn off authentication for unit tests
-    monkeypatch.setenv('LOGIN_DISABLED', 'True')
-
-    assert not create_app().testing
-    # Without calling disconnect(), we hit a ConnectionFailure:
-    # A different connection with alias `default` was  already registered.
-    # Use disconnect() first.
-    disconnect()  # TODO: how can we remove this?
-    assert create_app(TESTING=True).testing
+SampleForm = model_form(ModalityInformation, BaseFormW_img_dim)
