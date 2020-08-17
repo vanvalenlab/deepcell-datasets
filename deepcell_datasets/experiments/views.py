@@ -32,21 +32,26 @@ from flask import request
 from flask import current_app
 from flask import render_template
 from flask import url_for, redirect
-from mongoengine import ValidationError
 
 from flask_login import current_user
 from flask_security import login_required
 
-from deepcell_datasets.database.models import Samples
-from deepcell_datasets.samples.forms import SampleForm
-from deepcell_datasets.utils.misc_utils import nest_dict
+from mongoengine import ValidationError
+
+from deepcell_datasets.database.models import Experiments
 
 
-samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
-                       template_folder='templates')
+from deepcell_datasets.experiments.forms import ExperimentForm
+from deepcell_datasets.samples.samples import samples_bp
+
+from deepcell_datasets.utils import nest_dict
 
 
-@samples_bp.errorhandler(Exception)
+experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
+                           template_folder='templates')
+
+
+@experiments_bp.errorhandler(Exception)
 def handle_exception(err):
     """Error handler
 
@@ -58,48 +63,47 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
+    current_app.logger.error('Encountered unexpected %s: %s.',
+                             err.__class__.__name__, err)
     return jsonify({'error': str(err)}), 500
 
 
 # Routes for HTML pages.
-# TODO: This should likely be split into several routes allowing
-#       users the option to re-use information like scope, step, marker, etc.
-#       This could be down with checkbox and passing objects from one route
-#       to the next.
-@samples_bp.route('/data_entry/<exp_id>', methods=['GET', 'POST'])
+@experiments_bp.route('/data_entry', methods=['GET', 'POST'])
 @login_required
-def add_sample(exp_id):
-    form = SampleForm()
-    # flask-mongoengine wtf validation fails for required fields
-    # TODO: likely a bug in flask-mongo but the following logic shouldnt stay
-    if form.is_submitted():
-        if not form.validate():
-            # TODO: This is here to remind us of the package bug:
-            current_app.logger.info('Form errors are %s ', form.errors)
-            # Do something with data
-            body_raw = request.form
-            current_app.logger.info('Form body is %s ', body_raw)
+def add_experiment():
+    form = ExperimentForm()
+    if form.validate_on_submit():
+        # Do something with data
+        body_raw = request.form
+        current_app.logger.info('Form body is %s ', body_raw)
 
-            # We need to add in experiment ID information here
-            # Or inject value from form
+        # TODO: USER information is missing and should be added
 
-            body_dict = nest_dict(body_raw.to_dict())
-            current_app.logger.info('Nested dict to save is %s ', body_dict)
-            sample = Samples(**body_dict).save()
+        body_dict = nest_dict(body_raw.to_dict())
+        current_app.logger.info('Nested dict to save is %s ', body_dict)
+        experiment = Experiments(**body_dict).save()
 
-            current_app.logger.info('sample %s saved succesfully', sample)
-            unique_id = sample.id
-            current_app.logger.info('unique_id %s extracted as key', unique_id)
+        current_app.logger.info('experiment %s saved succesfully', experiment)
+        unique_id = experiment.id
+        current_app.logger.info('unique_id %s extracted as key', unique_id)
+
+        # doi_information = request.form['doi']
+        # date_information = request.form['date_collected']
+        # imaging_info = request.form
+        # subtype_info = request.form['methods-subtype']
+        # current_app.logger.info('doi information from form: %s', doi_information)
+        # current_app.logger.info('date information from form: %s', date_information)
+        # current_app.logger.info('method information from form: %s', imaging_info)
+        # current_app.logger.info('method information from form: %s', subtype_info)
 
 
-            return redirect(url_for('samples_bp.success'))
-
-    return render_template('samples/data_entry.html',
+        return redirect(url_for('samples_bp.add_sample', exp_id=unique_id))
+    return render_template('experiments/data_entry.html',
                            form=form,
-                           current_user=current_user,
-                           exp_id=exp_id)
+                           current_user=current_user)
 
 
-@samples_bp.route('/success')
+@experiments_bp.route('/success')
 def success():
-    return 'Sample Successfully Submitted'
+    return 'Experiment Successfully Submitted'

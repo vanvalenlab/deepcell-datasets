@@ -35,11 +35,15 @@ from deepcell_datasets.database import models
 
 def new_sample():
     """Create new sample with some static values"""
+    # Defined required fields
     session = 1
     position = 2
+    spatial_dim = random.choice(['2d', '3d'])
+    # Create the sample
     sample = models.Samples(
         session=session,
-        position=position
+        position=position,
+        spatial_dim=spatial_dim
     )
     sample.save()
     return sample
@@ -76,9 +80,11 @@ def test_get_sample(client):
 def test_create_sample(client):
     session = random.randint(1, 1000)
     position = random.randint(1, 1000)
+    spatial_dim = random.choice(['2d', '3d'])
     body = {
         'session': session,
-        'position': position
+        'position': position,
+        'spatial_dim': spatial_dim,
     }
     response = client.post('/samples/', json=body)
     assert response.status_code == 200

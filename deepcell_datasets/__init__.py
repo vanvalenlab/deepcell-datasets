@@ -31,10 +31,9 @@ from flask_security import Security, hash_password
 
 from deepcell_datasets import config
 from deepcell_datasets import database
-from deepcell_datasets.api import api
 from deepcell_datasets.general import general
-from deepcell_datasets.experiments import experiments
-from deepcell_datasets.samples import samples
+from deepcell_datasets import experiments
+from deepcell_datasets import samples
 
 
 class ReverseProxied(object):
@@ -82,10 +81,11 @@ def create_app(**config_overrides):
             user=app.config['ADMIN_EMAIL'],
             role=admin_role)
 
-    app.register_blueprint(api.api_bp, url_prefix='/api')
     app.register_blueprint(general.general_bp, url_prefix='/')
-    app.register_blueprint(experiments.experiments_bp, url_prefix='/experiments')
-    app.register_blueprint(samples.samples_bp, url_prefix='/samples')
+    app.register_blueprint(experiments.api.experiments_api_bp, url_prefix='/experiments')
+    app.register_blueprint(experiments.views.experiments_bp, url_prefix='/experiments')
+    app.register_blueprint(samples.api.samples_api_bp, url_prefix='/samples')
+    app.register_blueprint(samples.views.samples_bp, url_prefix='/samples')
 
     # toolbar = DebugToolbarExtension(app)
 
