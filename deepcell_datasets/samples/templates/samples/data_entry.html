@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% from "macros/_forms.html" import render_field %}
+
 {% block content %}
 <h3 class="title center-align">Sample Information</h3>
 
@@ -38,40 +40,21 @@
       <span class="helper-text" data-error="wrong" data-success="right">Describe the sample in terms of kinetics and spatial dimension.</span>
     </div>
     <div class="radio col s6">
-
-    <p>
-      <label for="static">
-        <input id="static" name="kinetics" type="radio" value="static" checked />
-        <span>Static</span>
-      </label>
-    </p>
-    <p>
-      <label for="dynamic">
-        <input id="dynamic" name="kinetics" type="radio" value="dynamic" />
-        <span>Dynamic</span>
-      </label>
-    </p>
-
-<!--
       <p>
-        <input id="static" name="kinetics" type="radio" value="static">
-        <label for="static">static</label>
+        <label for="static">
+          <input id="static" name="kinetics" type="radio" value="static" checked />
+          <span>Static</span>
+        </label>
       </p>
       <p>
-        <input id="dynamic" name="kinetics" type="radio" value="dynamic">
-        <label for="dynamic">dynamic</label>
+        <label for="dynamic">
+          <input id="dynamic" name="kinetics" type="radio" value="dynamic" />
+          <span>Dynamic</span>
+        </label>
       </p>
-
-  {% for subfield in form.kinetics %}
-    <p>
-        {{ subfield }}
-        {{ subfield.label }}
-    </p>
-  {% endfor %}
--->
     </div>
-    <div class="radio col s6">
 
+    <div class="radio col s6">
       <p>
         <label for="2d">
           <input id="2d" name="spatial_dim" type="radio" value="2d" checked />
@@ -84,54 +67,41 @@
           <span>3D</span>
         </label>
       </p>
-
-<!--
-      {{ form.spatial_dim.label("Spatial Dimension") }}
-      {{ form.spatial_dim(class="radio") }}
--->
-
     </div>
   </div>
+
   <div class="row">
     <div class="input-field col s12">
-      {{ form.specimen.label("Specimen Name") }}
-      {{ form.specimen() }}
+      {{ render_field(form.specimen) }}
       <span class="helper-text" data-error="wrong" data-success="right">Name or abbreviation of the specimen. This could be a cell line or tissue type (e.g. HeLa or TNBC).</span>
     </div>
   </div>
   <div class="row">
     <div class="input-field col s3">
-      {{ form.modality.imaging_modality.label("Imaging Modality") }}
-      {{ form.modality.imaging_modality() }}
+      {{ render_field(form.modality.imaging_modality) }}
     </div>
     <div class="input-field col s3">
-      {{ form.modality.compartment.label("Compartment of Interest") }}
-      {{ form.modality.compartment() }}
+      {{ render_field(form.modality.compartment) }}
     </div>
     <div class="input-field col s3">
-      {{ form.modality.marker.label("Marker") }}
-      {{ form.modality.marker() }}
+      {{ render_field(form.modality.marker) }}
     </div>
   </div>
 
   <div class="row">
     <div class="input-field col s6">
-      {{ form.session.label("Imaging Session") }}
-      {{ form.session() }}
+      {{ render_field(form.session) }}
     </div>
     <div class="input-field col s6">
-      {{ form.position.label("Sample Position/FOV") }}
-      {{ form.position() }}
+      {{ render_field(form.position) }}
     </div>
   </div>
   <div class="row">
     <div class="input-field col s6">
-      {{ form.time_step.label("Time Step") }}
-      {{ form.time_step() }}
+      {{ render_field(form.time_step) }}
     </div>
     <div class="input-field col s6">
-      {{ form.z_step.label("Z Step") }}
-      {{ form.z_step() }}
+      {{ render_field(form.z_step) }}
     </div>
   </div>
 
@@ -140,56 +110,45 @@
       <span class="helper-text" data-error="wrong" data-success="right">Define the dimensions of the sample.</span>
     </div>
     <div class="input-field col s3">
-      {{ form.dimensions.x.label("x") }}
-      {{ form.dimensions.x() }}
+      {{ render_field(form.dimensions.x) }}
     </div>
     <div class="input-field col s3">
-      {{ form.dimensions.y.label("y") }}
-      {{ form.dimensions.y() }}
+      {{ render_field(form.dimensions.y) }}
     </div>
     <div class="input-field col s3">
-      {{ form.dimensions.z.label("z") }}
-      {{ form.dimensions.z() }}
+      {{ render_field(form.dimensions.z) }}
     </div>
     <div class="input-field col s3">
-      {{ form.dimensions.t.label("t") }}
-      {{ form.dimensions.t() }}
+      {{ render_field(form.dimensions.t) }}
     </div>
   </div>
 
 
   <div class="row">
     <div class="input-field col s3">
-      {{ form.imaging_params.magnification.label("Magnification (e.g. 40x)") }}
-      {{ form.imaging_params.magnification() }}
+      {{ render_field(form.imaging_params.magnification) }}
     </div>
     <div class="input-field col s3">
-      {{ form.imaging_params.na.label("NA") }}
-      {{ form.imaging_params.na() }}
+      {{ render_field(form.imaging_params.na) }}
     </div>
     <div class="input-field col s3">
-      {{ form.imaging_params.pixel_size.label("Pixel Size") }}
-      {{ form.imaging_params.pixel_size() }}
+      {{ render_field(form.imaging_params.pixel_size) }}
     </div>
   </div>
   <div class="row">
     <div class="input-field col s6">
-      {{ form.imaging_params.binning.label("Binning") }}
-      {{ form.imaging_params.binning() }}
+      {{ render_field(form.imaging_params.binning) }}
     </div>
     <div class="input-field col s6">
-      {{ form.imaging_params.exposure_time.label("Exposure Time") }}
-      {{ form.imaging_params.exposure_time() }}
+      {{ render_field(form.imaging_params.exposure_time) }}
     </div>
   </div>
   <div class="row">
     <div class="input-field col s6">
-      {{ form.imaging_params.microscope.label("Microscope") }}
-      {{ form.imaging_params.microscope() }}
+      {{ render_field(form.imaging_params.microscope) }}
     </div>
     <div class="input-field col s6">
-      {{ form.imaging_params.camera.label("Camera") }}
-      {{ form.imaging_params.camera() }}
+      {{ render_field(form.imaging_params.camera) }}
     </div>
   </div>
 
