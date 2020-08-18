@@ -40,33 +40,33 @@
       <span class="helper-text" data-error="wrong" data-success="right">Describe the sample in terms of kinetics and spatial dimension.</span>
     </div>
     <div class="radio col s6">
+      {% for choice in form.kinetics.choices %}
       <p>
-        <label for="static">
-          <input id="static" name="kinetics" type="radio" value="static" checked />
-          <span>Static</span>
+        <label for="{{ choice }}">
+          {% if loop.index == 1 %}
+          <input id="{{ choice }}" name="kinetics" type="radio" value="{{ choice }}" checked />
+          {% else %}
+          <input id="{{ choice }}" name="kinetics" type="radio" value="{{ choice }}" />
+          {% endif %}
+          <span>{{ choice|title }}</span>
         </label>
       </p>
-      <p>
-        <label for="dynamic">
-          <input id="dynamic" name="kinetics" type="radio" value="dynamic" />
-          <span>Dynamic</span>
-        </label>
-      </p>
+      {% endfor %}
     </div>
 
     <div class="radio col s6">
+      {% for choice in form.spatial_dim.choices %}
       <p>
-        <label for="2d">
-          <input id="2d" name="spatial_dim" type="radio" value="2d" checked />
-          <span>2D</span>
+        <label for="{{ choice }}">
+          {% if loop.index == 1 %}
+          <input id="{{ choice }}" name="spatial_dim" type="radio" value="{{ choice }}" checked />
+          {% else %}
+          <input id="{{ choice }}" name="kinetics" type="radio" value="{{ choice }}" />
+          {% endif %}
+          <span>{{ choice|title }}</span>
         </label>
       </p>
-      <p>
-        <label for="3d">
-          <input id="3d" name="spatial_dim" type="radio" value="3d" />
-          <span>3D</span>
-        </label>
-      </p>
+      {% endfor %}
     </div>
   </div>
 
