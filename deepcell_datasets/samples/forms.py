@@ -55,7 +55,7 @@ class ModalityInformationForm(FlaskForm):
     marker = fields.StringField('Marker', validators=[validators.Length(0, 1000)])
 
 
-class SamplesForm(FlaskForm):
+class SampleForm(FlaskForm):
     """Form for creating a new Samples document."""
 
     session = fields.IntegerField('Specimen Name',

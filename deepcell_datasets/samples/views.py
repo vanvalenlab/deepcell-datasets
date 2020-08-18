@@ -40,7 +40,7 @@ from flask_security import login_required
 from deepcell_datasets.database.models import Samples
 from deepcell_datasets.database.models import Experiments
 
-from deepcell_datasets.samples.forms import SamplesForm
+from deepcell_datasets.samples.forms import SampleForm
 from deepcell_datasets.utils import nest_dict
 
 
@@ -71,7 +71,7 @@ def handle_exception(err):
 @samples_bp.route('/data_entry/<exp_id>', methods=['GET', 'POST'])
 @login_required
 def add_sample(exp_id):
-    form = SamplesForm()
+    form = SampleForm()
     # flask-mongoengine wtf validation fails for required fields
     # TODO: likely a bug in flask-mongo but the following logic shouldnt stay
     if form.validate_on_submit():
