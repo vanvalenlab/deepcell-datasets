@@ -25,6 +25,40 @@
 # ==============================================================================
 """Initialization Script for DeepCell Datasets Database"""
 
+# This script should run when the Database is first brought online.
+# It should traverse a given directory, locate metadata files, and import
+# the information it finds into the relevant collection.
+
+import os
+import json
+import fnmatch
+
+from pathlib import Path
+import numpy as np
+
+from skimage.external import tifffile as tiff
+
+import pandas as pd
+
+
+def sorted_nicely(l):
+    convert = lambda text: int(text) if text.isdigit() else text
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+    return sorted(l, key=alphanum_key)
+
+
+def _datasets_available(self):
+        # This function should be part of a different system and constantly maintained
+        # This is a placeholder for a database that tells us what data is available
+        for (cur_dir, sub_dirs, files) in os.walk(self.base_path):
+            if not sub_dirs and not files:
+                print(cur_dir)
+                print('empty directory')
+                print('--------------------------------')
+            if not sub_dirs and len(files) == 2:
+                print(cur_dir)
+                print('only 1 file')
+                print('--------------------------------')
 
 def json_loader():
     """Load all raw datasets from
