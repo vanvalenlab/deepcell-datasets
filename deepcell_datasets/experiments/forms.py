@@ -25,11 +25,18 @@
 # ==============================================================================
 """Forms for Experiments."""
 
-from flask_mongoengine.wtf import model_form
+from wtforms import fields, validators
+from flask_wtf import FlaskForm
 
-from deepcell_datasets.database.models import Experiments
-from deepcell_datasets.database.models import Methods
 
-BaseExperimentForm = model_form(Experiments, exclude=('created_by'))
-# MethodsForm = fields.FormField(Methods)
-ExperimentForm = model_form(Methods, BaseExperimentForm)
+class MethodsForm(FlaskForm):
+    subtype = fields.StringField()
+    culture = fields.StringField()
+    labeling = fields.StringField()
+    imaging = fields.StringField()
+
+
+class ExperimentForm(FlaskForm):
+    doi = fields.StringField('DOI', validators=[validators.Length(0, 1000)])
+    date_collected = fields.StringField()
+    methods = fields.FormField(MethodsForm)
