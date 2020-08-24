@@ -25,19 +25,61 @@
 # ==============================================================================
 """Forms for Saples."""
 
-from flask_mongoengine.wtf import model_form
+from wtforms import fields, validators
+from flask_wtf import FlaskForm
 
-from deepcell_datasets.database.models import Samples
-from deepcell_datasets.database.models import ImagingParameters
-from deepcell_datasets.database.models import Dimensions
-from deepcell_datasets.database.models import ModalityInformation
 
-# Should this exclude created_by as we will add this through current_user
-# BaseForm = model_form(Samples,
-#                       field_args={'kinetics': {'radio': True},
-#                                   'spatial_dim': {'radio': True}})
-BaseForm = model_form(Samples)
-BaseFormW_img = model_form(ImagingParameters, BaseForm)
-BaseFormW_img_dim = model_form(Dimensions, BaseFormW_img)
+class ImagingParametersForm(FlaskForm):
+    microscope = fields.StringField('Microscope')
+    camera = fields.StringField('Camera')
+    magnification = fields.FloatField(
+        'Magnification (e.g. 40x)', validators=[validators.NumberRange(0)])
+    na = fields.FloatField('NA', validators=[validators.NumberRange(0, 5)])
+    binning = fields.StringField('Binning', validators=[validators.Length(0, 1000)])
+    pixel_size = fields.StringField('Pixel Size', validators=[validators.Length(0, 255)])
+    exposure_time = fields.StringField('Exposure Time', validators=[validators.Length(0, 255)])
 
-SampleForm = model_form(ModalityInformation, BaseFormW_img_dim)
+
+class DimensionsForm(FlaskForm):
+    x = fields.IntegerField('x', validators=[validators.required()])
+    y = fields.IntegerField('y', validators=[validators.required()])
+    z = fields.IntegerField('z')
+    t = fields.IntegerField('t')
+
+
+class ModalityInformationForm(FlaskForm):
+    imaging_modality = fields.StringField(
+        'Imaging Modality', validators=[validators.required()])
+    compartment = fields.StringField(
+        'Compartment of Interest', validators=[validators.Length(0, 1000)])
+    marker = fields.StringField('Marker', validators=[validators.Length(0, 1000)])
+
+
+class SampleForm(FlaskForm):
+    """Form for creating a new Samples document."""
+
+    session = fields.IntegerField('Specimen Name',
+                                  validators=[validators.required()])
+    position = fields.IntegerField('Sample Position/FOV',
+                                   validators=[validators.required()])
+
+    time_step = fields.StringField('Time Step', validators=[validators.Length(0, 255)])
+    z_step = fields.StringField('Z Step', validators=[validators.Length(0, 255)])
+
+    specimen = fields.StringField('Specimen Name',
+                                  validators=[validators.Length(0, 1000)])
+
+    # imaging parameters (embedded document fields)
+    imaging_params = fields.FormField(ImagingParametersForm)
+
+    # dimensions (embedded document fields)
+    dimensions = fields.FormField(DimensionsForm)
+
+    # modality (embedded document fields)
+    modality = fields.FormField(ModalityInformationForm)
+
+    # location in the ontology
+    kinetics = fields.RadioField(choices=('static', 'dynamic'),
+                                 validators=[validators.required()])
+    spatial_dim = fields.RadioField(choices=('2d', '3d'),
+                                    validators=[validators.required()])

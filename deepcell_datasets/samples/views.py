@@ -74,27 +74,26 @@ def add_sample(exp_id):
     form = SampleForm()
     # flask-mongoengine wtf validation fails for required fields
     # TODO: likely a bug in flask-mongo but the following logic shouldnt stay
-    if form.is_submitted():
-        if not form.validate():
-            # TODO: This is here to remind us of the package bug:
-            current_app.logger.info('Form errors are %s ', form.errors)
-            # Do something with data
-            body_raw = request.form
-            current_app.logger.info('Form body is %s ', body_raw)
-            body_dict = nest_dict(body_raw.to_dict())
+    if form.validate_on_submit():
+        # TODO: This is here to remind us of the package bug:
+        current_app.logger.info('Form errors are %s ', form.errors)
+        # Do something with data
+        body_raw = request.form
+        current_app.logger.info('Form body is %s ', body_raw)
+        body_dict = nest_dict(body_raw.to_dict())
 
-            # Add in Experiment ID information here
-            experiment = Experiments.objects.get_or_404(id=exp_id)
-            body_dict['experiment'] = experiment
+        # Add in Experiment ID information here
+        experiment = Experiments.objects.get_or_404(id=exp_id)
+        body_dict['experiment'] = experiment
 
-            current_app.logger.info('Nested dict to save is %s ', body_dict)
-            sample = Samples(**body_dict).save()
+        current_app.logger.info('Nested dict to save is %s ', body_dict)
+        sample = Samples(**body_dict).save()
 
-            current_app.logger.info('sample %s saved succesfully', sample)
-            unique_id = sample.id
-            current_app.logger.info('unique_id %s extracted as key', unique_id)
+        current_app.logger.info('sample %s saved succesfully', sample)
+        unique_id = sample.id
+        current_app.logger.info('unique_id %s extracted as key', unique_id)
 
-            return redirect(url_for('samples_bp.success'))
+        return redirect(url_for('samples_bp.success'))
 
     return render_template('samples/data_entry.html',
                            form=form,
