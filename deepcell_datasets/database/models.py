@@ -140,15 +140,24 @@ class Samples(db.Document):
 
 
 # TODO: Finish Crowdsourcing
-# Should this be an embedded field on sample???
+# Part of this should be an embedded field on sample
+class AnnotationNotes(db.EmbeddedDocument):
+    # How many pieces do we need to split this into to meet our standard(s)
+
+
+# The other part will exist in the Crowdsourcing collection
 class Crowdsourcing(db.Document):
     """This should describe which samples have been sent to which crowdsourcing companies.
     It should also note what dimensions were used and what area of the original raw image
     it came from (we sometimes crop out areas because theyre at the edge of dish, etc).
+
+    We need to understand dimensions and what sizes are needed
     """
 
     platform = db.StringField(choices=('appen', 'anolytics', 'mturk'), required=True)
     submitted_by = db.ReferenceField(Users)
+
+
 
     curated = db.BooleanField()
 
