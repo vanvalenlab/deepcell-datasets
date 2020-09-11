@@ -92,6 +92,7 @@ class Experiments(db.Document):
 
 
 class ImagingParameters(db.EmbeddedDocument):
+    platform = db.StringField()
     microscope = db.StringField()
     camera = db.StringField()
     magnification = db.FloatField(required=True, min_value=0)
@@ -140,18 +141,26 @@ class Samples(db.Document):
 
 
 # TODO: Finish Crowdsourcing
-# Part of this should be an embedded field on sample
-class AnnotationNotes(db.EmbeddedDocument):
-    # How many pieces do we need to split this into to meet our standard(s)
+
+class Subsection(db.EmbeddedDocument):
+    coordinate_x = db.IntField()
+    coordinate_y = db.IntField()
+    coordinate_z = db.IntField()
+    coordinate_t = db.IntField()
+
+    dimensions = db.EmbeddedDocumentField(Dimensions)
+
+    queued = db.BooleanField()
+    annotated = db.BooleanField()
+    curated = db.BooleanField()  # Could also be QCd?
 
 
-# The other part will exist in the Crowdsourcing collection
 class Crowdsourcing(db.Document):
     """This should describe which samples have been sent to which crowdsourcing companies.
     It should also note what dimensions were used and what area of the original raw image
     it came from (we sometimes crop out areas because theyre at the edge of dish, etc).
 
-    We need to understand dimensions and what sizes are needed
+    Should we state/force standard dimensions here?
     """
 
     platform = db.StringField(choices=('appen', 'anolytics', 'mturk'), required=True)
@@ -159,20 +168,38 @@ class Crowdsourcing(db.Document):
 
 
 
-    curated = db.BooleanField()
-
-
-
 # TODO: Finish Training data
+class annotation_stats(db.EmbeddedDocument):
+    # TODO: include total number of annotations/trajectories/children
+    num_batches = db.IntField()  # for 2d this is num imgs, for 3d num movies, etc
+    dimensions = db.EmbeddedDocumentField(Dimensions)
+    num_ann = db.IntField()
+    num_div = db.IntField()
+
+
 class Training_Data(db.Document):
     """A collection of pointers to each npz containing paired x(raw) and Y(annotations) data.
 
     """
+    # location in the ontology (the annotation could be different than the raw data
+    # e.g. movies vs indpendent imgs)
+    kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
+    spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
+
+    # Samples contained or link to crowdsourcing (individual annotated pieces of samples)?
     samples_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
+    # TODO: Is samples_contained sufficient? Should keys like tissue/platform list be stored here?
+
+    ann_version = db.StringField()  # TODO: Link this to DVC
+    ann_stats = db.EmbeddedDocumentField(annotation_stats)
+
+    split_train = db.FloatField()  # Percentage of total data in train
+    split_val = db.FloatField()
+    split_test = db.FloatField()
+    split_seed = db.IntField()
 
     raw_dtype = db.StringField()
     ann_dtype = db.StringField()
-    ann_version = db.StringField()  # TODO: Link this to DVC
 
     madrox_filepath = db.StringField()  # path to the npz on madrox
     cloud_storage_loc = db.URLField()  # aws address
