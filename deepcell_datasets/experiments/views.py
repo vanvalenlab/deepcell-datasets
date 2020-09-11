@@ -93,6 +93,23 @@ def add_experiment():
                            current_user=current_user)
 
 
+@experiments_bp.route('/', methods=['GET'])
+@login_required
+def experiments_table():
+    page = request.args.get('page', default=1, type=int)
+    experiments = Experiments.objects.paginate(page=page, per_page=20)
+    return render_template('experiments/experiments-table.html',
+                           paginated_experiments=experiments)
+
+
+@experiments_bp.route('/<experiment_id>', methods=['GET'])
+@login_required
+def view_experiment(experiment_id):
+    experiment = Experiments.objects.get_or_404(id=experiment_id)
+    return render_template('experiments/experiment-detail.html',
+                           experiment=experiment)
+
+
 @experiments_bp.route('/success')
 def success():
     return 'Experiment Successfully Submitted'
