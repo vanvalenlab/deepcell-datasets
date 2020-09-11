@@ -185,12 +185,16 @@ class Training_Data(db.Document):
     # e.g. movies vs indpendent imgs)
     kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
     spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
+    annotation_type = db.StringField()  # whole cell, cyto, nuc, AM
 
     # Samples contained or link to crowdsourcing (individual annotated pieces of samples)?
     samples_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
     # TODO: Is samples_contained sufficient? Should keys like tissue/platform list be stored here?
+    channel_list = db.ListField()
+    padding = db.BooleanField()
 
     ann_version = db.StringField()  # TODO: Link this to DVC
+    last_modified = db.StringField()
     ann_stats = db.EmbeddedDocumentField(annotation_stats)
 
     split_train = db.FloatField()  # Percentage of total data in train
