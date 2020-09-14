@@ -34,7 +34,7 @@ from flask import current_app
 
 from mongoengine import ValidationError
 
-from deepcell_datasets.database.models import TrainingData
+from deepcell_datasets.database.models import Training_Data
 
 
 training_api_bp = Blueprint('training_api_bp', __name__,  # pylint: disable=C0103

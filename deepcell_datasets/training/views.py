@@ -38,17 +38,14 @@ from flask_security import login_required
 
 from mongoengine import ValidationError
 
-from deepcell_datasets.database.models import Experiments
-from deepcell_datasets.experiments.forms import ExperimentForm
-from deepcell_datasets.utils import nest_dict
-from deepcell_datasets.samples.views import samples_bp
+from deepcell_datasets.database.models import Training_Data
 
 
-training_data_bp = Blueprint('training_data_bp', __name__,  # pylint: disable=C0103
-                             template_folder='templates')
+training_bp = Blueprint('training_bp', __name__,  # pylint: disable=C0103
+                        template_folder='templates')
 
 
-@training_data_bp.errorhandler(Exception)
+@training_bp.errorhandler(Exception)
 def handle_exception(err):
     """Error handler
 
@@ -65,12 +62,16 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-@training_data_bp.route('/')
+@training_bp.route('/')
 def view_all_training_data():
-    return render_template('training/index.html')
+    page = request.args.get('page', default=1, type=int)
+    training_data = Training_Data.objects.paginate(page=page, per_page=20)
+    return render_template('training/index.html',
+                           paginated_training_data=training_data)
 
 
-@training_data_bp.route('/<training_data_id>')
+@training_bp.route('/<training_data_id>')
 def view_training_data(training_data_id):
     training_data = Training_Data.objects.get_or_404(id=training_data_id)
-    return render_template('training/detail.html')
+    return render_template('training/detail.html',
+                           training_data=training_data)
