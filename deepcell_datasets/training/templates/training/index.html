@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% from "macros/_pagination.html" import render_pagination %}
+
+{% block content %}
+
+<h3 class="title center-align">Training Data </h3>
+
+<table>
+
+  <thead>
+    <tr>
+        <th>Date Collected</th>
+        <th>Kinetics</th>
+        <th>Spatial Dimension</th>
+        <th>Channels</th>
+        <th>Annotation Type</th>
+        <th>Annotation Version</th>
+        <th>Samples Contained</th>
+        <th>Number of Batches</th>
+        <th>Number of Annotations</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for training_data in paginated_training_data.items %}
+    <tr>
+      <td><a href="/training/{{ training_data.id }}">View Details</a></td>
+      <td>{{ training_data.kinetics }}</td>
+      <td>{{ training_data.spatial_dim }}</td>
+      <td>{{ training_data.channel_list }}</td>
+      <td>{{ training_data.annotation_type }}</td>
+      <td>{{ training_data.ann_version }}</td>
+      <td>{{ training_data.samples_contained|length }}</td>
+      <td>{{ training_data.ann_stats.num_batches }}</td>
+      <td>{{ training_data.ann_stats.num_ann }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+{{ render_pagination(paginated_training_data, 'training_data_bp.view_all_training_data') }}
+
+{% endblock %}

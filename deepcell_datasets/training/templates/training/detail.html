@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- TODO: Change title from ID to name/DOI -->
+<h3 class="title center-align">Training Data: {{ training_data.id }}</h3>
+
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="s12 m6">
+            <h4>Annotation Type</h4>
+
+            <span>Annotation Type: {{ training_data.annotation_type }}</span>
+            <span>{{ training_data.spatial_dim }} | {{ training_data.kinetics }}</span>
+            <span>Channels: {{ training_data.channels_list }}</span>
+        </div>
+
+        <div class="s12 m6">
+            <h4>Annotation Stats</h4>
+
+            <span>Dimensions: {{ training_data.ann_stats.dimensions }}</span>
+            <span>Total Samples: {{ training_data.samples_contained|length }}</span>
+            <span>Total Batches: {{ training_data.ann_stats.num_batches }}</span>
+            <span>Total Annotations: {{ training_data.ann_stats.num_ann }}</span>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="s12">
+            <a href="{{ training_data.cloud_storage_loc }}" class="waves-effect waves-indigo btn-flat">
+                Download
+            </a>
+        </div>
+    </div>
+
+</div>
+<table>
+  <tr>
+    <td>Date Collected</td>
+    <td>training_data.date_collected</td>
+  </tr>
+    <td>SubType</td>
+    <td>training_data.methods.subtype</td>
+  <tr>
+    <td>Culture</td>
+    <td>training_data.methods.culture</td>
+  </tr>
+  <tr>
+    <td>Labeling</td>
+    <td>training_data.methods.labeling</td>
+  </tr>
+  <tr>
+    <td>Imaging</td>
+    <td>training_data.methods.imaging</td>
+  </tr>
+</table>
+
+{% endblock %}
