@@ -58,16 +58,16 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-# TrainingData Routes
+# Training_Data Routes
 @training_api_bp.route('/')
 def get_all_training_data():
-    training_data = TrainingData.objects().to_json()
+    training_data = Training_Data.objects().to_json()
     return Response(training_data, mimetype='application/json')
 
 
 @training_api_bp.route('/<training_data_id>')
 def get_training_data(training_data_id):
-    training_data = TrainingData.objects.get_or_404(id=training_data_id).to_json()
+    training_data = Training_Data.objects.get_or_404(id=training_data_id).to_json()
     return Response(training_data, mimetype='application/json')
 
 
@@ -76,7 +76,7 @@ def get_training_data(training_data_id):
 #     """Create a new training data"""
 #     body = request.get_json()
 #     current_app.logger.info('Body is %s ', body)
-#     training_data = TrainingData(**body).save()
+#     training_data = Training_Data(**body).save()
 #     current_app.logger.info('training_data %s saved succesfully', training_data)
 #     unique_id = training_data.id
 #     current_app.logger.info('unique_id %s extracted as key', unique_id)
@@ -86,11 +86,11 @@ def get_training_data(training_data_id):
 # @training_api_bp.route('/<training_data_id>', methods=['PUT'])
 # def update_training_data(training_data_id):
 #     body = request.get_json()
-#     TrainingData.objects.get_or_404(id=training_data_id).update(**body)
+#     Training_Data.objects.get_or_404(id=training_data_id).update(**body)
 #     return jsonify({}), 204  # successful update but no content
 
 
 # @training_api_bp.route('/<training_data_id>', methods=['DELETE'])
 # def delete_training_data(training_data_id):
-#     TrainingData.objects.get_or_404(id=training_data_id).delete()
+#     Training_Data.objects.get_or_404(id=training_data_id).delete()
 #     return jsonify({}), 204  # successful update but no content

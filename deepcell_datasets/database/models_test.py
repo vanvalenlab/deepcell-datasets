@@ -42,13 +42,15 @@ def mongodb():
 
 
 @pytest.fixture()
-def sample(mongodb):
+def sample(mongodb, experiment):
     session = random.randint(1, 9999)
     position = random.randint(1, 9999)
     spatial_dim = random.choice(['2d', '3d'])
+    kinetics = random.choice(['static', 'dynamic'])
 
     sample = models.Samples(session=session, position=position,
-                            spatial_dim=spatial_dim)
+                            spatial_dim=spatial_dim, kinetics=kinetics,
+                            experiment=experiment.id)
 
     sample.save()
     yield sample
@@ -126,13 +128,15 @@ class TestExperiments(object):
 
 class TestSamples(object):
 
-    def test_create(self, mongodb):
+    def test_create(self, mongodb, experiment):
         session = random.randint(1, 99)
         position = random.randint(1, 99)
         spatial_dim = random.choice(['2d', '3d'])
+        kinetics = random.choice(['static', 'dynamic'])
 
         sample = models.Samples(session=session, position=position,
-                                spatial_dim=spatial_dim)
+                                spatial_dim=spatial_dim, kinetics=kinetics,
+                                experiment=experiment.id)
         sample.save()
 
         fresh_sample = models.Samples.objects(id=sample.id).first()
