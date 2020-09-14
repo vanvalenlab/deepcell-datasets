@@ -33,30 +33,35 @@ from mongoengine import DoesNotExist
 from deepcell_datasets.database import models
 
 
-def new_sample():
+def new_sample(experiment_id):
     """Create new sample with some static values"""
     # Defined required fields
     session = 1
     position = 2
     spatial_dim = random.choice(['2d', '3d'])
+    kinetics = random.choice(['static', 'dynamic'])
+
+
     # Create the sample
     sample = models.Samples(
         session=session,
         position=position,
-        spatial_dim=spatial_dim
+        spatial_dim=spatial_dim,
+        kinetics=kinetics,
+        experiment=experiment_id,
     )
     sample.save()
     return sample
 
 
-def test_get_all_sample(client):
+def test_get_all_sample(client, experiment):
     # database should be empty
     response = client.get('/api/samples/')
     assert response.status_code == 200
     assert response.json == []
 
     # create new sample get all again.
-    sample = new_sample()
+    sample = new_sample(experiment.id)
     response = client.get('/api/samples/')
     assert len(response.json) == 1
     assert response.json[0]['session'] == sample.session
@@ -64,8 +69,8 @@ def test_get_all_sample(client):
     sample.delete()
 
 
-def test_get_sample(client):
-    sample = new_sample()
+def test_get_sample(client, experiment):
+    sample = new_sample(experiment.id)
     response = client.get('/api/samples/%s' % sample.id)
     assert response.status_code == 200
     assert response.json['session'] == sample.session
@@ -77,14 +82,17 @@ def test_get_sample(client):
     sample.delete()
 
 
-def test_create_sample(client):
+def test_create_sample(client, experiment):
     session = random.randint(1, 1000)
     position = random.randint(1, 1000)
     spatial_dim = random.choice(['2d', '3d'])
+    kinetics = random.choice(['static', 'dynamic'])
     body = {
         'session': session,
         'position': position,
         'spatial_dim': spatial_dim,
+        'kinetics': kinetics,
+        'experiment': str(experiment.id),
     }
     response = client.post('/api/samples/', json=body)
     assert response.status_code == 200
@@ -101,8 +109,8 @@ def test_create_sample(client):
     assert response.status_code == 400
 
 
-def test_update_sample(client):
-    sample = new_sample()
+def test_update_sample(client, experiment):
+    sample = new_sample(experiment.id)
     new_session = random.randint(1, 1000)
     payload = {'session': new_session}
     response = client.put('/api/samples/%s' % sample.id, json=payload)
@@ -116,8 +124,8 @@ def test_update_sample(client):
     sample.delete()
 
 
-def test_delete_sample(client):
-    sample = new_sample()
+def test_delete_sample(client, experiment):
+    sample = new_sample(experiment.id)
     response = client.delete('/api/samples/%s' % sample.id)
     assert response.status_code == 204
     with pytest.raises(DoesNotExist):
