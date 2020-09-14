@@ -92,12 +92,13 @@ class Experiments(db.Document):
 
 
 class ImagingParameters(db.EmbeddedDocument):
+    platform = db.StringField()
     microscope = db.StringField()
     camera = db.StringField()
-    magnification = db.FloatField(min_value=0)
+    magnification = db.FloatField(required=True, min_value=0)
     na = db.FloatField(min_value=0, max_value=5)
     binning = db.StringField(max_length=1000)
-    pixel_size = db.StringField(max_length=255)
+    pixel_size = db.StringField(required=True, max_length=255)
     exposure_time = db.StringField(max_length=255)
 
 
@@ -110,9 +111,9 @@ class Dimensions(db.EmbeddedDocument):
 
 class ModalityInformation(db.EmbeddedDocument):
     # These can't be selected from sets because there could always be a new one
-    imaging_modality = db.StringField(max_length=1000, required=True)
-    compartment = db.StringField(max_length=1000)
-    marker = db.StringField(max_length=1000)
+    imaging_modality = db.StringField(required=True, max_length=1000)
+    compartment = db.StringField(required=True, max_length=1000)
+    marker = db.StringField(required=True, max_length=1000)
 
 
 class Samples(db.Document):
@@ -131,11 +132,86 @@ class Samples(db.Document):
     modality = db.EmbeddedDocumentField(ModalityInformation)
 
     # location in the ontology
-    kinetics = db.StringField(choices=('static', 'dynamic'))
+    kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
     spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
 
     # each sample belongs to an Experiment
-    experiment = db.ReferenceField(Experiments, reverse_delete_rule=db.NULLIFY)
+    experiment = db.ReferenceField(Experiments, required=True, reverse_delete_rule=db.NULLIFY)
+
+
+
+# TODO: Finish Crowdsourcing
+
+class Subsection(db.EmbeddedDocument):
+    coordinate_x = db.IntField()
+    coordinate_y = db.IntField()
+    coordinate_z = db.IntField()
+    coordinate_t = db.IntField()
+
+    dimensions = db.EmbeddedDocumentField(Dimensions)
+
+    queued = db.BooleanField()
+    annotated = db.BooleanField()
+    curated = db.BooleanField()  # Could also be QCd?
+
+
+class Crowdsourcing(db.Document):
+    """This should describe which samples have been sent to which crowdsourcing companies.
+    It should also note what dimensions were used and what area of the original raw image
+    it came from (we sometimes crop out areas because theyre at the edge of dish, etc).
+
+    Should we state/force standard dimensions here?
+    """
+
+    platform = db.StringField(choices=('appen', 'anolytics', 'mturk'), required=True)
+    submitted_by = db.ReferenceField(Users)
+
+
+
+# TODO: Finish Training data
+class annotation_stats(db.EmbeddedDocument):
+    # TODO: include total number of annotations/trajectories/children
+    num_batches = db.IntField()  # for 2d this is num imgs, for 3d num movies, etc
+    dimensions = db.EmbeddedDocumentField(Dimensions)
+    num_ann = db.IntField()
+    num_div = db.IntField()
+
+
+class Training_Data(db.Document):
+    """A collection of pointers to each npz containing paired x(raw) and Y(annotations) data.
+
+    """
+    # location in the ontology (the annotation could be different than the raw data
+    # e.g. movies vs indpendent imgs)
+    kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
+    spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
+    annotation_type = db.StringField()  # whole cell, cyto, nuc, AM
+
+    # Samples contained or link to crowdsourcing (individual annotated pieces of samples)?
+    samples_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
+    # TODO: Is samples_contained sufficient? Should keys like tissue/platform list be stored here?
+    channel_list = db.ListField()
+    padding = db.BooleanField()
+
+    ann_version = db.StringField()  # TODO: Link this to DVC
+    last_modified = db.StringField()
+    ann_stats = db.EmbeddedDocumentField(annotation_stats)
+
+    split_train = db.FloatField()  # Percentage of total data in train
+    split_val = db.FloatField()
+    split_test = db.FloatField()
+    split_seed = db.IntField()
+
+    raw_dtype = db.StringField()
+    ann_dtype = db.StringField()
+
+    madrox_filepath = db.StringField()  # path to the npz on madrox
+    cloud_storage_loc = db.URLField()  # aws address
+
+
+
+# TODO: Use inheritance to clean the Samples up a bit (dynamic/static, 2D/3D)
+#     meta = {'allow_inheritance': True}
 
 # Custom Fields
 # class OntoLoc(db.ListField):
@@ -148,50 +224,3 @@ class Samples(db.Document):
 
 #         if self.correct_length is not None and len(value) != self.correct_length:
 #             self.error('OntoLoc Information Incorrect')
-
-
-# # Embedded documents for detailed info that needs context("contains" relationship)
-# class RawDataOrigin(db.EmbeddedDocument):
-#     facility = db.StringField()
-#     collected_by = db.StringField()
-#     date_collected = db.DateTimeField()
-#     doi = db.StringField()
-
-
-# class Specimen_Information(db.EmbeddedDocument):
-#     tissues_types = db.ListField(db.StringField(), required=True)
-#     cells_types = db.ListField(db.StringField(), required=True)
-#     dynamic = db.BooleanField()
-#     three_dim = db.BooleanField()
-
-
-# This collection will hold information about each specimen type in our ontology
-# class Specimen(db.Document):
-#     # Some unique ID for a given specimen within the ontology
-#     # Only the combination of spec_id and onto_loc is required to be unique
-#     spec_id = db.ListField(db.StringField(), required=True)  # e.g. cell, HEK293
-#     ontology_loc = db.ListField(db.StringField(), required=True)  # e.g. dynamic,2d..
-
-#     #experiments = db.ListField(Experiments)  # experiment ID or DOI
-#     experiments = db.ListField(db.StringField())  # experiment ID or DOI
-#     # DictField for data with unknown structure (how many channels)
-#     channel_marker = db.DictField()  # e.g. 0: H2B-mClover, ...
-
-#     meta = {'allow_inheritance': True}
-
-
-# TODO: Use inheritance to clean the Samples up a bit
-#     z_step = db.StringField(required=True)
-
-# class ThreeDimSample(Sample):
-#     z_step = db.StringField(required=True)
-
-
-# TODO: Training data
-    # cloud_storage_loc = db.URLField()  # aws address
-
-
-# TODO: Crowdsourcing
-    # How much of data has been sent to f8 and from which dirs
-    # a note section on dimensions and amount of raw image used
-    # (we sometimes crop out areas because theyre at the edge of dish, etc)
