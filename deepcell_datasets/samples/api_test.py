@@ -41,7 +41,6 @@ def new_sample(experiment_id):
     spatial_dim = random.choice(['2d', '3d'])
     kinetics = random.choice(['static', 'dynamic'])
 
-
     # Create the sample
     sample = models.Samples(
         session=session,
