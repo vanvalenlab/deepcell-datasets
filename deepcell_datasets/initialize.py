@@ -60,6 +60,7 @@ def _datasets_available(self):
                 print('only 1 file')
                 print('--------------------------------')
 
+
 def json_loader():
     """Load all raw datasets from
 

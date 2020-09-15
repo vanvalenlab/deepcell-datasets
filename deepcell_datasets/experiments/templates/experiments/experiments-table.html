@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% from "macros/_pagination.html" import render_pagination %}
+
+{% block content %}
+
+<h3 class="title center-align">{{ experiments }} Experiments </h3>
+
+<table>
+
+  <thead>
+    <tr>
+        <th>Date Collected</th>
+        <th>DOI</th>
+        <th>Subtype</th>
+        <th>Culture</th>
+        <th>Labeling</th>
+        <th>Imaging</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for experiment in paginated_experiments.items %}
+    <tr>
+      <td>{{ experiment.date_collected }}</td>
+      <td><a href="/experiments/{{ experiment.id }}">{{ experiment.doi }}</a></td>
+      <td>{{ experiment.methods.subtype }}</td>
+      <td>{{ experiment.methods.culture }}</td>
+      <td>{{ experiment.methods.labeling }}</td>
+      <td>{{ experiment.methods.imaging }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+{{ render_pagination(paginated_experiments, 'experiments_bp.experiments_table') }}
+
+{% endblock %}
