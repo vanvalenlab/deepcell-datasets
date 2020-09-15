@@ -66,12 +66,12 @@ def handle_exception(err):
 def view_all_training_data():
     page = request.args.get('page', default=1, type=int)
     training_data = Training_Data.objects.paginate(page=page, per_page=20)
-    return render_template('training/index.html',
+    return render_template('training/training-table.html',
                            paginated_training_data=training_data)
 
 
 @training_bp.route('/<training_data_id>')
 def view_training_data(training_data_id):
     training_data = Training_Data.objects.get_or_404(id=training_data_id)
-    return render_template('training/detail.html',
+    return render_template('training/training-detail.html',
                            training_data=training_data)
