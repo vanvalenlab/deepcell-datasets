@@ -171,10 +171,7 @@ class Crowdsourcing(db.Document):
 
     subsections = db.EmbeddedDocumentField(Subsection)
 
-    split_seed = db.IntField()  # Fed into caliban-toolbox
-    split_train = db.FloatField()  # Percentage of total data in train
-    split_val = db.FloatField()
-    split_test = db.FloatField()
+    split_seed = db.IntField()  # Fed into caliban-toolbox to create train/val/test split
 
 # TODO: Finish Training data
 
@@ -196,6 +193,10 @@ class Training_Data(db.Document):
     kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
     spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
     annotation_type = db.StringField()  # whole cell, cyto, nuc, AM, tracking, dots?
+
+    # ID information
+    doi = db.StringField(max_length=1000)  # DOI may be different than raw (compliation of multiple)
+    title = db.StringField()  # Human-readable for display purpose (eg. smith et al. nuclear study)
 
     # Samples contained or link to crowdsourcing (individual annotated pieces of samples)?
     samples_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
