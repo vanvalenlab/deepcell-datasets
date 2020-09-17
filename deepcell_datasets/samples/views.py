@@ -101,6 +101,15 @@ def add_sample(exp_id):
                            exp_id=exp_id)
 
 
+@samples_bp.route('/', methods=['GET'])
+def view_all_samples():
+    page = request.args.get('page', default=1, type=int)
+    per_page = current_app.config['ITEMS_PER_PAGE']
+    samples = Samples.objects.paginate(page=page, per_page=per_page)
+    return render_template('samples/samples-table.html',
+                           paginated_samples=samples)
+
+
 @samples_bp.route('/success')
 def success():
     return 'Sample Successfully Submitted'

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% from "macros/_pagination.html" import render_pagination %}
+
+{% block content %}
+
+<h3 class="title center-align">Samples</h3>
+
+<table>
+
+  <thead>
+    <tr>
+        <th>Experiment</th>
+        <th>Specimen</th>
+        <th>Session</th>
+        <th>Position</th>
+        <th>Kinetics</th>
+        <th>Spatial Dimension</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for sample in paginated_samples.items %}
+    <tr>
+      <td><a href="/experiments/{{ sample.experiment.id }}">{{ sample.experiment.doi }}</a></td>
+      <td>{{ sample.specimen }}</td>
+      <td>{{ sample.session }}</td>
+      <td>{{ sample.position }}</td>
+      <td>{{ sample.kinetics }}</td>
+      <td>{{ sample.spatial_dim }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+{{ render_pagination(paginated_samples, 'samples_bp.view_all_samples') }}
+
+{% endblock %}
