@@ -58,7 +58,7 @@ class ModalityInformationForm(FlaskForm):
 class SampleForm(FlaskForm):
     """Form for creating a new Samples document."""
 
-    session = fields.IntegerField('Specimen Name',
+    session = fields.IntegerField('Session',
                                   validators=[validators.required()])
     position = fields.IntegerField('Sample Position/FOV',
                                    validators=[validators.required()])

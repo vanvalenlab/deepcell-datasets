@@ -33,46 +33,6 @@ from mongoengine import connect, disconnect
 from deepcell_datasets.database import models
 
 
-@pytest.fixture()
-def mongodb():
-    disconnect()  # TODO: why do we need to call this?
-    db = connect('mongoenginetest', host='mongomock://localhost')
-    yield db
-    disconnect()
-
-
-@pytest.fixture()
-def sample(mongodb):
-    session = random.randint(1, 9999)
-    position = random.randint(1, 9999)
-    spatial_dim = random.choice(['2d', '3d'])
-
-    sample = models.Samples(session=session, position=position,
-                            spatial_dim=spatial_dim)
-
-    sample.save()
-    yield sample
-
-    sample.delete()
-
-
-@pytest.fixture()
-def experiment(mongodb):
-    doi = 'a specific DOI number'
-    created_by = models.Users(
-        first_name='first',
-        last_name='last',
-        facility='test facility'
-    )
-    created_by.save()
-
-    experiment = models.Experiments(doi=doi, created_by=created_by)
-    experiment.save()
-    yield experiment
-
-    experiment.delete()
-
-
 class TestExperiments(object):
 
     def test_create(self, mongodb):
@@ -126,13 +86,15 @@ class TestExperiments(object):
 
 class TestSamples(object):
 
-    def test_create(self, mongodb):
+    def test_create(self, mongodb, experiment):
         session = random.randint(1, 99)
         position = random.randint(1, 99)
         spatial_dim = random.choice(['2d', '3d'])
+        kinetics = random.choice(['static', 'dynamic'])
 
         sample = models.Samples(session=session, position=position,
-                                spatial_dim=spatial_dim)
+                                spatial_dim=spatial_dim, kinetics=kinetics,
+                                experiment=experiment.id)
         sample.save()
 
         fresh_sample = models.Samples.objects(id=sample.id).first()

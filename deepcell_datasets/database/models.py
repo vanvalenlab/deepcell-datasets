@@ -139,8 +139,8 @@ class Samples(db.Document):
     experiment = db.ReferenceField(Experiments, required=True, reverse_delete_rule=db.NULLIFY)
 
 
-
 # TODO: Finish Crowdsourcing
+
 
 class Subsection(db.EmbeddedDocument):
     coordinate_x = db.IntField()
@@ -176,8 +176,9 @@ class Crowdsourcing(db.Document):
     split_val = db.FloatField()
     split_test = db.FloatField()
 
-
 # TODO: Finish Training data
+
+
 class annotation_stats(db.EmbeddedDocument):
     # TODO: include total number of annotations/trajectories/children
     num_batches = db.IntField()  # for 2d this is num imgs, for 3d num movies, etc
@@ -218,7 +219,6 @@ class Training_Data(db.Document):
 
     nas_filepath = db.StringField()  # path to the npz on madrox
     cloud_storage_loc = db.URLField()  # aws address
-
 
 
 # TODO: Use inheritance to clean the Samples up a bit (dynamic/static, 2D/3D)

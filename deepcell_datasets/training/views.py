@@ -38,17 +38,14 @@ from flask_security import login_required
 
 from mongoengine import ValidationError
 
-from deepcell_datasets.database.models import Experiments
-from deepcell_datasets.experiments.forms import ExperimentForm
-from deepcell_datasets.utils import nest_dict
-from deepcell_datasets.samples.views import samples_bp
+from deepcell_datasets.database.models import Training_Data
 
 
-experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
-                           template_folder='templates')
+training_bp = Blueprint('training_bp', __name__,  # pylint: disable=C0103
+                        template_folder='templates')
 
 
-@experiments_bp.errorhandler(Exception)
+@training_bp.errorhandler(Exception)
 def handle_exception(err):
     """Error handler
 
@@ -65,51 +62,16 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-# Routes for HTML pages.
-@experiments_bp.route('/data_entry', methods=['GET', 'POST'])
-@login_required
-def add_experiment():
-    form = ExperimentForm()
-    if form.validate_on_submit():
-        body_raw = request.form
-        current_app.logger.info('Form body is %s ', body_raw)
-        body_dict = nest_dict(body_raw.to_dict())
-        # Add in current user information
-        body_dict['created_by'] = current_user._get_current_object()
-
-        current_app.logger.info('Nested dict to save is %s ', body_dict)
-        experiment = Experiments(**body_dict).save()
-
-        current_app.logger.info('experiment %s saved succesfully', experiment)
-        unique_id = experiment.id
-        current_app.logger.info('unique_id %s extracted as key', unique_id)
-
-        # TODO: It would be helpful to have the experiment added to the User
-        #       collection here
-
-        return redirect(url_for('samples_bp.add_sample', exp_id=unique_id))
-    return render_template('experiments/data_entry.html',
-                           form=form,
-                           current_user=current_user)
-
-
-@experiments_bp.route('/', methods=['GET'])
-@login_required
-def experiments_table():
+@training_bp.route('/')
+def view_all_training_data():
     page = request.args.get('page', default=1, type=int)
-    experiments = Experiments.objects.paginate(page=page, per_page=20)
-    return render_template('experiments/experiments-table.html',
-                           paginated_experiments=experiments)
+    training_data = Training_Data.objects.paginate(page=page, per_page=20)
+    return render_template('training/training-table.html',
+                           paginated_training_data=training_data)
 
 
-@experiments_bp.route('/<experiment_id>', methods=['GET'])
-@login_required
-def view_experiment(experiment_id):
-    experiment = Experiments.objects.get_or_404(id=experiment_id)
-    return render_template('experiments/experiment-detail.html',
-                           experiment=experiment)
-
-
-@experiments_bp.route('/success')
-def success():
-    return 'Experiment Successfully Submitted'
+@training_bp.route('/<training_data_id>')
+def view_training_data(training_data_id):
+    training_data = Training_Data.objects.get_or_404(id=training_data_id)
+    return render_template('training/training-detail.html',
+                           training_data=training_data)
