@@ -97,7 +97,8 @@ def add_experiment():
 @login_required
 def experiments_table():
     page = request.args.get('page', default=1, type=int)
-    experiments = Experiments.objects.paginate(page=page, per_page=20)
+    per_page = current_app.config['ITEMS_PER_PAGE']
+    experiments = Experiments.objects.paginate(page=page, per_page=per_page)
     return render_template('experiments/experiments-table.html',
                            paginated_experiments=experiments)
 
