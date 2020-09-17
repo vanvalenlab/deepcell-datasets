@@ -154,7 +154,8 @@ class Subsection(db.EmbeddedDocument):
     annotated = db.BooleanField()
     curated = db.BooleanField()  # Could also be QCd?
 
-
+# TODO: crowdsourcing and subsection should be inversed. proj id and sample id belong
+# to subsection not the other way around
 class Crowdsourcing(db.Document):
     """This should describe which samples have been sent to which crowdsourcing companies.
     It should also note what dimensions were used and what area of the original raw image
@@ -163,9 +164,17 @@ class Crowdsourcing(db.Document):
     Should we state/force standard dimensions here?
     """
 
+    # Should be connected to individual samples
+
     platform = db.StringField(choices=('appen', 'anolytics', 'mturk'), required=True)
     submitted_by = db.ReferenceField(Users)
 
+    subsections = db.EmbeddedDocumentField(Subsection)
+
+    split_seed = db.IntField()  # Fed into caliban-toolbox
+    split_train = db.FloatField()  # Percentage of total data in train
+    split_val = db.FloatField()
+    split_test = db.FloatField()
 
 
 # TODO: Finish Training data
@@ -178,20 +187,23 @@ class annotation_stats(db.EmbeddedDocument):
 
 
 class Training_Data(db.Document):
-    """A collection of pointers to each npz containing paired x(raw) and Y(annotations) data.
+    """A collection of pointers to each npz containing paired X(raw) and y(annotations) data.
 
     """
     # location in the ontology (the annotation could be different than the raw data
     # e.g. movies vs indpendent imgs)
     kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
     spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
-    annotation_type = db.StringField()  # whole cell, cyto, nuc, AM
+    annotation_type = db.StringField()  # whole cell, cyto, nuc, AM, tracking, dots?
 
     # Samples contained or link to crowdsourcing (individual annotated pieces of samples)?
     samples_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
+    # TODO: Should have coordinates that follow samples and subsamples
     # TODO: Is samples_contained sufficient? Should keys like tissue/platform list be stored here?
-    channel_list = db.ListField()
+    channel_list = db.ListField(db.StringField())
+    # TODO: Which samples/platforms exist with which batch? Do we need a one-to-one like that?
     padding = db.BooleanField()
+    # TODO: Include size of padding (x and y)
 
     ann_version = db.StringField()  # TODO: Link this to DVC
     last_modified = db.StringField()
@@ -200,12 +212,11 @@ class Training_Data(db.Document):
     split_train = db.FloatField()  # Percentage of total data in train
     split_val = db.FloatField()
     split_test = db.FloatField()
-    split_seed = db.IntField()
 
-    raw_dtype = db.StringField()
+    raw_dtype = db.StringField()  # TODO: Enumerate as choices
     ann_dtype = db.StringField()
 
-    madrox_filepath = db.StringField()  # path to the npz on madrox
+    nas_filepath = db.StringField()  # path to the npz on madrox
     cloud_storage_loc = db.URLField()  # aws address
 
 
