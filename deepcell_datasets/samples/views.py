@@ -104,10 +104,17 @@ def add_sample(exp_id):
 @samples_bp.route('/', methods=['GET'])
 def view_all_samples():
     page = request.args.get('page', default=1, type=int)
+    experiment = request.args.get('experiment', default='')
+
+    if experiment:
+        samples = Samples.objects(experiment=experiment)
+    else:
+        samples = Samples.objects
+
     per_page = current_app.config['ITEMS_PER_PAGE']
-    samples = Samples.objects.paginate(page=page, per_page=per_page)
+    paginated_samples = samples.paginate(page=page, per_page=per_page)
     return render_template('samples/samples-table.html',
-                           paginated_samples=samples)
+                           paginated_samples=paginated_samples)
 
 
 @samples_bp.route('/success')
