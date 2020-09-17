@@ -154,6 +154,7 @@ class Subsection(db.EmbeddedDocument):
     annotated = db.BooleanField()
     curated = db.BooleanField()  # Could also be QCd?
 
+
 # TODO: crowdsourcing and subsection should be inversed. proj id and sample id belong
 # to subsection not the other way around
 class Crowdsourcing(db.Document):
