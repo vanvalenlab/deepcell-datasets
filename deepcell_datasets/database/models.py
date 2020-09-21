@@ -87,6 +87,7 @@ class Experiments(db.Document):
     doi = db.StringField(max_length=1000)
     date_collected = db.StringField()  # Date on microscope (date added auto-saved by mongo)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
+    copyright = db.StringField()
     # Specimen + modality + compartment + marker
     # subjects = db.EmbeddedDocumentListField(SpecimenInformation)
 
@@ -98,7 +99,7 @@ class ImagingParameters(db.EmbeddedDocument):
     magnification = db.FloatField(required=True, min_value=0)
     na = db.FloatField(min_value=0, max_value=5)
     binning = db.StringField(max_length=1000)
-    pixel_size = db.StringField(required=True, max_length=255)
+    pixel_size = db.StringField(required=True, max_length=255)  #um per pixel?
     exposure_time = db.StringField(max_length=255)
 
 
@@ -128,6 +129,7 @@ class Samples(db.Document):
     time_step = db.StringField(max_length=255)
     z_step = db.StringField(max_length=255)
 
+    species = db.StringField(max_length=1000)
     specimen = db.StringField(max_length=1000)
     modality = db.EmbeddedDocumentField(ModalityInformation)
 
@@ -197,6 +199,7 @@ class Training_Data(db.Document):
     # ID information
     doi = db.StringField(max_length=1000)  # DOI may be different than raw (compliation of multiple)
     title = db.StringField()  # Human-readable for display purpose (eg. smith et al. nuclear study)
+    copyright = db.StringField()
 
     # Samples contained or link to crowdsourcing (individual annotated pieces of samples)?
     samples_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)

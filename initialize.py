@@ -61,8 +61,20 @@ def _datasets_available(self):
                 print('--------------------------------')
 
 
-def json_loader():
-    """Load all raw datasets from
+def csv_loader():
+    """Load Greenwald et al multiplex data using pandas and provided xlsx
 
 
     """
+
+
+""" for each row,
+        iF the folder name in daves folder
+            add sample id to list
+            make entry into experiments for ever row and sample for each file in folder
+
+        for sample id
+            included in training npz?
+                add to training collection
+
+"""
