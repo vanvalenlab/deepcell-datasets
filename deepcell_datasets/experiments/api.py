@@ -66,6 +66,7 @@ def get_experiments():  # def get_experiments(page=1):
     return Response(experiments, mimetype='application/json')
 
 
+# TODO: Implement session/CSRF Tokens for API access
 @experiments_api_bp.route('/', methods=['POST'])
 def create_experiment():
     """Create a new experiments"""

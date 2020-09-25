@@ -33,7 +33,7 @@ def test_health(client):
 
 
 def test_login_logout(client, app):
-    response = response = client.post('/login', data=dict(
+    response = client.post('/login', data=dict(
         email=app.config['ADMIN_EMAIL'],
         password=app.config['ADMIN_PASSWORD']
     ), follow_redirects=True)

@@ -62,7 +62,8 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-@training_bp.route('/')
+@training_bp.route('/', methods=['GET'])
+@login_required
 def view_all_training_data():
     page = request.args.get('page', default=1, type=int)
     training_data = Training_Data.objects.paginate(page=page, per_page=20)

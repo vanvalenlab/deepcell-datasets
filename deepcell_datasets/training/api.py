@@ -71,16 +71,16 @@ def get_training_data(training_data_id):
     return Response(training_data, mimetype='application/json')
 
 
-# @training_api_bp.route('/', methods=['POST'])
-# def create_training_data():
-#     """Create a new training data"""
-#     body = request.get_json()
-#     current_app.logger.info('Body is %s ', body)
-#     training_data = Training_Data(**body).save()
-#     current_app.logger.info('training_data %s saved succesfully', training_data)
-#     unique_id = training_data.id
-#     current_app.logger.info('unique_id %s extracted as key', unique_id)
-#     return jsonify({'unique_id': str(unique_id)})
+@training_api_bp.route('/', methods=['POST'])
+def create_training_data():
+    """Create a new training data"""
+    body = request.get_json()
+    current_app.logger.info('Body is %s ', body)
+    training_data = Training_Data(**body).save()
+    current_app.logger.info('training_data %s saved succesfully', training_data)
+    unique_id = training_data.id
+    current_app.logger.info('unique_id %s extracted as key', unique_id)
+    return jsonify({'unique_id': str(unique_id)})
 
 
 # @training_api_bp.route('/<training_data_id>', methods=['PUT'])

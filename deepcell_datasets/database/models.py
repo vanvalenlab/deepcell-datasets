@@ -84,7 +84,7 @@ class Methods(db.EmbeddedDocument):
 
 class Experiments(db.Document):
     created_by = db.ReferenceField(Users)
-    doi = db.StringField(max_length=1000)
+    doi = db.StringField(max_length=1000)  # Name/ID field in addtion to this?
     date_collected = db.StringField()  # Date on microscope (date added auto-saved by mongo)
     methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
     copyright = db.StringField()
@@ -96,10 +96,10 @@ class ImagingParameters(db.EmbeddedDocument):
     platform = db.StringField()
     microscope = db.StringField()
     camera = db.StringField()
-    magnification = db.FloatField(required=True, min_value=0)
+    magnification = db.FloatField(required=True, min_value=0)  # objective?
     na = db.FloatField(min_value=0, max_value=5)
     binning = db.StringField(max_length=1000)
-    pixel_size = db.StringField(required=True, max_length=255)  #um per pixel?
+    pixel_size = db.FloatField(required=True)  # assume um per pixel
     exposure_time = db.StringField(max_length=255)
 
 
@@ -114,7 +114,7 @@ class ModalityInformation(db.EmbeddedDocument):
     # These can't be selected from sets because there could always be a new one
     imaging_modality = db.StringField(required=True, max_length=1000)
     compartment = db.StringField(required=True, max_length=1000)
-    marker = db.StringField(required=True, max_length=1000)
+    marker = db.StringField(required=True, max_length=1000)  # TODO: Should this be a list? multiple for whole_cell or cyto+nuc in one image
 
 
 class Samples(db.Document):
