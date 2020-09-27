@@ -11,6 +11,7 @@
   <thead>
     <tr>
         <th></th>
+        <th>Filename</th>
         <th>Kinetics</th>
         <th>Spatial Dimension</th>
         <th>Channels</th>
@@ -26,6 +27,7 @@
     {% for training_data in paginated_training_data.items %}
     <tr>
       <td><a href="/training/{{ training_data.id }}">View Details</a></td>
+      <td>{{ training_data.title }}</td>
       <td>{{ training_data.kinetics }}</td>
       <td>{{ training_data.spatial_dim }}</td>
       <td>{{ training_data.channel_list }}</td>
