@@ -12,13 +12,13 @@
 
     <p>Annotation Type: {{ training_data.annotation_type }}</p>
     <p>{{ training_data.spatial_dim }} | {{ training_data.kinetics }}</p>
-    <p>Channels: {{ training_data.channels_list }}</p>
+    <p>Raw Channels: {{ training_data.raw_channel_list }}</p>
   </div>
 
   <div class="col s6">
     <h4>Annotation Stats</h4>
 
-    <p>Dimensions: {{ training_data.ann_stats.dimensions }}</p>
+    <p>Dimensions: {{ training_data.ann_stats.dimensions.x, training_data.ann_stats.dimensions.y }}</p>
     <p>Total Samples: {{ training_data.samples_contained|length }}</p>
     <p>Total Batches: {{ training_data.ann_stats.num_batches }}</p>
     <p>Total Annotations: {{ training_data.ann_stats.num_ann }}</p>
