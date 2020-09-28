@@ -66,7 +66,8 @@ def handle_exception(err):
 @login_required
 def view_all_training_data():
     page = request.args.get('page', default=1, type=int)
-    training_data = Training_Data.objects.paginate(page=page, per_page=20)
+    per_page = current_app.config['ITEMS_PER_PAGE']
+    training_data = Training_Data.objects.paginate(page=page, per_page=per_page)
     return render_template('training/training-table.html',
                            paginated_training_data=training_data)
 
