@@ -66,15 +66,3 @@ def csv_loader():
 
 
     """
-
-
-""" for each row,
-        iF the folder name in daves folder
-            add sample id to list
-            make entry into experiments for ever row and sample for each file in folder
-
-        for sample id
-            included in training npz?
-                add to training collection
-
-"""
