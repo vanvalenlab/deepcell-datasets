@@ -25,6 +25,11 @@
       {% include "partials/navbar.html" %}
     {% endblock %}
 
+    <main>
+      {% block nocontainer %}
+      {% endblock %}
+    </main>
+
     <main class="container">
       {% block content %}
       {% endblock %}
