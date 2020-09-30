@@ -1,20 +1,113 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="section center-align">
-  <h5>
-    Select an experiment to load available samples and metadata
-  </h5>
-  <p>
-    Each sample contains all the relevant information related to dimensions and imaging parameters.
-    It also contains links to the associated image stack. While an experiment can contain multiple
-    samples, each sample belongs to only one experiment.
-  </p>
-</div>
-<div class="section center-align">
-	<a class="waves-effect waves-light btn" href="experiments/data_entry">
-		Add a new Experiment
-	</a>
+{% block nocontainer %}
+<div id="index-banner" class="parallax-container">
+  <div class="section no-pad-bot">
+    <div class="container">
+      <br><br>
+      <h1 class="header center white-text text-lighten-2">DeepCell Datasets</h1>
+      <div class="row center">
+        <h5 class="header col s12 light">A hub for annotated single-cell images to train deep learning models.</h5>
+      </div>
+      <br><br>
+
+    </div>
+  </div>
+  <div class="parallax"><img src="{{ url_for('static', filename='combined.gif') }}" alt="Raw microscope image of cells in culture"></div>
 </div>
 
+
+<div class="container">
+  <div class="section">
+
+    <!--   Icon Section   -->
+    <div class="row center">
+      <h4>Browse Data</h4>
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center brown-text"><i class="material-icons">insert_drive_file</i></h2>
+          <h5 class="center">Training Data</h5>
+
+          <p class="light">Review and download published training datasets.</p>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center brown-text"><i class="material-icons">photo_library</i></h2>
+          <h5 class="center">Experiments</h5>
+
+          <p class="light">Explore the samples in published experiments.</p>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center brown-text"><i class="material-icons">photo</i></h2>
+          <h5 class="center">Samples</h5>
+
+          <p class="light">Query and download individual biological images.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row center">
+      <div class="col s12 m4">
+        <div class="row center">
+          <a href="training" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Browse Training Data</a>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="row center">
+          <a href="experiments" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Browse Experiments</a>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="row center">
+          <a href="samples" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Browse Samples</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="parallax-container valign-wrapper">
+  <div class="section no-pad-bot">
+    <div class="container">
+      <div class="row center">
+        <h5 class="header col s12 light">Access raw biological images and curated single-cell annotations.</h5>
+      </div>
+    </div>
+  </div>
+  <div class="parallax"><img src="{{ url_for('static', filename='CyCIF_DNA_Membrane_overlay.png') }}" alt="Segmented microscope image of cells in culture"></div>
+</div>
+
+<div class="container">
+  <div class="section">
+
+    <div class="row">
+      <div class="col s12 center">
+        <h3><i class="mdi-content-send brown-text"></i></h3>
+        <h4>Upload Data</h4>
+        <p class="center-align light">Upload new experiments to expand DeepCell Datasets.</p>
+      </div>
+    </div>
+    <div class="row center">
+      <div class="col s12">
+        <div class="row center">
+          <a href="experiments/data_entry" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Upload New Experiment</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extraJs %}
+  <!-- Load parallex template JS from Materialize -->
+  <script src="{{ url_for('static', filename='js/init.js') }}"></script>    
 {% endblock %}
