@@ -95,17 +95,3 @@ def delete_experiment(experiment_id):
 def get_experiment(experiment_id):
     experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
     return Response(experiment, mimetype='application/json')
-
-
-# Routes for HTML pages.
-@experiments_bp.route('/data_entry', methods=['GET', 'POST'])
-def add_experiment():
-    form = ExperimentForm()
-    if form.validate_on_submit():
-        return redirect(url_for('experiments_bp.success'))
-    return render_template('experiments/data_entry.html', form=form)
-
-
-@experiments_bp.route('/success')
-def success():
-    return 'Experiment Successfully Submitted'
