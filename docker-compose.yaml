@@ -19,9 +19,9 @@ services:
       # MONGODB_USERNAME: ${MONGODB_USERNAME:-root}
       # MONGODB_PASSWORD: ${MONGODB_PASSWORD:-password}
       MAIL_SERVER: ${MAIL_SERVER:-mail}
-      MAIL_PORT: ${MAIL_PORT:-25}
       # MAIL_USERNAME: ${MAIL_USERNAME:-alice@example.com}
       # MAIL_PASSWORD: ${MAIL_PASSWORD:-secretpassword}
+      MAIL_PORT: ${MAIL_PORT:-587}
 
   mongo:
     image: mongo

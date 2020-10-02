@@ -35,8 +35,8 @@ TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, defa
 
 # Flask-Mail settings: https://tinyurl.com/y3db5s3h
 MAIL_SERVER = decouple.config('MAIL_SERVER', default='localhost')
-MAIL_PORT = decouple.config('MAIL_PORT', default=25, cast=int)
-MAIL_USE_TLS = decouple.config('MAIL_USE_TLS', default=False, cast=bool)
+MAIL_PORT = decouple.config('MAIL_PORT', default=587, cast=int)
+MAIL_USE_TLS = decouple.config('MAIL_USE_TLS', default=True, cast=bool)
 MAIL_USE_SSL = decouple.config('MAIL_USE_SSL', default=False, cast=bool)
 MAIL_USERNAME = decouple.config('MAIL_USERNAME', default=None)
 MAIL_PASSWORD = decouple.config('MAIL_PASSWORD', default=None)
