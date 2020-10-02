@@ -45,8 +45,10 @@ def mongodb():
 def sample(mongodb):
     session = random.randint(1, 9999)
     position = random.randint(1, 9999)
+    spatial_dim = random.choice(['2d', '3d'])
 
-    sample = models.Samples(session=session, position=position)
+    sample = models.Samples(session=session, position=position,
+                            spatial_dim=spatial_dim)
 
     sample.save()
     yield sample
@@ -127,8 +129,10 @@ class TestSamples(object):
     def test_create(self, mongodb):
         session = random.randint(1, 99)
         position = random.randint(1, 99)
+        spatial_dim = random.choice(['2d', '3d'])
 
-        sample = models.Samples(session=session, position=position)
+        sample = models.Samples(session=session, position=position,
+                                spatial_dim=spatial_dim)
         sample.save()
 
         fresh_sample = models.Samples.objects(id=sample.id).first()

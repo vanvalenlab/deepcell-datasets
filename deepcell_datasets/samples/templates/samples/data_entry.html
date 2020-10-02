@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% from "macros/_forms.html" import render_field %}
+
+{% block content %}
+<h3 class="title center-align">Sample Information</h3>
+
+<form method="post">
+
+
+<!--
+  {{  form.csrf_token  }}
+-->
+
+<!-- TODO: It would be nice to use a macro to render all these
+-->
+
+  <legend><h5>Please fill out the following:</h5></legend>
+
+  {% if form.errors %}
+    <ul class="errors">
+      {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+        {% for error in field_errors %}
+          <li>{{ form[field_name].label }}: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+
+  <div class="row">
+    <div class="input-field col s12">
+      <input disabled value={{ exp_id }} id="experiment" type="text">
+      <label for="experiment">Experiment ID</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the sample in terms of kinetics and spatial dimension.</span>
+    </div>
+    <div class="radio col s6">
+      {% for choice in form.kinetics.choices %}
+      <p>
+        <label for="{{ choice }}">
+          {% if loop.index == 1 %}
+          <input id="{{ choice }}" name="kinetics" type="radio" value="{{ choice }}" checked />
+          {% else %}
+          <input id="{{ choice }}" name="kinetics" type="radio" value="{{ choice }}" />
+          {% endif %}
+          <span>{{ choice|title }}</span>
+        </label>
+      </p>
+      {% endfor %}
+    </div>
+
+    <div class="radio col s6">
+      {% for choice in form.spatial_dim.choices %}
+      <p>
+        <label for="{{ choice }}">
+          {% if loop.index == 1 %}
+          <input id="{{ choice }}" name="spatial_dim" type="radio" value="{{ choice }}" checked />
+          {% else %}
+          <input id="{{ choice }}" name="kinetics" type="radio" value="{{ choice }}" />
+          {% endif %}
+          <span>{{ choice|title }}</span>
+        </label>
+      </p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s12">
+      {{ render_field(form.specimen) }}
+      <span class="helper-text" data-error="wrong" data-success="right">
+        Name or abbreviation of the specimen. This could be a cell line or tissue type (e.g. HeLa or TNBC).
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s3">
+      {{ render_field(form.modality.imaging_modality) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.modality.compartment) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.modality.marker) }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.session) }}
+    </div>
+    <div class="input-field col s6">
+      {{ render_field(form.position) }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.time_step) }}
+    </div>
+    <div class="input-field col s6">
+      {{ render_field(form.z_step) }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <span class="helper-text" data-error="wrong" data-success="right">Define the dimensions of the sample.</span>
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.x) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.y) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.z) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.t) }}
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="input-field col s3">
+      {{ render_field(form.imaging_params.magnification) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.imaging_params.na) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.imaging_params.pixel_size) }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.imaging_params.binning) }}
+    </div>
+    <div class="input-field col s6">
+      {{ render_field(form.imaging_params.exposure_time) }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.imaging_params.microscope) }}
+    </div>
+    <div class="input-field col s6">
+      {{ render_field(form.imaging_params.camera) }}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Add Sample</button>
+
+</form>
+{% endblock %}

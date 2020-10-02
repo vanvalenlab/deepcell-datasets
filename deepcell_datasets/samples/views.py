@@ -29,11 +29,19 @@ from werkzeug.exceptions import HTTPException
 from flask import Blueprint
 from flask import jsonify
 from flask import request
-from flask import Response
 from flask import current_app
+from flask import render_template
+from flask import url_for, redirect
 from mongoengine import ValidationError
 
+from flask_login import current_user
+from flask_security import login_required
+
 from deepcell_datasets.database.models import Samples
+from deepcell_datasets.database.models import Experiments
+
+from deepcell_datasets.samples.forms import SampleForm
+from deepcell_datasets.utils import nest_dict
 
 
 samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
@@ -55,39 +63,44 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-@samples_bp.route('/')
-def get_samples():  # def get_samples(page=1):
-    # paginated_samples = Samples.objects.paginate(page=page, per_page=10)
-    samples = Samples.objects().to_json()
-    return Response(samples, mimetype='application/json')
+# Routes for HTML pages.
+# TODO: This should likely be split into several routes allowing
+#       users the option to re-use information like scope, step, marker, etc.
+#       This could be down with checkbox and passing objects from one route
+#       to the next.
+@samples_bp.route('/data_entry/<exp_id>', methods=['GET', 'POST'])
+@login_required
+def add_sample(exp_id):
+    form = SampleForm()
+    # flask-mongoengine wtf validation fails for required fields
+    # TODO: likely a bug in flask-mongo but the following logic shouldnt stay
+    if form.validate_on_submit():
+        # TODO: This is here to remind us of the package bug:
+        current_app.logger.info('Form errors are %s ', form.errors)
+        # Do something with data
+        body_raw = request.form
+        current_app.logger.info('Form body is %s ', body_raw)
+        body_dict = nest_dict(body_raw.to_dict())
+
+        # Add in Experiment ID information here
+        experiment = Experiments.objects.get_or_404(id=exp_id)
+        body_dict['experiment'] = experiment
+
+        current_app.logger.info('Nested dict to save is %s ', body_dict)
+        sample = Samples(**body_dict).save()
+
+        current_app.logger.info('sample %s saved succesfully', sample)
+        unique_id = sample.id
+        current_app.logger.info('unique_id %s extracted as key', unique_id)
+
+        return redirect(url_for('samples_bp.success'))
+
+    return render_template('samples/data_entry.html',
+                           form=form,
+                           current_user=current_user,
+                           exp_id=exp_id)
 
 
-@samples_bp.route('/', methods=['POST'])
-def create_sample():
-    """Create a new experiments"""
-    body = request.get_json()
-    current_app.logger.info('Body is %s ', body)
-    sample = Samples(**body).save()
-    current_app.logger.info('sample %s saved succesfully', sample)
-    unique_id = sample.id
-    current_app.logger.info('unique_id %s extracted as key', unique_id)
-    return jsonify({'unique_id': str(unique_id)})
-
-
-@samples_bp.route('/<sample_id>', methods=['PUT'])
-def update_sample(sample_id):
-    body = request.get_json()
-    Samples.objects.get_or_404(id=sample_id).update(**body)
-    return jsonify({}), 204  # successful update but no content
-
-
-@samples_bp.route('/<sample_id>', methods=['DELETE'])
-def delete_sample(sample_id):
-    Samples.objects.get_or_404(id=sample_id).delete()
-    return jsonify({}), 204  # successful update but no content
-
-
-@samples_bp.route('/<sample_id>')
-def get_sample(sample_id):
-    sample = Samples.objects.get_or_404(id=sample_id).to_json()
-    return Response(sample, mimetype='application/json')
+@samples_bp.route('/success')
+def success():
+    return 'Sample Successfully Submitted'

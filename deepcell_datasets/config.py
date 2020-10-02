@@ -51,18 +51,24 @@ SECRET_KEY = decouple.config('SECRET_KEY', default='super-secret')
 SECURITY_PASSWORD_SALT = decouple.config('SECURITY_PASSWORD_SALT', default='salt')
 # Enable new users to create accounts
 SECURITY_REGISTERABLE = True
-SECURITY_SEND_REGISTER_EMAIL = True
+SECURITY_SEND_REGISTER_EMAIL = True  # TODO: need to set up a mail client if True.
 # Enable users to reset/recover their password
-SECURITY_RECOVERABLE = True
+SECURITY_RECOVERABLE = True  # TODO: need to set up a mail client if True.
 SECURITY_RESET_PASSWORD_WITHIN = '3 days'
 # Enable users to change their password
 SECURITY_CHANGEABLE = True
-SECURITY_SEND_PASSWORD_CHANGE_EMAIL = True
+SECURITY_SEND_PASSWORD_CHANGE_EMAIL = True  # TODO: need to set up a mail client if True.
 # Send an confirmation email, but allow login without it
-SECURITY_CONFIRMABLE = True
+SECURITY_CONFIRMABLE = True  # TODO: need to set up a mail client if True.
 SECURITY_LOGIN_WITHOUT_CONFIRMATION = True
 # Tracks basic user login statistics
 SECURITY_TRACKABLE = True
+
+# TODO: Set to True for faster (non-user-related) dev
+LOGIN_DISABLED = False
+
+# TODO: This should be enabled when we move to production
+WTF_CSRF_ENABLED = False
 
 ADMIN_EMAIL = decouple.config('ADMIN_EMAIL', default='admin@me.com')
 ADMIN_PASSWORD = decouple.config('ADMIN_PASSWORD', default='password')
@@ -75,9 +81,6 @@ MONGODB_SETTINGS = {
     'USERNAME': decouple.config('MONGODB_USERNAME', default=None),
     'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None)
 }
-
-# TODO: This should be enabled when we move to production
-WTF_CSRF_ENABLED = False
 
 # Explain loading only if in DEBUG mode.
 EXPLAIN_TEMPLATE_LOADING = DEBUG

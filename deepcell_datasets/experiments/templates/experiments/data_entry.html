@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
+{% from "macros/_forms.html" import render_field %}
+
 {% block content %}
-<h3 class="title">Experiment Information</h3>
+<h3 class="title center-align">Experiment Information</h3>
+
 <form method="POST" role="form">
 
+<!--
   {{  form.csrf_token  }}
+-->
 
   <legend><h5>Please fill out the following:</h5></legend>
 
@@ -18,30 +23,45 @@
     </ul>
   {% endif %}
 
-  <div class="form-group">
-    {{ form.created_by.label() }}
-    {{ form.created_by(class='form-control', type='textinput') }}
-
-    <label for="created_by">User ID</label>
-    <input type="text" id="created_by" name="creator" class="form-control" value="">
-
+  <div class="row">
+    <div class="input-field col s12">
+      <input disabled value={{ current_user.email }} id="user_email" type="text">
+      <label for="user_email">User</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.doi) }}
+    </div>
+    <div class="input-field col s6">
+      <input class="datepicker" id="date_collected" name="date_collected" type="text">
+      <label for="date_collected">Date Collected</label>
+    </div>
   </div>
 
-  <div class="form-group">
-    {{ form.doi.label() }}
-    {{ form.doi(class='form-control', type='textarea') }}
-
-    <label for="doi">DOI</label>
-    <input type="text" id="doi" name="Example DOI" class="form-control">
-
+  <div class="row">
+    <div class="input-field col s12">
+      {{ render_field(form.methods.subtype) }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the cell line.</span>
+    </div>
   </div>
-
-  <div class="form-group">
-    {{ form.date_collected.label() }}
-    {{ form.date_collected(class='form-control', type='textinput') }}
-    <!-- <label for="idea">Idea description</label>
-    <textarea name="idea" id="idea" class="form-control"></textarea>
-    -->
+  <div class="row">
+    <div class="input-field col s12">
+      {{ render_field(form.methods.culture) }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the culture protocol.</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      {{ render_field(form.methods.labeling) }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the labeling methodology.</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      {{ render_field(form.methods.imaging) }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the imaging technique/methodology.</span>
+    </div>
   </div>
 
   <button type="submit" class="btn btn-primary">Add Experiment</button>
