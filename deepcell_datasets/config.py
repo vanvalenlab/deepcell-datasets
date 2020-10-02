@@ -40,7 +40,7 @@ MAIL_USE_TLS = decouple.config('MAIL_USE_TLS', default=True, cast=bool)
 MAIL_USE_SSL = decouple.config('MAIL_USE_SSL', default=False, cast=bool)
 MAIL_USERNAME = decouple.config('MAIL_USERNAME', default=None)
 MAIL_PASSWORD = decouple.config('MAIL_PASSWORD', default=None)
-MAIL_DEFAULT_SENDER = decouple.config('MAIL_DEFAULT_SENDER', default='datasets@deepcell.org')
+MAIL_DEFAULT_SENDER = decouple.config('MAIL_DEFAULT_SENDER', default='datasets@mail.deepcell.org')
 MAIL_MAX_EMAILS = decouple.config('MAIL_MAX_EMAILS', default=None)
 
 # Flask-Security-Too settings: https://tinyurl.com/y5d2n9ry
