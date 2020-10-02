@@ -6,10 +6,8 @@ services:
     #   - /deepcell_data:/data
     links:
       - mongo
-      - mail
     depends_on:
       - mongo
-      - mail
     ports:
       - 5000:5000
     environment:
