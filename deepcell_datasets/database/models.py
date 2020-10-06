@@ -208,7 +208,9 @@ class Training_Data(db.Document):
     # TODO: Should have coordinates that follow samples and subsamples
     # TODO: Is samples_contained sufficient? Should keys like tissue/platform list be stored here?
     # TODO: does channel_list violate our data ontology? shouldnt it be 1-to-1?
-    raw_channel_list = db.ListField(db.StringField())  # TODO: Should this be DNA/Membrane or dsDNA or DAPI or nuc?
+
+    # TODO: Should this be DNA/Membrane or dsDNA or DAPI or nuc?
+    raw_channel_list = db.ListField(db.StringField())
     # TODO: Which samples/platforms exist with which batch? Do we need a one-to-one like that?
     padding = db.BooleanField()
     # TODO: Include size of padding (x and y)
