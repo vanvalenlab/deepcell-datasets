@@ -114,7 +114,8 @@ class ModalityInformation(db.EmbeddedDocument):
     # These can't be selected from sets because there could always be a new one
     imaging_modality = db.StringField(required=True, max_length=1000)
     compartment = db.StringField(required=True, max_length=1000)
-    marker = db.StringField(required=True, max_length=1000)  # TODO: Should this be a list? multiple for whole_cell or cyto+nuc in one image
+    # TODO: Should this be a list? multiple for whole_cell or cyto+nuc in one image
+    marker = db.StringField(required=True, max_length=1000)
 
 
 class Samples(db.Document):
@@ -224,7 +225,8 @@ class Training_Data(db.Document):
 
 
 class Publication(db.Document):
-    training_data_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
+    training_data_contained = db.ListField(
+        db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
 
     title = db.StringField()
     nas_filepath = db.StringField()  # path to the npz on madrox
@@ -250,7 +252,8 @@ class Publication(db.Document):
     spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
     annotation_type = db.StringField()  # whole cell, cyto, nuc, AM, tracking, dots?
 
-    raw_channel_list = db.ListField(db.StringField())  # TODO: Should this be DNA/Membrane or dsDNA or DAPI or nuc?
+    # TODO: Should this be DNA/Membrane or dsDNA or DAPI or nuc?
+    raw_channel_list = db.ListField(db.StringField())
     # TODO: Which samples/platforms exist with which batch? Do we need a one-to-one like that?
     padding = db.BooleanField()
 
