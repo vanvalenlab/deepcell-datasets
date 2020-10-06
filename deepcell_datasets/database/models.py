@@ -216,6 +216,20 @@ class Training_Data(db.Document):
     last_modified = db.StringField()
     ann_stats = db.EmbeddedDocumentField(annotation_stats)
 
+    raw_dtype = db.StringField()  # TODO: Enumerate as choices
+    ann_dtype = db.StringField()
+
+    nas_filepath = db.StringField()  # path to the npz on madrox
+    cloud_storage_loc = db.URLField()  # aws address
+
+
+class Publication(db.Document):
+    training_data_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
+
+    title = db.StringField()
+    nas_filepath = db.StringField()  # path to the npz on madrox
+    cloud_storage_loc = db.URLField()  # aws address
+
     split_train = db.FloatField()  # Percentage of total data in train
     split_val = db.FloatField()
     split_test = db.FloatField()
@@ -223,8 +237,22 @@ class Training_Data(db.Document):
     raw_dtype = db.StringField()  # TODO: Enumerate as choices
     ann_dtype = db.StringField()
 
-    nas_filepath = db.StringField()  # path to the npz on madrox
-    cloud_storage_loc = db.URLField()  # aws address
+    ann_version = db.StringField()  # TODO: Link this to DVC
+    last_modified = db.StringField()
+    ann_stats = db.EmbeddedDocumentField(annotation_stats)
+
+    doi = db.StringField(max_length=1000)  # DOI may be different than raw (compliation of multiple)
+    title = db.StringField()  # Human-readable for display purpose (eg. smith et al. nuclear study)
+    copyright = db.StringField()
+    authors = db.ListField(db.StringField())
+
+    kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
+    spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
+    annotation_type = db.StringField()  # whole cell, cyto, nuc, AM, tracking, dots?
+
+    raw_channel_list = db.ListField(db.StringField())  # TODO: Should this be DNA/Membrane or dsDNA or DAPI or nuc?
+    # TODO: Which samples/platforms exist with which batch? Do we need a one-to-one like that?
+    padding = db.BooleanField()
 
 
 # TODO: Use inheritance to clean the Samples up a bit (dynamic/static, 2D/3D)
