@@ -95,7 +95,7 @@ def add_experiment():
 
 @experiments_bp.route('/', methods=['GET'])
 @login_required
-def experiments_table():
+def view_all_experiments():
     page = request.args.get('page', default=1, type=int)
     per_page = current_app.config['ITEMS_PER_PAGE']
 
