@@ -126,7 +126,8 @@ def view_all_samples():
     per_page = current_app.config['ITEMS_PER_PAGE']
     paginated_samples = samples.paginate(page=page, per_page=per_page)
     return render_template('samples/samples-table.html',
-                           paginated_samples=paginated_samples)
+                           paginated_samples=paginated_samples,
+                           **kwargs)
 
 
 @samples_bp.route('/success')

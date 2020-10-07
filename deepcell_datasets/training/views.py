@@ -86,7 +86,8 @@ def view_all_training_data():
     per_page = current_app.config['ITEMS_PER_PAGE']
     paginated_results = results.paginate(page=page, per_page=per_page)
     return render_template('training/training-table.html',
-                           paginated_training_data=paginated_results)
+                           paginated_training_data=paginated_results,
+                           **kwargs)
 
 
 @training_bp.route('/<training_data_id>')
