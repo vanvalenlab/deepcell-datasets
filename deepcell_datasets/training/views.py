@@ -67,9 +67,26 @@ def handle_exception(err):
 def view_all_training_data():
     page = request.args.get('page', default=1, type=int)
     per_page = current_app.config['ITEMS_PER_PAGE']
-    training_data = Training_Data.objects.paginate(page=page, per_page=per_page)
+
+    filters = [
+        'kinetics',
+        'spatial_dim',
+        'annotation_type',
+        'ann_stats__num_ann__gte_ann',  # annotations >= value
+        'ann_stats__num_ann__lte_ann',  # annotations >= value
+        'ann_stats__num_div__gte_ann',  # divisions >= value
+        'ann_stats__num_div__lte_ann',  # divisions >= value
+    ]
+
+    provided_values = (request.args.get(f, default='') for f in filters)
+    kwargs = {f: v for f, v in zip(filters, provided_values) if v}
+
+    results = Training_Data.objects(**kwargs)
+
+    per_page = current_app.config['ITEMS_PER_PAGE']
+    paginated_results = results.paginate(page=page, per_page=per_page)
     return render_template('training/training-table.html',
-                           paginated_training_data=training_data)
+                           paginated_training_data=paginated_results)
 
 
 @training_bp.route('/<training_data_id>')

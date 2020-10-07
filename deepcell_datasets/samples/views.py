@@ -104,12 +104,24 @@ def add_sample(exp_id):
 @samples_bp.route('/', methods=['GET'])
 def view_all_samples():
     page = request.args.get('page', default=1, type=int)
-    experiment = request.args.get('experiment', default='')
 
-    if experiment:
-        samples = Samples.objects(experiment=experiment)
-    else:
-        samples = Samples.objects
+    filters = [
+        'experiment',
+        'kinetics',
+        'spatial_dim',
+        'species',
+        'specimen',
+        'modality__imaging_modality',
+        'modality__compartment',
+        'modality__marker',
+        'imaging_params__platform',
+        'imaging_params__magnification',
+    ]
+
+    provided_values = (request.args.get(f, default='') for f in filters)
+    kwargs = {f: v for f, v in zip(filters, provided_values) if v}
+
+    samples = Samples.objects(**kwargs)
 
     per_page = current_app.config['ITEMS_PER_PAGE']
     paginated_samples = samples.paginate(page=page, per_page=per_page)

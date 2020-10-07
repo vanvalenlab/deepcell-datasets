@@ -98,9 +98,22 @@ def add_experiment():
 def experiments_table():
     page = request.args.get('page', default=1, type=int)
     per_page = current_app.config['ITEMS_PER_PAGE']
-    experiments = Experiments.objects.paginate(page=page, per_page=per_page)
+
+    filters = [
+        'methods__subtype',
+        'methods__culture',
+        'methods__labeling',
+        'methods__imaging',
+    ]
+
+    provided_values = (request.args.get(f, default='') for f in filters)
+    kwargs = {f: v for f, v in zip(filters, provided_values) if v}
+
+    experiments = Experiments.objects(**kwargs)
+
+    paginated_experiments = experiments.paginate(page=page, per_page=per_page)
     return render_template('experiments/experiments-table.html',
-                           paginated_experiments=experiments)
+                           paginated_experiments=paginated_experiments)
 
 
 @experiments_bp.route('/<experiment_id>', methods=['GET'])
@@ -113,4 +126,5 @@ def view_experiment(experiment_id):
 
 @experiments_bp.route('/success')
 def success():
+    # TODO: render HTML template, maybe forward to "My Experiments"
     return 'Experiment Successfully Submitted'
