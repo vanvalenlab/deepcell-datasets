@@ -6,6 +6,86 @@
 
 <h3 class="title center-align">Samples</h3>
 
+<form action="{{ url_for('samples_bp.view_all_samples') }}" name="sample_filter_form">
+
+  <div class="row">
+
+    <div class="col s3">
+      <span>Spatial Dimension</span>
+      <p>
+        <label>
+          {% if spatial_dim is defined %}
+          <input name="spatial_dim" type="radio" value="" />
+          {% else %}
+          <input name="spatial_dim" type="radio" value="" checked />
+          {% endif %}
+          <span>All</span>
+        </label>
+      </p>
+      <p>
+        <label>
+          {% if spatial_dim == "2d" %}
+          <input name="spatial_dim" type="radio" value="2d" checked />
+          {% else %}
+          <input name="spatial_dim" type="radio" value="2d" />
+          {% endif %}
+          <span>2D</span>
+        </label>
+      </p>
+      <p>
+        <label>
+          {% if spatial_dim == "3d" %}
+          <input name="spatial_dim" type="radio" value="3d" checked />
+          {% else %}
+          <input name="spatial_dim" type="radio" value="3d" />
+          {% endif %}
+          <span>3D</span>
+        </label>
+      </p>
+    </div>
+
+    <div class="col s3">
+      <span>Kinetics</span>
+      <p>
+        <label>
+          {% if kinetics is defined %}
+          <input name="kinetics" type="radio" value="" />
+          {% else %}
+          <input name="kinetics" type="radio" value="" checked />
+          {% endif %}
+          <span>All</span>
+        </label>
+      </p>
+      <p>
+        <label>
+          {% if kinetics == "static" %}
+          <input name="kinetics" type="radio" value="static" checked />
+          {% else %}
+          <input name="kinetics" type="radio" value="static" />
+          {% endif %}
+          <span>Static</span>
+        </label>
+      </p>
+      <p>
+        <label>
+          {% if kinetics == "dynamic" %}
+          <input name="kinetics" type="radio" value="dynamic" checked />
+          {% else %}
+          <input name="kinetics" type="radio" value="dynamic" />
+          {% endif %}
+          <span>Dynamic</span>
+        </label>
+      </p>
+    </div>
+
+    <div class="col s3 offset-s3">
+      <button class="btn" type="submit">Submit</button>
+    </div>
+
+  </div>
+
+</form>
+
 <table>
 
   <thead>
