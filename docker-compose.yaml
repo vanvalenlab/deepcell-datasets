@@ -16,6 +16,10 @@ services:
       MONGODB_PORT: ${MONGODB_PORT:-27017}
       # MONGODB_USERNAME: ${MONGODB_USERNAME:-root}
       # MONGODB_PASSWORD: ${MONGODB_PASSWORD:-password}
+      MAIL_SERVER: ${MAIL_SERVER:-locahost}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-postmaster@example.com}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-password}
 
   mongo:
     image: mongo

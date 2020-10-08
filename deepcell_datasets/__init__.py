@@ -26,6 +26,7 @@
 """DeepCell Datasets Module"""
 
 from flask import Flask
+from flask_mail import Mail
 from flask_security import Security, hash_password
 # from flask_debugtoolbar import DebugToolbarExtension
 
@@ -62,6 +63,10 @@ def create_app(**config_overrides):
     app.jinja_env.auto_reload = True
 
     database.db.initialize_db(app)
+
+    # Setup Flask-Mail
+    mail = Mail()
+    mail.init_app(app)
 
     # Setup Flask-Security
     security = Security()
