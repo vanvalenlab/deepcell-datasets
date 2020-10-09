@@ -234,6 +234,10 @@ class Publication(db.Document):
     nas_filepath = db.StringField()  # path to the npz on madrox
     cloud_storage_loc = db.URLField()  # aws address
 
+    train_loc = db.URLField()  # aws address
+    test_loc = db.URLField()
+    val_loc = db.URLField()
+
     split_train = db.FloatField()  # Percentage of total data in train
     split_val = db.FloatField()
     split_test = db.FloatField()
