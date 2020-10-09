@@ -84,6 +84,7 @@ class SampleForm(FlaskForm):
     spatial_dim = fields.RadioField(choices=('2d', '3d'),
                                     validators=[validators.required()])
 
+
 class SampleFilterForm(FlaskForm):
     """Form for querying Sample documents."""
 
