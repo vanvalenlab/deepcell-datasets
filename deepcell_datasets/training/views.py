@@ -39,6 +39,7 @@ from flask_security import login_required
 from mongoengine import ValidationError
 
 from deepcell_datasets.database.models import Training_Data
+from deepcell_datasets.training.forms import TrainingDataFilterForm
 
 
 training_bp = Blueprint('training_bp', __name__,  # pylint: disable=C0103
@@ -83,10 +84,13 @@ def view_all_training_data():
 
     results = Training_Data.objects(**kwargs)
 
+    form = TrainingDataFilterForm()
+
     per_page = current_app.config['ITEMS_PER_PAGE']
     paginated_results = results.paginate(page=page, per_page=per_page)
     return render_template('training/training-table.html',
                            paginated_training_data=paginated_results,
+                           form=form,
                            **kwargs)
 
 

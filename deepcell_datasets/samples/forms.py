@@ -23,7 +23,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Forms for Saples."""
+"""Forms for Samples."""
 
 from wtforms import fields, validators
 from flask_wtf import FlaskForm
@@ -83,3 +83,11 @@ class SampleForm(FlaskForm):
                                  validators=[validators.required()])
     spatial_dim = fields.RadioField(choices=('2d', '3d'),
                                     validators=[validators.required()])
+
+class SampleFilterForm(FlaskForm):
+    """Form for querying Sample documents."""
+
+    # location in the ontology
+    kinetics = fields.RadioField(choices=('', 'static', 'dynamic'))
+
+    spatial_dim = fields.RadioField(choices=('', '2d', '3d'))
