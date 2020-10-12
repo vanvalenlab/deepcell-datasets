@@ -6,6 +6,64 @@
 
 <h3 class="title center-align">Samples</h3>
 
+<form action="{{ url_for('samples_bp.view_all_samples') }}" name="sample_filter_form">
+
+  <div class="row">
+
+    <div class="col s3">
+      <span>Spatial Dimension</span>
+      {% for choice in form.spatial_dim.choices %}
+      {% if choice|length %}
+        {% set choice_name = choice %}
+      {% else %}
+        {% set choice_name = "all" %}
+      {% endif %}
+      <p>
+        <label for="spatial_dim_{{ choice_name }}">
+          {% if spatial_dim == choice %}
+          <input id="spatial_dim_{{ choice_name }}" name="spatial_dim" type="radio" value="{{ choice }}" checked />
+          {% elif choice|length %}
+          <input id="spatial_dim_{{ choice_name }}" name="spatial_dim" type="radio" value="{{ choice }}" />
+          {% else %}
+          <input id="spatial_dim_{{ choice_name }}" name="spatial_dim" type="radio" value="{{ choice }}" checked />
+          {% endif %}
+          <span>{{ choice_name|title }}</span>
+        </label>
+      </p>
+      {% endfor %}
+    </div>
+
+    <div class="col s3">
+      <span>Kinetics</span>
+      {% for choice in form.kinetics.choices %}
+      {% if choice|length %}
+        {% set choice_name = choice %}
+      {% else %}
+        {% set choice_name = "all" %}
+      {% endif %}
+      <p>
+        <label for="kinetics_{{ choice_name }}">
+          {% if kinetics == choice %}
+          <input id="kinetics_{{ choice_name }}" name="kinetics" type="radio" value="{{ choice }}" checked />
+          {% elif choice|length %}
+          <input id="kinetics_{{ choice_name }}" name="kinetics" type="radio" value="{{ choice }}" />
+          {% else %}
+          <input id="kinetics_{{ choice_name }}" name="kinetics" type="radio" value="{{ choice }}" checked />
+          {% endif %}
+          <span>{{ choice_name|title }}</span>
+        </label>
+      </p>
+      {% endfor %}
+    </div>
+
+    <div class="col s3 offset-s3">
+      <button class="btn" type="submit">Submit</button>
+    </div>
+
+  </div>
+
+</form>
+
 <table>
 
   <thead>
