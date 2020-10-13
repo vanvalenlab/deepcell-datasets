@@ -63,3 +63,7 @@ footer.page-footer {
   margin: 0;
 }
 /* END parallax template from Materialize */
+
+.btn-large {
+  width: 70%;
+}
