@@ -34,14 +34,14 @@ from flask import current_app
 
 from mongoengine import ValidationError
 
-from deepcell_datasets.database.models import Experiments
+from deepcell_datasets.database.models import Training_Data
 
 
-experiments_api_bp = Blueprint('experiments_api_bp', __name__,  # pylint: disable=C0103
-                               template_folder='templates')
+training_api_bp = Blueprint('training_api_bp', __name__,  # pylint: disable=C0103
+                            template_folder='templates')
 
 
-@experiments_api_bp.errorhandler(Exception)
+@training_api_bp.errorhandler(Exception)
 def handle_exception(err):
     """Error handler
 
@@ -58,41 +58,39 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-# Experiment Routes
-@experiments_api_bp.route('/')
-def get_experiments():  # def get_experiments(page=1):
-    # paginated_experiments = experiments.objects.paginate(page=page, per_page=10)
-    experiments = Experiments.objects().to_json()
-    return Response(experiments, mimetype='application/json')
+# Training_Data Routes
+@training_api_bp.route('/')
+def get_all_training_data():
+    training_data = Training_Data.objects().to_json()
+    return Response(training_data, mimetype='application/json')
 
 
-# TODO: Implement session/CSRF Tokens for API access
-@experiments_api_bp.route('/', methods=['POST'])
-def create_experiment():
-    """Create a new experiments"""
+@training_api_bp.route('/<training_data_id>')
+def get_training_data(training_data_id):
+    training_data = Training_Data.objects.get_or_404(id=training_data_id).to_json()
+    return Response(training_data, mimetype='application/json')
+
+
+@training_api_bp.route('/', methods=['POST'])
+def create_training_data():
+    """Create a new training data"""
     body = request.get_json()
     current_app.logger.info('Body is %s ', body)
-    experiment = Experiments(**body).save()
-    current_app.logger.info('experiment %s saved succesfully', experiment)
-    unique_id = experiment.id
+    training_data = Training_Data(**body).save()
+    current_app.logger.info('training_data %s saved succesfully', training_data)
+    unique_id = training_data.id
     current_app.logger.info('unique_id %s extracted as key', unique_id)
     return jsonify({'unique_id': str(unique_id)})
 
 
-@experiments_api_bp.route('/<experiment_id>', methods=['PUT'])
-def update_experiment(experiment_id):
-    body = request.get_json()
-    Experiments.objects.get_or_404(id=experiment_id).update(**body)
-    return jsonify({}), 204  # successful update but no content
+# @training_api_bp.route('/<training_data_id>', methods=['PUT'])
+# def update_training_data(training_data_id):
+#     body = request.get_json()
+#     Training_Data.objects.get_or_404(id=training_data_id).update(**body)
+#     return jsonify({}), 204  # successful update but no content
 
 
-@experiments_api_bp.route('/<experiment_id>', methods=['DELETE'])
-def delete_experiment(experiment_id):
-    Experiments.objects.get_or_404(id=experiment_id).delete()
-    return jsonify({}), 204  # successful update but no content
-
-
-@experiments_api_bp.route('/<experiment_id>')
-def get_experiment(experiment_id):
-    experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
-    return Response(experiment, mimetype='application/json')
+# @training_api_bp.route('/<training_data_id>', methods=['DELETE'])
+# def delete_training_data(training_data_id):
+#     Training_Data.objects.get_or_404(id=training_data_id).delete()
+#     return jsonify({}), 204  # successful update but no content

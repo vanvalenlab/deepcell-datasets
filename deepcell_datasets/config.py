@@ -31,6 +31,9 @@ import decouple
 DEBUG = decouple.config('DEBUG', cast=bool, default=True)
 PORT = decouple.config('PORT', cast=int, default=5000)
 
+# Pagination - how many rows to show per page.
+ITEMS_PER_PAGE = 20
+
 TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, default=True)
 
 # Flask-Mail settings: https://tinyurl.com/y3db5s3h

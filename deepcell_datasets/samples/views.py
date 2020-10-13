@@ -40,7 +40,7 @@ from flask_security import login_required
 from deepcell_datasets.database.models import Samples
 from deepcell_datasets.database.models import Experiments
 
-from deepcell_datasets.samples.forms import SampleForm
+from deepcell_datasets.samples.forms import SampleForm, SampleFilterForm
 from deepcell_datasets.utils import nest_dict
 
 
@@ -99,6 +99,38 @@ def add_sample(exp_id):
                            form=form,
                            current_user=current_user,
                            exp_id=exp_id)
+
+
+@samples_bp.route('/', methods=['GET'])
+def view_all_samples():
+    page = request.args.get('page', default=1, type=int)
+
+    filters = [
+        'experiment',
+        'kinetics',
+        'spatial_dim',
+        'species',
+        'specimen',
+        'modality__imaging_modality',
+        'modality__compartment',
+        'modality__marker',
+        'imaging_params__platform',
+        'imaging_params__magnification',
+    ]
+
+    provided_values = (request.args.get(f, default='') for f in filters)
+    kwargs = {f: v for f, v in zip(filters, provided_values) if v}
+
+    samples = Samples.objects(**kwargs)
+
+    form = SampleFilterForm()
+
+    per_page = current_app.config['ITEMS_PER_PAGE']
+    paginated_samples = samples.paginate(page=page, per_page=per_page)
+    return render_template('samples/samples-table.html',
+                           paginated_samples=paginated_samples,
+                           form=form,
+                           **kwargs)
 
 
 @samples_bp.route('/success')

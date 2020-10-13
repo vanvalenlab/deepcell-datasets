@@ -35,6 +35,7 @@ from deepcell_datasets import database
 from deepcell_datasets.general import general
 from deepcell_datasets import experiments
 from deepcell_datasets import samples
+from deepcell_datasets import training
 
 
 class ReverseProxied(object):
@@ -91,6 +92,8 @@ def create_app(**config_overrides):
     app.register_blueprint(experiments.views.experiments_bp, url_prefix='/experiments')
     app.register_blueprint(samples.api.samples_api_bp, url_prefix='/api/samples')
     app.register_blueprint(samples.views.samples_bp, url_prefix='/samples')
+    app.register_blueprint(training.api.training_api_bp, url_prefix='/api/training')
+    app.register_blueprint(training.views.training_bp, url_prefix='/training')
 
     # toolbar = DebugToolbarExtension(app)
 

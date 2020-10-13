@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% from "macros/_pagination.html" import render_pagination %}
+
+{% block content %}
+
+<h3 class="title center-align">Training Data </h3>
+
+<form action="{{ url_for('training_bp.view_all_training_data') }}" name="training_filter_form">
+
+  <div class="row">
+
+    <div class="col s3">
+      <span>Spatial Dimension</span>
+      {% for choice in form.spatial_dim.choices %}
+      {% if choice|length %}
+        {% set choice_name = choice %}
+      {% else %}
+        {% set choice_name = "all" %}
+      {% endif %}
+      <p>
+        <label for="spatial_dim_{{ choice_name }}">
+          {% if spatial_dim == choice %}
+          <input id="spatial_dim_{{ choice_name }}" name="spatial_dim" type="radio" value="{{ choice }}" checked />
+          {% elif choice|length %}
+          <input id="spatial_dim_{{ choice_name }}" name="spatial_dim" type="radio" value="{{ choice }}" />
+          {% else %}
+          <input id="spatial_dim_{{ choice_name }}" name="spatial_dim" type="radio" value="{{ choice }}" checked />
+          {% endif %}
+          <span>{{ choice_name|title }}</span>
+        </label>
+      </p>
+      {% endfor %}
+    </div>
+
+    <div class="col s3">
+      <span>Kinetics</span>
+      {% for choice in form.kinetics.choices %}
+      {% if choice|length %}
+        {% set choice_name = choice %}
+      {% else %}
+        {% set choice_name = "all" %}
+      {% endif %}
+      <p>
+        <label for="kinetics_{{ choice_name }}">
+          {% if kinetics == choice %}
+          <input id="kinetics_{{ choice_name }}" name="kinetics" type="radio" value="{{ choice }}" checked />
+          {% elif choice|length %}
+          <input id="kinetics_{{ choice_name }}" name="kinetics" type="radio" value="{{ choice }}" />
+          {% else %}
+          <input id="kinetics_{{ choice_name }}" name="kinetics" type="radio" value="{{ choice }}" checked />
+          {% endif %}
+          <span>{{ choice_name|title }}</span>
+        </label>
+      </p>
+      {% endfor %}
+    </div>
+
+    <div class="col s3 offset-s3">
+      <button class="btn" type="submit">Submit</button>
+    </div>
+
+  </div>
+
+</form>
+
+<table>
+
+  <thead>
+    <tr>
+        <th></th>
+        <th>Filename</th>
+        <th>Kinetics</th>
+        <th>Spatial Dimension</th>
+        <th>Raw Channels</th>
+        <th>Annotation Type</th>
+        <th>Samples Contained</th>
+        <th>Number of Batches</th>
+        <th>Number of Annotations</th>
+        <th>Dimensions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for training_data in paginated_training_data.items %}
+    <tr>
+      <td><a href="/training/{{ training_data.id }}">View Details</a></td>
+      <td>{{ training_data.title }}</td>
+      <td>{{ training_data.kinetics }}</td>
+      <td>{{ training_data.spatial_dim }}</td>
+      <td>{{ training_data.raw_channel_list }}</td>
+      <td>{{ training_data.annotation_type }}</td>
+      <td>{{ training_data.samples_contained|length }}</td>
+      <td>{{ training_data.ann_stats.num_batches }}</td>
+      <td>{{ training_data.ann_stats.num_ann }}</td>
+      <td>{{ training_data.ann_stats.dimensions.x, training_data.ann_stats.dimensions.y }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+{{ render_pagination(paginated_training_data, 'training_bp.view_all_training_data') }}
+
+{% endblock %}

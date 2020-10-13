@@ -23,25 +23,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Flask blueprint for Experiments data API."""
+"""Flask blueprint for modular routes."""
 
 from werkzeug.exceptions import HTTPException
 from flask import Blueprint
 from flask import jsonify
 from flask import request
-from flask import Response
 from flask import current_app
+from flask import render_template
+from flask import url_for, redirect
+
+from flask_login import current_user
+from flask_security import login_required
 
 from mongoengine import ValidationError
 
-from deepcell_datasets.database.models import Experiments
+from deepcell_datasets.database.models import Training_Data
+from deepcell_datasets.training.forms import TrainingDataFilterForm
 
 
-experiments_api_bp = Blueprint('experiments_api_bp', __name__,  # pylint: disable=C0103
-                               template_folder='templates')
+training_bp = Blueprint('training_bp', __name__,  # pylint: disable=C0103
+                        template_folder='templates')
 
 
-@experiments_api_bp.errorhandler(Exception)
+@training_bp.errorhandler(Exception)
 def handle_exception(err):
     """Error handler
 
@@ -58,41 +63,39 @@ def handle_exception(err):
     return jsonify({'error': str(err)}), 500
 
 
-# Experiment Routes
-@experiments_api_bp.route('/')
-def get_experiments():  # def get_experiments(page=1):
-    # paginated_experiments = experiments.objects.paginate(page=page, per_page=10)
-    experiments = Experiments.objects().to_json()
-    return Response(experiments, mimetype='application/json')
+@training_bp.route('/', methods=['GET'])
+@login_required
+def view_all_training_data():
+    page = request.args.get('page', default=1, type=int)
+    per_page = current_app.config['ITEMS_PER_PAGE']
+
+    filters = [
+        'kinetics',
+        'spatial_dim',
+        'annotation_type',
+        'ann_stats__num_ann__gte_ann',  # annotations >= value
+        'ann_stats__num_ann__lte_ann',  # annotations >= value
+        'ann_stats__num_div__gte_ann',  # divisions >= value
+        'ann_stats__num_div__lte_ann',  # divisions >= value
+    ]
+
+    provided_values = (request.args.get(f, default='') for f in filters)
+    kwargs = {f: v for f, v in zip(filters, provided_values) if v}
+
+    results = Training_Data.objects(**kwargs)
+
+    form = TrainingDataFilterForm()
+
+    per_page = current_app.config['ITEMS_PER_PAGE']
+    paginated_results = results.paginate(page=page, per_page=per_page)
+    return render_template('training/training-table.html',
+                           paginated_training_data=paginated_results,
+                           form=form,
+                           **kwargs)
 
 
-# TODO: Implement session/CSRF Tokens for API access
-@experiments_api_bp.route('/', methods=['POST'])
-def create_experiment():
-    """Create a new experiments"""
-    body = request.get_json()
-    current_app.logger.info('Body is %s ', body)
-    experiment = Experiments(**body).save()
-    current_app.logger.info('experiment %s saved succesfully', experiment)
-    unique_id = experiment.id
-    current_app.logger.info('unique_id %s extracted as key', unique_id)
-    return jsonify({'unique_id': str(unique_id)})
-
-
-@experiments_api_bp.route('/<experiment_id>', methods=['PUT'])
-def update_experiment(experiment_id):
-    body = request.get_json()
-    Experiments.objects.get_or_404(id=experiment_id).update(**body)
-    return jsonify({}), 204  # successful update but no content
-
-
-@experiments_api_bp.route('/<experiment_id>', methods=['DELETE'])
-def delete_experiment(experiment_id):
-    Experiments.objects.get_or_404(id=experiment_id).delete()
-    return jsonify({}), 204  # successful update but no content
-
-
-@experiments_api_bp.route('/<experiment_id>')
-def get_experiment(experiment_id):
-    experiment = Experiments.objects.get_or_404(id=experiment_id).to_json()
-    return Response(experiment, mimetype='application/json')
+@training_bp.route('/<training_data_id>')
+def view_training_data(training_data_id):
+    training_data = Training_Data.objects.get_or_404(id=training_data_id)
+    return render_template('training/training-detail.html',
+                           training_data=training_data)

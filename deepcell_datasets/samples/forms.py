@@ -23,7 +23,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Forms for Saples."""
+"""Forms for Samples."""
 
 from wtforms import fields, validators
 from flask_wtf import FlaskForm
@@ -58,7 +58,7 @@ class ModalityInformationForm(FlaskForm):
 class SampleForm(FlaskForm):
     """Form for creating a new Samples document."""
 
-    session = fields.IntegerField('Specimen Name',
+    session = fields.IntegerField('Session',
                                   validators=[validators.required()])
     position = fields.IntegerField('Sample Position/FOV',
                                    validators=[validators.required()])
@@ -83,3 +83,12 @@ class SampleForm(FlaskForm):
                                  validators=[validators.required()])
     spatial_dim = fields.RadioField(choices=('2d', '3d'),
                                     validators=[validators.required()])
+
+
+class SampleFilterForm(FlaskForm):
+    """Form for querying Sample documents."""
+
+    # location in the ontology
+    kinetics = fields.RadioField(choices=('', 'static', 'dynamic'))
+
+    spatial_dim = fields.RadioField(choices=('', '2d', '3d'))
