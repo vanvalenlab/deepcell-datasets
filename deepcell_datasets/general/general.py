@@ -61,3 +61,10 @@ def admin():
 def index():
     """Request HTML landing page to be rendered."""
     return render_template('general/index.html')
+
+
+# TODO: Create effective terms and conditions.
+@general_bp.route('/terms-of-service', methods=['GET', 'POST'])
+def terms():
+    """Request HTML landing page to be rendered."""
+    return render_template('general/terms.html')
