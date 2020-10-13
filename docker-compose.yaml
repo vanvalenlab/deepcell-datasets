@@ -9,7 +9,7 @@ services:
     depends_on:
       - mongo
     ports:
-      - 5001:5000
+      - 5000:5000
     environment:
       MONGODB_DB: ${MONGODB_DB:-database}
       MONGODB_HOST: ${MONGODB_HOST:-mongo}
