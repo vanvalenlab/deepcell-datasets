@@ -74,7 +74,7 @@ def create_app(**config_overrides):
     security.init_app(app, database.models.user_datastore)
 
     # Create an admin user
-    # TODO: is there a better way to do this?
+    # TODO: Move this to mongo-init.js
     @app.before_first_request
     def create_admin_user():
         database.models.user_datastore.create_user(
