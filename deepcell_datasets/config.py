@@ -82,7 +82,8 @@ MONGODB_SETTINGS = {
     'HOST': decouple.config('MONGODB_HOST', default='localhost'),
     'PORT': decouple.config('MONGODB_PORT', cast=int, default=27017),
     'USERNAME': decouple.config('MONGODB_USERNAME', default=None),
-    'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None)
+    'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None),
+    'AUTHENTICATION_SOURCE': decouple.config('ADMIN_DB', default=None)
 }
 
 # Explain loading only if in DEBUG mode.

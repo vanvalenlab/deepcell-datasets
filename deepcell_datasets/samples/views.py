@@ -102,6 +102,7 @@ def add_sample(exp_id):
 
 
 @samples_bp.route('/', methods=['GET'])
+@login_required
 def view_all_samples():
     page = request.args.get('page', default=1, type=int)
 
