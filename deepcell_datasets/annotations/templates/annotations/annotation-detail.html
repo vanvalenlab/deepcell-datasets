@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3 class="title center-align">Sample ID: {{ annotation.sample }}</h3>
+
+<table>
+  <tr>
+    <td>Preprocessing</td>
+    <td>{{ annotation.preprocessing }}</td>
+  </tr>
+    <td>Rows</td>
+    <td>{{ annotation.rows }}</td>
+  <tr>
+    <td>Columns</td>
+    <td>{{ annotation.columns }}</td>
+  </tr>
+  <tr>
+    <td>Frames</td>
+    <td>{{ annotation.frames }}</td>
+  </tr>
+  <tr>
+    <td>Channel List</td>
+    <td>{{ annotation.channel_list }}</td>
+  </tr>
+</table>
+
+<a class="waves-effect waves-light btn" style="width:100%" href="/tasks?annotation={{ annotation.id}}">
+  View Tasks
+</a>
+
+{% endblock %}

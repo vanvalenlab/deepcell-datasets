@@ -154,6 +154,9 @@ class Annotations(db.Document):
 
     # TODO: Include options for multiple judgements (interannotator agreement)?
 
+    # TODO: Does this need some title outside of mongoID for human reference? should it come
+    #       from sample ref?
+
     # Each entry references to a sample
     # TODO: could this be multiple if it needs access to multiple channels?
     #       if so should it be a list of ref ids?
@@ -176,7 +179,7 @@ class Annotations(db.Document):
     channel_list = db.ListField(db.StringField())
 
     # If we intend for the tasks (pieces) to be stiched back togther, there needs to be an
-    # overlap in terms of number of pixels
+    # overlap in terms of number of pixels (this may be recorded in percentage)
     overlap_x = db.IntField()
     overlap_y = db.IntField()
 
@@ -221,6 +224,8 @@ class Tasks(db.Document):
 
     dimensions = db.EmbeddedDocumentField(Dimensions)
 
+    date_submitted = db.StringField()
+    date_completed = db.StringField()
     queued = db.BooleanField()
     annotated = db.BooleanField()
     curated = db.BooleanField()  # Could also be QCd?

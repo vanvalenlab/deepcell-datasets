@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% from "macros/_forms.html" import render_field %}
+
+{% block content %}
+<h3 class="title center-align">Annotation Information</h3>
+
+<form method="POST" role="form">
+
+<!--
+  {{  form.csrf_token  }}
+-->
+
+  <legend><h5>Please fill out the following:</h5></legend>
+
+  {% if form.errors %}
+    <ul class="errors">
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <li>{{ form[field_name].label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div class="row">
+    <div class="input-field col s12">
+      <input disabled value={{ current_user.email }} id="user_email" type="text">
+      <label for="user_email">User</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      <input disabled value={{ sample_id }} id="sample_id" type="text">
+      <label for="sample_id">Sample ID</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s12">
+      {{ render_field(form.preprocessing) }}
+      <span class="helper-text" data-error="wrong" data-success="right">Describe the preprocessing steps and settings used.</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <span class="helper-text" data-error="wrong" data-success="right">Define the dimensions of the annotation.</span>
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.x) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.y) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.z) }}
+    </div>
+    <div class="input-field col s3">
+      {{ render_field(form.dimensions.t) }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.rows) }}
+    </div>
+    <div class="input-field col s6">
+      {{ render_field(form.columns) }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.frames) }}
+    </div>
+    <div class="input-field col s6">
+      {{ render_field(form.channels) }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s12">
+      {{ render_field(form.channel_list) }}
+      <span class="helper-text" data-error="wrong" data-success="right">List the content of each channel in order (eg. nuclear, whole_cell).</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s6">
+      {{ render_field(form.overlap_x) }}
+    </div>
+    <div class="input-field col s6">
+      {{ render_field(form.overlap_y) }}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Add Annotation</button>
+
+</form>
+{% endblock %}

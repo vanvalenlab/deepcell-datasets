@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% from "macros/_pagination.html" import render_pagination %}
+
+{% block content %}
+
+<h3 class="title center-align">{{ annotations }} Annotations </h3>
+
+<table>
+
+  <thead>
+    <tr>
+        <th>Sample ID</th>
+        <th>Preprocessing</th>
+        <th>Columns</th>
+        <th>Rows</th>
+        <th>Frames</th>
+        <th>Channel List</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for annotation in paginated_annotations.items %}
+    <tr>
+      <td><a href="/annotations/{{ annotation.id }}">{{ annotation.sample }}</a></td>
+      <td>{{ annotation.preprocessing }}</td>
+      <td>{{ annotation.columns }}</td>
+      <td>{{ annotation.rows }}</td>
+      <td>{{ annotation.frames }}</td>
+      <td>{{ annotation.channel_list }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+{{ render_pagination(paginated_annotations, 'annotations_bp.view_all_annotations') }}
+
+{% endblock %}
