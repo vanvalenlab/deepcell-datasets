@@ -142,45 +142,101 @@ class Samples(db.Document):
     experiment = db.ReferenceField(Experiments, required=True, reverse_delete_rule=db.NULLIFY)
 
 
-# TODO: Finish Crowdsourcing
+# TODO: Finish Crowdsourcing -> Now called annotations
+class Annotations(db.Document):
+    """This collection should be the equivalent to Experiments for crowdsourcing. Each entry
+    represents one sample and its associated annotation. It is not neccesarily one-for-one with
+    the sample collection as the sample may need to be subdivided or even have portions cropped
+    out entirely (as is the case with the edges of a dish, etc)
+
+    There are no standard dimensions for samples so there are none here
+    """
+
+    # TODO: Include options for multiple judgements (interannotator agreement)?
+
+    # Each entry references to a sample
+    # TODO: could this be multiple if it needs access to multiple channels?
+    #       if so should it be a list of ref ids?
+    sample = db.ReferenceField(Samples, required=True, reverse_delete_rule=db.NULLIFY)
+
+    # Pre-processing - these images will likely be adjusted for either prediction or
+    # crowd annotation. The steps taken should be recorded (brightness, contrast filtering, etc)
+    preprocessing = db.StringField()  # TODO: would this be better served in an embedded doc?
+
+    # The dimensions may be different than the original sample (it may be desirous to crop
+    # portions or to split into subsamples)
+    dimensions = db.EmbeddedDocumentField(Dimensions)
+    # These samples/annotations will likely need to be broken down into smaller pieces for
+    # crowd annotators to deal with
+    rows = db.IntField()
+    columns = db.IntField()
+    frames = db.IntField()
+    # Some annotations require multiple channels for annotators to render judgements
+    channels = db.IntField()
+    channel_list = db.ListField(db.StringField())
+
+    # If we intend for the tasks (pieces) to be stiched back togther, there needs to be an
+    # overlap in terms of number of pixels
+    overlap_x = db.IntField()
+    overlap_y = db.IntField()
+
+    # One user usually makes these calls this can be recorded/assigned here
+    submitted_by = db.ReferenceField(Users)
+
+    # TODO: each entry in this collection is made up of several entries in the task collection
+    # As such, whenever one of these tasks is updated, the entire "parent" needs to be updated
+    # To acomplish this, we need both versioning and a recipe
+    # version = dvc_hash
+    # recipe = dvc workflow? JSON recipe? should include versions of each piece
 
 
-class Subsection(db.EmbeddedDocument):
+class Tasks(db.Document):
+    """Each entry refers to the individual, cropped, subsamples that are sent to be annotated.
+    Once cropped, this collection should track the subsample from initial prediction (if
+    relevant), to initial crowdsourced annotation, to curation - and for as many rounds of
+    annotation and curation is needed. As such, each subsample or task should be versioned.
+
+    It should also note what dimensions were used and what area of the original raw image
+    it came from (we sometimes crop out areas because theyre at the edge of dish, etc).
+
+    The dimensions of each task is dictated by the annotator requirements
+    These files need to be on disk to be uploaded to a crowdsourcing site.
+    """
+
+    # TODO: Should we build in options for multiple judgements (interannotator agreement)
+
+    # This is a subsample/subimage so it needs a reference to its parent from Crowdsourcing
+    parent = db.ReferenceField(Annotations, required=True, reverse_delete_rule=db.NULLIFY)
+    # Where did this entry come from within this parent sample/annotation
     coordinate_x = db.IntField()
     coordinate_y = db.IntField()
     coordinate_z = db.IntField()
     coordinate_t = db.IntField()
+    # TODO: Should z/t coordinates be ranges? Should it start at a frame & have num_frames?
+
+    # Project ID(s)? - Is this a good place to keep track of groups of similar tasks
+    # that have been posted together to the crowd?
+    platform = db.StringField(choices=('appen', 'anolytics', 'mturk'), required=True)
+    project_ids = db.ListField(db.StringField())
 
     dimensions = db.EmbeddedDocumentField(Dimensions)
 
     queued = db.BooleanField()
     annotated = db.BooleanField()
     curated = db.BooleanField()  # Could also be QCd?
+    # version = dvc_hash  # TODO
 
+    # TODO: keep track of what user curated each version
+    #       should we include all Caliban stats?
 
-# TODO: crowdsourcing and subsection should be inversed. proj id and sample id belong
-# to subsection not the other way around
-class Crowdsourcing(db.Document):
-    """This should describe which samples have been sent to which crowdsourcing companies.
-    It should also note what dimensions were used and what area of the original raw image
-    it came from (we sometimes crop out areas because theyre at the edge of dish, etc).
+    cloud_storage_loc = db.URLField()  # aws address
+    # TODO: is the nas path needed?
+    nas_filepath = db.StringField()  # path to the npz on madrox
 
-    Should we state/force standard dimensions here?
-    """
-
-    # Should be connected to individual samples
-
-    platform = db.StringField(choices=('appen', 'anolytics', 'mturk'), required=True)
-    submitted_by = db.ReferenceField(Users)
-
-    subsections = db.EmbeddedDocumentField(Subsection)
-
-    split_seed = db.IntField()  # Fed into caliban-toolbox to create train/val/test split
 
 # TODO: Finish Training data
 
-
-class annotation_stats(db.EmbeddedDocument):
+class AnnotationStats(db.EmbeddedDocument):
     # TODO: include total number of annotations/trajectories/children
     num_batches = db.IntField()  # for 2d this is num imgs, for 3d num movies, etc
     dimensions = db.EmbeddedDocumentField(Dimensions)
@@ -189,9 +245,15 @@ class annotation_stats(db.EmbeddedDocument):
 
 
 class Training_Data(db.Document):
-    """A collection of pointers to each npz containing paired X(raw) and y(annotations) data.
+    """A collection of pointers to each npz containing paired X(raw) and y(annotations) data. The
+    entries in this collection represent at least one (but likely more) entries in the crowdsourcing
+    collection (referred to as annotations).
 
+    It is only at this stage we mandate a standard dimension size - to facilitate model training
     """
+
+    # TODO: Should we build in options for multiple judgements (interannotator agreement)?
+
     # location in the ontology (the annotation could be different than the raw data
     # e.g. movies vs indpendent imgs)
     kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
@@ -216,8 +278,9 @@ class Training_Data(db.Document):
 
     ann_version = db.StringField()  # TODO: Link this to DVC
     last_modified = db.StringField()
-    ann_stats = db.EmbeddedDocumentField(annotation_stats)
+    ann_stats = db.EmbeddedDocumentField(AnnotationStats)
 
+    split_seed = db.IntField()  # Fed into caliban-toolbox to create train/val/test split
     split_train = db.FloatField()  # Percentage of total data in train
     split_val = db.FloatField()
     split_test = db.FloatField()
