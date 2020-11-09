@@ -31,8 +31,14 @@
   </div>
   <div class="row">
     <div class="input-field col s6">
-      <input disabled value={{ sample_id }} id="sample_id" type="text">
-      <label for="sample_id">Sample ID</label>
+      {{ render_field(form.sample) }}
+      <!--
+      Users should select from available (multiple?) samples
+      This shouldn't be manual entry unless we verify the sample exists
+
+      <input disabled value={{ sample_id }} id="sample" type="text">
+      <label for="sample">Sample ID</label>
+      -->
     </div>
   </div>
 

@@ -48,3 +48,9 @@ class AnnotationForm(FlaskForm):
 
     # dimensions (embedded document fields)
     dimensions = fields.FormField(DimensionsForm)
+
+    # TODO: sample isn't an ideal form field as it is an Object ID
+    # It can be a string, but it would be better to provide the user with
+    # a list of IDs to choose from (ideally allowing them to choose
+    # multiple and re-use values from the above fields)
+    sample = fields.StringField()
