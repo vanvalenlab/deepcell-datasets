@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% from "macros/_pagination.html" import render_pagination %}
+
+{% block content %}
+
+<h3 class="title center-align">Tasks</h3>
+
+<form action="{{ url_for('tasks_bp.view_all_tasks') }}" name="task_filter_form">
+
+  <div class="row">
+
+    <div class="col s3">
+      <span>Platform</span>
+      {% for choice in form.platform.choices %}
+      {% if choice|length %}
+        {% set choice_name = choice %}
+      {% else %}
+        {% set choice_name = "all" %}
+      {% endif %}
+      <p>
+        <label for="platform_{{ choice_name }}">
+          {% if platform == choice %}
+          <input id="platform_{{ choice_name }}" name="platform" type="radio" value="{{ choice }}" checked />
+          {% elif choice|length %}
+          <input id="platform_{{ choice_name }}" name="platform" type="radio" value="{{ choice }}" />
+          {% else %}
+          <input id="platform_{{ choice_name }}" name="platform" type="radio" value="{{ choice }}" checked />
+          {% endif %}
+          <span>{{ choice_name|title }}</span>
+        </label>
+      </p>
+      {% endfor %}
+    </div>
+
+    <div class="col s3 offset-s3">
+      <button class="btn" type="submit">Submit</button>
+    </div>
+
+  </div>
+
+</form>
+
+<table>
+
+  <thead>
+    <tr>
+        <th>Annotation</th>
+        <th>X Coordinate</th>
+        <th>Y Coordinate</th>
+        <th>Z Coordinate</th>
+        <th>T Coordinate</th>
+        <th>Platform</th>
+
+        <th>Project ID</th>
+        <th>Dimensions</th>
+        <th>Date Submitted</th>
+        <th>Date Completed</th>
+        <th>Queued</th>
+        <th>Annotated</th>
+        <th>Curated</th>
+        <th>Cloud Storage Location</th>
+        <th>NAS Filepath</th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for task in paginated_tasks.items %}
+    <tr>
+      <td><a href="/annotations/{{ task.annotation.id }}">{{ task.annotation.doi }}</a></td>
+      <td>{{ task.coordinate_x }}</td>
+      <td>{{ task.coordinate_y }}</td>
+      <td>{{ task.coordinate_z }}</td>
+      <td>{{ task.coordinate_t }}</td>
+      <td>{{ task.platform }}</td>
+      <td>{{ task.project_ids }}</td>
+      <td>{{ task.dimensions }}</td>
+      <td>{{ task.date_submitted }}</td>
+      <td>{{ task.date_completed }}</td>
+      <td>{{ task.queued }}</td>
+      <td>{{ task.annotated }}</td>
+      <td>{{ task.curated }}</td>
+      <td>{{ task.cloud_storage_loc }}</td>
+      <td>{{ task.nas_filepath }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+{{ render_pagination(paginated_tasks, 'tasks_bp.view_all_tasks') }}
+
+{% endblock %}

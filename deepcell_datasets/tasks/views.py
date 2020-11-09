@@ -32,24 +32,23 @@ from flask import request
 from flask import current_app
 from flask import render_template
 from flask import url_for, redirect
+from mongoengine import ValidationError
 
 from flask_login import current_user
 from flask_security import login_required
 
-from mongoengine import ValidationError
-
+from deepcell_datasets.database.models import Tasks
 from deepcell_datasets.database.models import Annotations
-from deepcell_datasets.annotations.forms import AnnotationForm
+
+from deepcell_datasets.tasks.forms import TaskForm, TaskFilterForm
 from deepcell_datasets.utils import nest_dict
-# TODO: finish tasks bp
-# from deepcell_datasets.tasks.views import tasks_bp
 
 
-annotations_bp = Blueprint('annotations_bp', __name__,  # pylint: disable=C0103
-                           template_folder='templates')
+tasks_bp = Blueprint('tasks_bp', __name__,  # pylint: disable=C0103
+                       template_folder='templates')
 
 
-@annotations_bp.errorhandler(Exception)
+@tasks_bp.errorhandler(Exception)
 def handle_exception(err):
     """Error handler
 
@@ -61,71 +60,72 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
-    current_app.logger.error('Encountered unexpected %s: %s.',
-                             err.__class__.__name__, err)
     return jsonify({'error': str(err)}), 500
 
 
 # Routes for HTML pages.
-@annotations_bp.route('/data_entry', methods=['GET', 'POST'])
+# TODO: This should likely be split into several routes allowing
+#       users the option to re-use information like scope, step, marker, etc.
+#       This could be down with checkbox and passing objects from one route
+#       to the next.
+@tasks_bp.route('/data_entry/<ann_id>', methods=['GET', 'POST'])
 @login_required
-def add_annotation():
-    form = AnnotationForm()
+def add_task(ann_id):
+    form = TaskForm()
+    # flask-mongoengine wtf validation fails for required fields
+    # TODO: likely a bug in flask-mongo but the following logic shouldnt stay
     if form.validate_on_submit():
+        # TODO: This is here to remind us of the package bug:
+        current_app.logger.info('Form errors are %s ', form.errors)
+        # Do something with data
         body_raw = request.form
         current_app.logger.info('Form body is %s ', body_raw)
         body_dict = nest_dict(body_raw.to_dict())
-        # Add in current user information
-        body_dict['submitted_by'] = current_user._get_current_object()
+
+        # Add in Annotation ID information here
+        annotation = Annotations.objects.get_or_404(id=ann_id)
+        body_dict['annotation'] = annotation
 
         current_app.logger.info('Nested dict to save is %s ', body_dict)
-        annotation = Annotations(**body_dict).save()
+        task = Tasks(**body_dict).save()
 
-        current_app.logger.info('annotation %s saved succesfully', annotation)
-        unique_id = annotation.id
+        current_app.logger.info('task %s saved succesfully', task)
+        unique_id = task.id
         current_app.logger.info('unique_id %s extracted as key', unique_id)
 
-        # TODO: It would be helpful to have the annotation added to the User
-        #       collection here
+        return redirect(url_for('tasks_bp.success'))
 
-        return redirect(url_for('tasks_bp.add_task', ann_id=unique_id))
-    return render_template('annotations/data_entry.html',
+    return render_template('tasks/data_entry.html',
                            form=form,
-                           current_user=current_user)
+                           current_user=current_user,
+                           ann_id=ann_id)
 
 
-@annotations_bp.route('/', methods=['GET'])
+@tasks_bp.route('/', methods=['GET'])
 @login_required
-def view_all_annotations():
+def view_all_tasks():
     page = request.args.get('page', default=1, type=int)
-    per_page = current_app.config['ITEMS_PER_PAGE']
 
     filters = [
-        'methods__subtype',
-        'methods__culture',
-        'methods__labeling',
-        'methods__imaging',
+        'annotation',
+        'platform',
     ]
 
     provided_values = (request.args.get(f, default='') for f in filters)
     kwargs = {f: v for f, v in zip(filters, provided_values) if v}
 
-    annotations = Annotations.objects(**kwargs)
+    tasks = Tasks.objects(**kwargs)
 
-    paginated_annotations = annotations.paginate(page=page, per_page=per_page)
-    return render_template('annotations/annotations-table.html',
-                           paginated_annotations=paginated_annotations)
+    form = TaskFilterForm()
 
-
-@annotations_bp.route('/<annotation_id>', methods=['GET'])
-@login_required
-def view_annotation(annotation_id):
-    annotation = Annotations.objects.get_or_404(id=annotation_id)
-    return render_template('annotations/annotation-detail.html',
-                           annotation=annotation)
+    per_page = current_app.config['ITEMS_PER_PAGE']
+    paginated_tasks = tasks.paginate(page=page, per_page=per_page)
+    return render_template('tasks/tasks-table.html',
+                           paginated_tasks=paginated_tasks,
+                           form=form,
+                           **kwargs)
 
 
-@annotations_bp.route('/success')
+@tasks_bp.route('/success')
 def success():
-    # TODO: render HTML template, maybe forward to "My Annotations"
-    return 'Annotation Successfully Submitted'
+    return 'Task Successfully Submitted'

@@ -192,6 +192,9 @@ class Annotations(db.Document):
     # version = dvc_hash
     # recipe = dvc workflow? JSON recipe? should include versions of each piece
 
+    # TODO: should an entry keep track of what larger training data (npzs) it is included in?
+    #       eg. should it store ref to Training_Data IDs
+    #       OR is this handled by dvc_hashes on annotations + recipes in training_data?
 
 class Tasks(db.Document):
     """Each entry refers to the individual, cropped, subsamples that are sent to be annotated.
@@ -208,8 +211,8 @@ class Tasks(db.Document):
 
     # TODO: Should we build in options for multiple judgements (interannotator agreement)
 
-    # This is a subsample/subimage so it needs a reference to its parent from Crowdsourcing
-    parent = db.ReferenceField(Annotations, required=True, reverse_delete_rule=db.NULLIFY)
+    # This is a subsample/subimage so it references its parent annotation from Crowdsourcing
+    annotation = db.ReferenceField(Annotations, required=True, reverse_delete_rule=db.NULLIFY)
     # Where did this entry come from within this parent sample/annotation
     coordinate_x = db.IntField()
     coordinate_y = db.IntField()
