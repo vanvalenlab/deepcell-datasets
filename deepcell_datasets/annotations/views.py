@@ -41,8 +41,7 @@ from mongoengine import ValidationError
 from deepcell_datasets.database.models import Annotations
 from deepcell_datasets.annotations.forms import AnnotationForm
 from deepcell_datasets.utils import nest_dict
-# TODO: finish tasks bp
-# from deepcell_datasets.tasks.views import tasks_bp
+from deepcell_datasets.tasks.views import tasks_bp
 
 
 annotations_bp = Blueprint('annotations_bp', __name__,  # pylint: disable=C0103
@@ -67,6 +66,13 @@ def handle_exception(err):
 
 
 # Routes for HTML pages.
+@annotations_bp.route('/', methods=['GET'])
+@login_required
+def index():
+    """Request HTML Crowdsourcinglanding page to be rendered."""
+    return render_template('annotations/index.html')
+
+
 @annotations_bp.route('/data_entry', methods=['GET', 'POST'])
 @login_required
 def add_annotation():
@@ -94,17 +100,18 @@ def add_annotation():
                            current_user=current_user)
 
 
-@annotations_bp.route('/', methods=['GET'])
+@annotations_bp.route('/view_all', methods=['GET'])
 @login_required
 def view_all_annotations():
     page = request.args.get('page', default=1, type=int)
     per_page = current_app.config['ITEMS_PER_PAGE']
 
     filters = [
-        'methods__subtype',
-        'methods__culture',
-        'methods__labeling',
-        'methods__imaging',
+        'rows',
+        'columns',
+        'frames',
+        'channels',
+        'channel_list'
     ]
 
     provided_values = (request.args.get(f, default='') for f in filters)

@@ -5,6 +5,7 @@
         <a href="/" class="brand-logo">DeepCell Datasets</a>
         <ul id="nav-mobile" class="right hide-on-small-and-down">
           {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for('annotations_bp.index') }}">Crowdsourcing</a></li>
           <li><a href="{{ url_for_security('logout') }}">{{ _('Logout') }}</a></li>
           {% else %}
           <li><a href="{{ url_for_security('register') }}{% if 'next' in request.args %}?next={{ request.args.next|urlencode }}{% endif %}">{{ _('Sign up') }}</a></li>

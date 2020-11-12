@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block nocontainer %}
+
+<div class="container">
+  <div class="section">
+
+    <!--   Icon Section   -->
+    <div class="row center">
+      <h4>Review Crowdsourcing Progress</h4>
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center"><i class="material-icons">insert_drive_file</i></h2>
+          <h5 class="center">Training Data</h5>
+
+          <p class="light">Start a new annotation</p>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center"><i class="material-icons">photo_library</i></h2>
+          <h5 class="center">Annotated Samples</h5>
+
+          <p class="light">Review annotated samples</p>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center"><i class="material-icons">photo</i></h2>
+          <h5 class="center">Tasks</h5>
+
+          <p class="light">Review progress on crowdsourcing jobs</p>
+        </div>
+      </div>
+    </div>
+    <div class="row center">
+      <div class="col s12 m4">
+        <div class="row center">
+          <a href="{{ url_for('annotations_bp.add_annotation') }}" id="download-button" class="btn-large waves-effect waves-light indigo">Get Started</a>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="row center">
+          <a href="{{ url_for('annotations_bp.view_all_annotations') }}" id="download-button" class="btn-large waves-effect waves-light indigo">Browse Annotated Samples</a>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="row center">
+          <a href="{{ url_for('tasks_bp.view_all_tasks') }}" id="download-button" class="btn-large waves-effect waves-light indigo">Browse Crowdsourcing Tasks</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extraJs %}
+  <!-- Load parallex template JS from Materialize -->
+  <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+{% endblock %}

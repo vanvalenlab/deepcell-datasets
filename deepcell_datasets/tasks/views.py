@@ -109,6 +109,11 @@ def view_all_tasks():
     filters = [
         'annotation',
         'platform',
+        'date_submitted',
+        'date_completed',
+        'queued',
+        'annotated',
+        'curated'
     ]
 
     provided_values = (request.args.get(f, default='') for f in filters)

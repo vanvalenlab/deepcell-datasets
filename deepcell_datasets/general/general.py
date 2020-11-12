@@ -56,7 +56,6 @@ def admin():
     return jsonify({'message': 'success'})
 
 
-# TODO: Web interface for wet lab
 @general_bp.route('/', methods=['GET'])
 def index():
     """Request HTML landing page to be rendered."""
