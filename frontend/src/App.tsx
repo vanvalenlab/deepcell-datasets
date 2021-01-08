@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { Redirect, Router, RouteComponentProps } from '@reach/router'
 import { Amplify, Hub } from '@aws-amplify/core';
 import { Auth } from '@aws-amplify/auth';
 import { ParallaxProvider } from 'react-scroll-parallax';
-import loadable from '@loadable/component';
 import  styled  from  'styled-components';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Constants from './Constants';
+import LoadingPage from './LoadingPage';
 
-const NavigationToolbar = loadable(() => import('./NavigationToolbar'));
-const Footer = loadable(() => import('./Footer'));
-const SignUpContainer = loadable(() => import('./auth/SignUpContainer'));
-const LoginContainer = loadable(() => import('./auth/LoginContainer'));
-const LogoutContainer = loadable(() => import('./auth/LogoutContainer'));
-const ConfirmEmailContainer = loadable(() => import('./auth/ConfirmEmailContainer'));
-const ForgotPasswordContainer = loadable(() => import('./auth/ForgotPasswordContainer'));
-const PasswordResetContainer = loadable(() => import('./auth/PasswordResetContainer'));
-const Landing = loadable(() => import('./Landing'));
-const Data = loadable(() => import('./Data'));
-const PrivacyPolicy = loadable(() => import('./PrivacyPolicy'));
-const TermsAndConditions = loadable(() => import('./TermsAndConditions'));
-const NotFound = loadable(() => import('./NotFound'));
+const NavigationToolbar = lazy(() => import('./NavigationToolbar'));
+const Footer = lazy(() => import('./Footer'));
+const SignUpContainer = lazy(() => import('./auth/SignUpContainer'));
+const LoginContainer = lazy(() => import('./auth/LoginContainer'));
+const LogoutContainer = lazy(() => import('./auth/LogoutContainer'));
+const ConfirmEmailContainer = lazy(() => import('./auth/ConfirmEmailContainer'));
+const ForgotPasswordContainer = lazy(() => import('./auth/ForgotPasswordContainer'));
+const PasswordResetContainer = lazy(() => import('./auth/PasswordResetContainer'));
+const Landing = lazy(() => import('./Landing'));
+const Data = lazy(() => import('./Data'));
+const PrivacyPolicy = lazy(() => import('./PrivacyPolicy'));
+const TermsAndConditions = lazy(() => import('./TermsAndConditions'));
+const NotFound = lazy(() => import('./NotFound'));
 
 const RouterPage = (
   props: { pageComponent: JSX.Element } & RouteComponentProps
@@ -101,27 +101,29 @@ export default function App() {
 
   return (
     <Root>
-      <NavigationToolbar isLoggedIn={user !== null} />
-      <ParallaxProvider>
-        <Main>
-          <Router>
-            <RouterPage path={Constants.Index} pageComponent={<Landing />} />
-            <RouterPage path={Constants.Terms} pageComponent={<TermsAndConditions />} />
-            <RouterPage path={Constants.Privacy} pageComponent={<PrivacyPolicy />} />
-            <RouterPage path={Constants.SignOut} pageComponent={<LogoutContainer />} />
-            <RouterPage path={Constants.ForgotPassword} pageComponent={<ForgotPasswordContainer />} />
-            <RouterPage path={Constants.ResetPassword} pageComponent={<PasswordResetContainer />} />
-            {/* Pages only accessible when logged in */}
-            <ProtectedRouterPage path={Constants.Data} isLoggedIn={user !== null} pageComponent={<Data />} />
-            {/* Pages only accessible when NOT logged in */}
-            <AnonymousRouterPage path={Constants.ConfirmEmail} isLoggedIn={user !== null} pageComponent={<ConfirmEmailContainer />} />
-            <AnonymousRouterPage path={Constants.SignIn} isLoggedIn={user !== null} pageComponent={<LoginContainer />} />
-            <AnonymousRouterPage path={Constants.SignUp} isLoggedIn={user !== null} pageComponent={<SignUpContainer />} />
-            <RouterPage default pageComponent={<NotFound />} />
-          </Router>
-        </Main>
-      </ParallaxProvider>
-      <Footer />
+      <Suspense fallback={<LoadingPage />}>
+        <NavigationToolbar isLoggedIn={user !== null} />
+        <ParallaxProvider>
+          <Main>
+            <Router>
+              <RouterPage path={Constants.Index} pageComponent={<Landing />} />
+              <RouterPage path={Constants.Terms} pageComponent={<TermsAndConditions />} />
+              <RouterPage path={Constants.Privacy} pageComponent={<PrivacyPolicy />} />
+              <RouterPage path={Constants.SignOut} pageComponent={<LogoutContainer />} />
+              <RouterPage path={Constants.ForgotPassword} pageComponent={<ForgotPasswordContainer />} />
+              <RouterPage path={Constants.ResetPassword} pageComponent={<PasswordResetContainer />} />
+              {/* Pages only accessible when logged in */}
+              <ProtectedRouterPage path={Constants.Data} isLoggedIn={user !== null} pageComponent={<Data />} />
+              {/* Pages only accessible when NOT logged in */}
+              <AnonymousRouterPage path={Constants.ConfirmEmail} isLoggedIn={user !== null} pageComponent={<ConfirmEmailContainer />} />
+              <AnonymousRouterPage path={Constants.SignIn} isLoggedIn={user !== null} pageComponent={<LoginContainer />} />
+              <AnonymousRouterPage path={Constants.SignUp} isLoggedIn={user !== null} pageComponent={<SignUpContainer />} />
+              <RouterPage default pageComponent={<NotFound />} />
+            </Router>
+          </Main>
+        </ParallaxProvider>
+        <Footer />
+      </Suspense>
     </Root>
   );
 };

@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",
-    "@loadable/component": "^5.14.1",
     "@reach/router": "^1.3.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -47,7 +46,6 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.15",
-    "@types/loadable__component": "^5.13.1",
     "@types/node": "^12.0.0",
     "@types/reach__router": "^1.3.6",
     "@types/react": "^16.9.53",
