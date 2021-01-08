@@ -29,14 +29,14 @@ const RouterPage = (
 const AnonymousRouterPage = (
   props: { pageComponent: JSX.Element, isLoggedIn: boolean } & RouteComponentProps
 ) => {
-  const { ...rest } = props;
+  const { ...rest } = props; // eslint-disable-line
   return props.isLoggedIn ? <Redirect to={Constants.Data} noThrow /> : props.pageComponent;
 };
 
 const ProtectedRouterPage = (
   props: { pageComponent: JSX.Element, isLoggedIn: boolean } & RouteComponentProps
 ) => {
-  const { ...rest } = props;
+  const { ...rest } = props; // eslint-disable-line
   return props.isLoggedIn ? props.pageComponent : <Redirect to={Constants.SignIn} noThrow />;
 };
 
