@@ -4,7 +4,6 @@ import { Amplify, Hub } from '@aws-amplify/core';
 import { Auth } from '@aws-amplify/auth';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import  styled  from  'styled-components';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Constants from './Constants';
 import LoadingPage from './LoadingPage';
