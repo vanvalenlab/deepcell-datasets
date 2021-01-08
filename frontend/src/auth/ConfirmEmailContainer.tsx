@@ -21,7 +21,6 @@ export default function ConfirmEmailContainer() {
 
   const [code, setCode] = useState<string>('');
   const [error, setError] = useState(null);
-  const [isClicked, setIsClicked] = useState(false);
   const [isResent, setIsResent] = useState(false);
 
   const resendConfirmationCode = async () => {
@@ -34,11 +33,9 @@ export default function ConfirmEmailContainer() {
   }
 
   const handleSubmit = async (e: any) => {
-    setIsClicked(true);
     e.preventDefault();
     if (code.length === 0) {
       e.stopPropagation();
-      setIsClicked(false);
       return;
     }
 
@@ -47,7 +44,6 @@ export default function ConfirmEmailContainer() {
       navigate(Constants.Data);
     } catch (err) {
       setError(err.message);
-      setIsClicked(false);
     }
   };
 
