@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from '@reach/router';
 import { Alert, Button, Container, Form } from 'react-bootstrap';
 import { Auth } from '@aws-amplify/auth';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from '@reach/router';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { MdInsertDriveFile, MdPhoto, MdPhotoLibrary } from 'react-icons/md';

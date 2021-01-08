@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from '@reach/router'
+import { Alert, Button, Container, Form } from 'react-bootstrap';
 import { Auth } from '@aws-amplify/auth';
 import styled from 'styled-components';
-import { Alert, Button, Container, Form } from 'react-bootstrap';
 import Constants from '../Constants';
 import PasswordSchema from './PasswordSchema';
 
