@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Storage } from '@aws-amplify/storage';
 import { Alert, Button, Card, Col, Container, Row } from 'react-bootstrap';
-import TissueNetThumbnail from './images/multiplex_overlay.png';
+import TissueNetThumbnail from './images/multiplex_overlay.webp';
 
 /**
  * For the POC the "data" will just be hard coded.
