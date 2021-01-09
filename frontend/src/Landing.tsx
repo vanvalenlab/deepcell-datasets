@@ -1,5 +1,8 @@
 import { Link } from '@reach/router';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import { MdInsertDriveFile, MdPhoto, MdPhotoLibrary } from 'react-icons/md';
 import { ParallaxBanner } from 'react-scroll-parallax';
 import styled from 'styled-components';

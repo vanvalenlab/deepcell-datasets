@@ -1,4 +1,6 @@
-import { Button, Nav, Navbar } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 import { FaSignInAlt, FaPlusSquare, FaSignOutAlt } from 'react-icons/fa';
 // import Form from 'react-bootstrap/Form';
 // import FormControl from 'react-bootstrap/FormControl';

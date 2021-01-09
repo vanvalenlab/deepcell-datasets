@@ -1,4 +1,5 @@
-import { Container, Spinner } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function LoadingPage() {
   return (
