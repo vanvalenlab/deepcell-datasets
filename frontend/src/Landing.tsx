@@ -1,4 +1,5 @@
 import { Link } from '@reach/router';
+
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -9,12 +10,9 @@ import styled from 'styled-components';
 
 import Constants from './Constants';
 
-import CombinedGif from './images/combined.gif';
-import MultiplexImage from './images/multiplex_overlay.webp';
-
 const ImageBanner = styled.div`
   min-height: 380px;
-  background: url(${CombinedGif}) no-repeat center center;
+  background: url(/images/combined.gif) no-repeat center center;
   background-size: cover;
 `;
 
@@ -90,7 +88,12 @@ export default function Landing() {
       
       {/* Parallax scroll image */}
       <Row className="mx-auto">
-        <ParallaxBanner style={{height: '380px'}} layers={[{image: MultiplexImage, amount: 1}]} />
+        <ParallaxBanner style={{height: '380px'}} layers={[
+          {
+            image: '/images/multiplex_overlay.webp',
+            amount: 1
+          }
+        ]} />
       </Row>
 
       {/* Last Section */}

@@ -1,11 +1,21 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "DeepCell Datasets",
+  "name": "DeepCell Datasets",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "images/multiplex_overlay.webp",
+      "type": "image/webp",
+      "sizes": "1000x1000"
+    },
+    {
+      "src": "images/combined.gif",
+      "type": "image/gif",
+      "sizes": "1214x509"
     }
   ],
   "start_url": ".",
