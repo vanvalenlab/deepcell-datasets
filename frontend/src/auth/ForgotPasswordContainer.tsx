@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import { Auth } from '@aws-amplify/auth';
 import styled from 'styled-components';
+import Constants from '../Constants';
 
 const MaxWidthDiv = styled.div`
   max-width: 350px;
@@ -28,7 +29,7 @@ export default function ForgotPasswordContainer () {
 
     try {
       await Auth.forgotPassword(email);
-      navigate(`/reset/${email}`); // TODO: template Constants.ResetEmail ?
+      navigate(`${Constants.ResetPassword}/${email}`);
     } catch (err) {
       setError(err.message);
     }

@@ -110,11 +110,11 @@ export default function App() {
               <RouterPage path={Constants.Privacy} pageComponent={<PrivacyPolicy />} />
               <RouterPage path={Constants.SignOut} pageComponent={<LogoutContainer />} />
               <RouterPage path={Constants.ForgotPassword} pageComponent={<ForgotPasswordContainer />} />
-              <RouterPage path={Constants.ResetPassword} pageComponent={<PasswordResetContainer />} />
+              <RouterPage path={`${Constants.ResetPassword}/:email`} pageComponent={<PasswordResetContainer />} />
               {/* Pages only accessible when logged in */}
               <ProtectedRouterPage path={Constants.Data} isLoggedIn={user !== null} pageComponent={<Data />} />
               {/* Pages only accessible when NOT logged in */}
-              <AnonymousRouterPage path={Constants.ConfirmEmail} isLoggedIn={user !== null} pageComponent={<ConfirmEmailContainer />} />
+              <AnonymousRouterPage path={`${Constants.ConfirmEmail}/:email`} isLoggedIn={user !== null} pageComponent={<ConfirmEmailContainer />} />
               <AnonymousRouterPage path={Constants.SignIn} isLoggedIn={user !== null} pageComponent={<LoginContainer />} />
               <AnonymousRouterPage path={Constants.SignUp} isLoggedIn={user !== null} pageComponent={<SignUpContainer />} />
               <RouterPage default pageComponent={<NotFound />} />

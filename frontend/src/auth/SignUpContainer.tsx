@@ -71,9 +71,9 @@ export default function SignUpContainer() {
         }
       });
       if (res.userConfirmed) {
-        navigate(`/profile`);
+        navigate(Constants.Data);
       } else {
-        navigate(`/verify/${email}`);
+        navigate(`/${Constants.ConfirmEmail}/${email}`);
       }
     } catch (err) {
       setError(err.message);

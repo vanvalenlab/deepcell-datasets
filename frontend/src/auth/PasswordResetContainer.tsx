@@ -70,7 +70,7 @@ export default function ConfirmEmailContainer() {
   };
 
   return (
-    <MaxWidthDiv className="pt-4 mx-auto">
+    <MaxWidthDiv className="py-4 mx-auto">
       <h2 className="text-center">Confirm your Email</h2>
 
       { (error !== null) ?

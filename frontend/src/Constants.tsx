@@ -6,8 +6,8 @@ const Constants = {
   SignIn: '/login',
   SignOut: '/logout',
   ForgotPassword: '/forgot',
-  ConfirmEmail: '/verify/:email',
-  ResetPassword: '/reset/:email',
+  ConfirmEmail: '/verify',
+  ResetPassword: '/reset',
   Terms: '/terms',
   Privacy: '/privacy'
 };
