@@ -1,20 +1,12 @@
 import { Link } from '@reach/router';
-
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { MdInsertDriveFile, MdPhoto, MdPhotoLibrary } from 'react-icons/md';
 import { ParallaxBanner } from 'react-scroll-parallax';
-import styled from 'styled-components';
 
 import Constants from './Constants';
-
-const ImageBanner = styled.div`
-  min-height: 380px;
-  background: url(/images/combined.gif) no-repeat center center;
-  background-size: cover;
-`;
 
 export default function Landing() {
 
@@ -23,11 +15,16 @@ export default function Landing() {
 
       {/* .gif banner */}
       <Row className="mx-auto">
-        <ImageBanner className="w-100 d-table">
-          <h1 className="px-5 text-light text-center display-3 d-table-cell align-middle">
-            A hub for biological images with single-cell annotations
-          </h1>
-        </ImageBanner>
+        <ParallaxBanner style={{height: '380px'}} className="w-100 d-table" layers={[
+            {
+              image: '/images/combined.gif',
+              amount: 0
+            }
+          ]}>
+            <h1 className="text-light text-center display-3 d-table-cell align-middle position-sticky">
+              A hub for biological images with single-cell annotations
+            </h1>
+          </ParallaxBanner>
       </Row>
 
       {/* feature icons */}
