@@ -24,7 +24,7 @@ const allData = [
 export default function Data() {
 
   return (
-    <Container fluid>
+    <Container>
 
       <Row className="text-center py-4">
         <Col xs={12}>
@@ -32,17 +32,15 @@ export default function Data() {
         </Col>
       </Row>
 
-      <Container>
-        <Row>
-          {allData.map(d => {
-            return (
-              <Col xs={12} md={4} key={d.object_key} className="mx-auto mb-4">
-                <DataCard title={d.title} objectKey={d.object_key} text={d.text} thumbnail={d.thumbnail} />
-              </Col>
-            );
-          })}
-        </Row>
-      </Container>
+      <Row>
+        {allData.map(d => {
+          return (
+            <Col xs={12} md={4} key={d.object_key} className="mx-auto mb-4">
+              <DataCard title={d.title} objectKey={d.object_key} text={d.text} thumbnail={d.thumbnail} />
+            </Col>
+          );
+        })}
+      </Row>
 
     </Container>
   );
