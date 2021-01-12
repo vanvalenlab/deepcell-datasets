@@ -24,7 +24,6 @@ export default function DataCard (props: any) {
           public:''
         }
       });
-      console.log(url);
       openInNewTab(url.toString());
     } catch (err) {
       setError(JSON.stringify(err));
@@ -32,7 +31,7 @@ export default function DataCard (props: any) {
   }
 
   return (
-    <Card style={{ width: '18rem' }}>
+    <Card>
       <Card.Img variant="top" src={thumbnail} />
       <Card.Body>
         <Card.Title>{title}</Card.Title>
