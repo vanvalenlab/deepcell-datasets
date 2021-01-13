@@ -17,7 +17,7 @@ const ConfirmEmailContainer = lazy(() => import('./auth/ConfirmEmailContainer'))
 const ForgotPasswordContainer = lazy(() => import('./auth/ForgotPasswordContainer'));
 const PasswordResetContainer = lazy(() => import('./auth/PasswordResetContainer'));
 const Landing = lazy(() => import('./Landing'));
-const Data = lazy(() => import('./Data'));
+const Data = lazy(() => import('./datasets/Data'));
 const PrivacyPolicy = lazy(() => import('./PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./TermsAndConditions'));
 const NotFound = lazy(() => import('./NotFound'));
