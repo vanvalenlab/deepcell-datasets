@@ -62,5 +62,5 @@ First build the project with `yarn`, then push the files to S3.
 yarn build
 
 # If using a profile, include AWS_PROFILE=profile-name
-aws s3 sync build/ s3://datasets.deepcell.org --acl public-read
+yarn deploy:frontend:dev
 ```
