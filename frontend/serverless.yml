@@ -15,6 +15,7 @@ custom:
     # A simple configuration for copying static assets
     - bucketName: datasets.deepcell.org
       localDir: build
+      acl: public-read
 
 resources:
   Resources:
