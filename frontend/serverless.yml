@@ -1,0 +1,25 @@
+service: DeepCellDatasetsFrontend
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+
+useDotenv: true
+
+plugins:
+  - serverless-s3-sync
+
+custom:
+  s3Sync:
+    # A simple configuration for copying static assets
+    - bucketName: datasets.deepcell.org
+      localDir: build
+
+resources:
+  Resources:
+
+    DeploymentBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: datasets.deepcell.org
