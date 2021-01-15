@@ -73,7 +73,7 @@ export default function SignUpContainer() {
       if (res.userConfirmed) {
         navigate(Constants.Data);
       } else {
-        navigate(`/${Constants.ConfirmEmail}/${email}`);
+        navigate(`${Constants.ConfirmEmail}/${email}`);
       }
     } catch (err) {
       setError(err.message);
