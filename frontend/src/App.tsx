@@ -87,7 +87,6 @@ export default function App() {
       const currUser = await Auth.currentAuthenticatedUser();
       setUser(currUser);
     } catch (e) {
-      console.log(e);
       setUser(null);
     }
   };
