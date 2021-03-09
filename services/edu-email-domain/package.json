@@ -1,0 +1,11 @@
+{
+  "name": "edu-email-validation-service",
+  "version": "0.0.1",
+  "description": "Serverless .edu Email Validation Service",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove"
+  },
+  "main": "index.js",
+  "author": "vanvalenlab"
+}

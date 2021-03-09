@@ -7,11 +7,20 @@ DeepCell Datasets is a collection of data engineering and versioning tools for t
 
 ## Getting Started
 
-DeepCell Datasets uses `nvidia-docker` and `mongodb` to keep track of new images. A Flask API provides convenient access to the database.
+DeepCell Datasets uses a serverless architecture with a static webpage consuming several services.
+This is aided by using `lectra` as well as the `serverless` framework.
+`lerna` enables us to easily control all of the services from the root directory, while `serverless` allows us to deploy and manage AWS infrastructure through `.yml` configuration files.
+
+### Deployment
+
+```bash
+yarn deploy:dev
+# yarn deploy:prod
+```
 
 ## Copyright
 
-Copyright © 2016-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
+Copyright © 2016-2021 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
 All rights reserved.
 
 ## License
