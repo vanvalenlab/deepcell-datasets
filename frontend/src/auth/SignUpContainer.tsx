@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from '@reach/router';
+import { Auth } from '@aws-amplify/auth';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import { Auth } from '@aws-amplify/auth';
+import Modal from 'react-bootstrap/Modal'
 import styled from 'styled-components';
 import Constants from '../Constants';
 import PasswordSchema from './PasswordSchema';
+import TermsAndConditions from '../TermsAndConditions';
 
 const MaxWidthDiv = styled.div`
   max-width: 880px;
@@ -25,6 +27,8 @@ export default function SignUpContainer() {
   const [agreedToTerms, setAgreedToTerms] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState(false);
   const [error, setError] = useState(null);
+
+  const [showTOC, setShowTOC] = useState(false);
 
   const handleEmailChange = (e: any) => {
     const value = e.target.value;
@@ -120,8 +124,27 @@ export default function SignUpContainer() {
 
           <Form.Group controlId="formTermsAndConditions">
             <Form.Check inline required type="checkbox" onChange={e => setAgreedToTerms(!agreedToTerms)} />
-            <Form.Label className="font-weight-bold small">I agree to the <Link to={Constants.Terms}>Terms & Conditions</Link>.<span className="text-danger">*</span></Form.Label>
+            <Form.Label className="font-weight-bold small">
+              I agree to the <a href="#" onClick={() => setShowTOC(true)}>Terms & Conditions</a>.<span className="text-danger">*</span>
+            </Form.Label>
           </Form.Group>
+
+          <Modal
+            show={showTOC}
+            onHide={() => setShowTOC(false)}
+            backdrop="static"
+            size="lg"
+          >
+            <Modal.Header closeButton />
+            <Modal.Body>
+              <TermsAndConditions />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowTOC(false)}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
           <Button variant="primary" type="submit" disabled={isClicked}>
             { isClicked ? "Submitting..." : "Submit" }
