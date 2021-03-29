@@ -118,7 +118,7 @@ export default function SignUpContainer() {
               isInvalid={password.length > 0 && !isValidPassword}
               isValid={password.length > 0 && isValidPassword} />
             <Form.Text id="passwordHelpBlock" muted>
-              Your password must be between 8 and 128 characters and contain a digit an uppercase letter, and a lowercase letter.
+              Your password must be between 8 and 128 characters and contain a digit, an uppercase letter, a lowercase letter, and a special character.
             </Form.Text>
           </Form.Group>
 
