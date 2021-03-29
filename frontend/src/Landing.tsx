@@ -58,27 +58,27 @@ export default function Landing() {
       <Row className="mx-auto pb-4 mb-3">
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
-          <Link to="/training">
+          {/* <Link to="/training"> */}
             <Button variant="dark" className="w-75">
               Browse Training Data
             </Button>
-          </Link>
+          {/* </Link> */}
         </Col>
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
-          <Link to="/experiments">
+          {/* <Link to="/experiments"> */}
             <Button variant="dark" className="w-75">
               Browse Experiments
             </Button>
-          </Link>
+          {/* </Link> */}
         </Col>
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
-          <Link to="/samples" className="w-50">
+          {/* <Link to="/samples" className="w-50"> */}
             <Button variant="dark" className="w-75">
               Browse Samples
             </Button>
-          </Link>
+          {/* </Link> */}
         </Col>
 
       </Row>
