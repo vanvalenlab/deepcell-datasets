@@ -50,7 +50,7 @@ export default function Landing() {
         <Col xs={12} md={4} className="text-center mb-2">
           <MdSchool size={70} />
           <h5>Learn More</h5>
-          <p className="small">Learn more about the DeepCell Ecosystem.</p>
+          <p className="small">Learn more about the DeepCell.</p>
         </Col>
       </Row>
 
