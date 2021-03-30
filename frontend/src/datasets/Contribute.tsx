@@ -16,10 +16,12 @@ export default function Contribute() {
 
       <Row className="text-center py-4">
         <Col xs={12}>
-          <span>
-            We are hard at work on an easy way to upload data and register it with DeepCell Datasets!
-            In the mean-time, if you would like to contribute data, please reach out to us and we will work with you on the best way to add your data.
-          </span>
+          <Container>
+            <span>
+              We are hard at work on an easy way to upload data and register it with DeepCell Datasets!
+              In the mean-time, if you would like to contribute data, please reach out to us and we will work with you on the best way to add your data.
+            </span>
+          </Container>
         </Col>
       </Row>
 
