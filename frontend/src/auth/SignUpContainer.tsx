@@ -125,6 +125,7 @@ export default function SignUpContainer() {
           <Form.Group controlId="formTermsAndConditions">
             <Form.Check inline required type="checkbox" onChange={e => setAgreedToTerms(!agreedToTerms)} />
             <Form.Label className="font-weight-bold small">
+              {/* eslint-disable-next-line */} 
               I agree to the <a href="#" onClick={() => setShowTOC(true)}>Terms & Conditions</a>.<span className="text-danger">*</span>
             </Form.Label>
           </Form.Group>
