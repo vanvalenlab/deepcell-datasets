@@ -21,6 +21,7 @@ const Data = lazy(() => import('./datasets/Data'));
 const PrivacyPolicy = lazy(() => import('./PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./TermsAndConditions'));
 const NotFound = lazy(() => import('./NotFound'));
+const Maintenance = lazy(() => import('./Maintenance'));
 
 const RouterPage = (
   props: { pageComponent: JSX.Element } & RouteComponentProps
@@ -112,6 +113,7 @@ export default function App() {
               <RouterPage path={`${Constants.ResetPassword}/:email`} pageComponent={<PasswordResetContainer />} />
               {/* Pages only accessible when logged in */}
               <ProtectedRouterPage path={Constants.Data} isLoggedIn={user !== null} pageComponent={<Data />} />
+              <ProtectedRouterPage path={Constants.Contribute} isLoggedIn={user !== null} pageComponent={<Maintenance />} />
               {/* Pages only accessible when NOT logged in */}
               <AnonymousRouterPage path={`${Constants.ConfirmEmail}/:email`} isLoggedIn={user !== null} pageComponent={<ConfirmEmailContainer />} />
               <AnonymousRouterPage path={Constants.SignIn} isLoggedIn={user !== null} pageComponent={<LoginContainer />} />
