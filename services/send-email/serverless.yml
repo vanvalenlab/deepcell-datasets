@@ -1,0 +1,60 @@
+service: ContactFormEmailService
+
+custom:
+  bucket: ${env:DEPLOYMENT_BUCKET}
+  email: ${env:CONTACT_FORM_EMAIL}
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+  timeout: 6
+  logRetentionInDays: 14 # Set the default RetentionInDays for a CloudWatch LogGroup
+  deploymentBucket:
+    blockPublicAccess: true # Prevents public access via ACLs or bucket policies. Default is false
+    name: ${self:custom.bucket}
+    maxPreviousDeploymentArtifacts: 3
+    serverSideEncryption: AES256
+  environment: 
+    EMAIL: ${self:custom.email}
+  apiGateway:
+    shouldStartNameWithService: true
+  usagePlan:
+    throttle:
+      burstLimit: 1
+      rateLimit: 1
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "ses:SendEmail"
+      Resource: "*"
+
+useDotenv: true
+
+package:
+  include:
+    - src/**
+    - handler.js
+  exclude:
+    - README.md
+  individually: true
+
+functions:
+  ContactFormSendEmail:
+    handler: index.handler
+    name: ContactFormSendEmail
+    description: Send the given email to EMAIL address.
+    memorySize: 128
+    events:
+      - http:
+          path: sendemail
+          method: post
+          cors:
+            origin: '*'
+    package:
+      include:
+        - index.js
+      exclude: # Specify the directories and files which should be excluded in the deployment package for this specific function.
+        - README.md
+
+configValidationMode: warn # Modes for config validation. `error` throws an exception, `warn` logs error to console, `off` disables validation at all. The default is warn.

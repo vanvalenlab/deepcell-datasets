@@ -1,0 +1,14 @@
+{
+  "name": "send-email-service",
+  "version": "0.0.1",
+  "description": "Send email service for the contact form.",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove"
+  },
+  "main": "index.js",
+  "author": "vanvalenlab",
+  "dependencies": {
+    "aws-sdk": "^2.346.0"
+  }
+}

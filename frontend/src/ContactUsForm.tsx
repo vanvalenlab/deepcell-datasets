@@ -1,17 +1,49 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
+const REACT_APP_SEND_EMAIL_API_ENDPOINT = process.env.REACT_APP_SEND_EMAIL_API_ENDPOINT || '';
+
 export default function ContactUsForm() {
-  const { register, errors, handleSubmit } = useForm();
+  const { register, errors, handleSubmit, reset } = useForm();
+  const [successText, setSuccessText] = useState('');
+  const [errorText, setErrorText] = useState('');
 
   const onSubmit = async (data) => {
-    console.log('Name: ', data.name);
-    console.log('Email: ', data.email);
-    console.log('Subject: ', data.subject);
-    console.log('Message: ', data.message);
+    try {
+      const payload = {
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message
+      };
+      fetch(REACT_APP_SEND_EMAIL_API_ENDPOINT, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+        .then(res => res.json())
+        .then((result) => {
+          setSuccessText('Message Sent! Thanks for reaching out!')
+          reset();
+        },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            setErrorText(error.toString());
+          }
+        );
+
+    } catch (e) {
+      setErrorText(e.toString());
+    }
   };
 
   return (
@@ -89,6 +121,24 @@ export default function ContactUsForm() {
                 {errors.message && <span className='text-danger'>Please enter a message</span>}
               </Col>
             </Row>
+            { successText.length > 0 && 
+            <Row>
+              <Col xs={12}>
+                <Alert variant="success" onClose={() => setSuccessText('')} dismissible>
+                  {successText}
+                </Alert>
+              </Col>
+            </Row>
+            }
+            { errorText.length > 0 && 
+            <Row>
+              <Col xs={12}>
+                <Alert variant="danger" onClose={() => setErrorText('')} dismissible>
+                  {errorText}
+                </Alert>
+              </Col>
+            </Row>
+            }
             <Button variant="dark" type="submit" className="w-50">Submit</Button>
           </form>
         </Col>
