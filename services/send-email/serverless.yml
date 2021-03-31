@@ -1,5 +1,9 @@
 service: ContactFormEmailService
 
+frameworkVersion: '2'
+
+useDotenv: true
+
 custom:
   bucket: ${env:DEPLOYMENT_BUCKET}
   receiverEmailAddress: ${env:RECEIVER_EMAIL}
@@ -10,15 +14,13 @@ provider:
   runtime: nodejs12.x
   region: us-west-2
   timeout: 6
-  logRetentionInDays: 14 # Set the default RetentionInDays for a CloudWatch LogGroup
+  logRetentionInDays: 7 # Set the default RetentionInDays for a CloudWatch LogGroup
   deploymentBucket:
     blockPublicAccess: true # Prevents public access via ACLs or bucket policies. Default is false
     name: ${self:custom.bucket}
     maxPreviousDeploymentArtifacts: 3
     serverSideEncryption: AES256
-  environment: 
-    RECEIVER_EMAIL: ${self:custom.receiverEmailAddress}
-    SENDER_EMAIL: ${self:custom.senderEmailAddress}
+    deploymentPrefix: serverless # The S3 prefix under which deployed artifacts should be stored. Default is serverless
   apiGateway:
     shouldStartNameWithService: true
   usagePlan:
@@ -30,8 +32,9 @@ provider:
       Action:
         - "ses:SendEmail"
       Resource: "*"
-
-useDotenv: true
+  environment: 
+    RECEIVER_EMAIL: ${self:custom.receiverEmailAddress}
+    SENDER_EMAIL: ${self:custom.senderEmailAddress}
 
 package:
   include:
@@ -45,7 +48,7 @@ functions:
   ContactFormSendEmail:
     handler: index.handler
     name: ContactFormSendEmail
-    description: Send the given email to EMAIL address.
+    description: Send an email from SENDER_EMAIL to RECEIVER_EMAIL.
     memorySize: 128
     events:
       - http:
@@ -58,5 +61,3 @@ functions:
         - index.js
       exclude: # Specify the directories and files which should be excluded in the deployment package for this specific function.
         - README.md
-
-configValidationMode: warn # Modes for config validation. `error` throws an exception, `warn` logs error to console, `off` disables validation at all. The default is warn.
