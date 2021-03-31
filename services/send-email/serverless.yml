@@ -2,7 +2,8 @@ service: ContactFormEmailService
 
 custom:
   bucket: ${env:DEPLOYMENT_BUCKET}
-  email: ${env:CONTACT_FORM_EMAIL}
+  receiverEmailAddress: ${env:RECEIVER_EMAIL}
+  senderEmailAddress: ${env:SENDER_EMAIL}
 
 provider:
   name: aws
@@ -16,7 +17,8 @@ provider:
     maxPreviousDeploymentArtifacts: 3
     serverSideEncryption: AES256
   environment: 
-    EMAIL: ${self:custom.email}
+    RECEIVER_EMAIL: ${self:custom.receiverEmailAddress}
+    SENDER_EMAIL: ${self:custom.senderEmailAddress}
   apiGateway:
     shouldStartNameWithService: true
   usagePlan:

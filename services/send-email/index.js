@@ -3,14 +3,15 @@
 var AWS = require('aws-sdk');
 var ses = new AWS.SES();
 
-var verifiedEmail = process.env.EMAIL;
+var receiverEmail = process.env.RECEIVER_EMAIL || 'example@example.com';
+var senderEmail = process.env.SENDER_EMAIL || 'example@example.com';
 
 function sendEmail (event, done) {
   var data = JSON.parse(event.body);
   var params = {
     Destination: {
       ToAddresses: [
-        verifiedEmail,
+        receiverEmail,
       ]
     },
     Message: {
@@ -32,7 +33,7 @@ function sendEmail (event, done) {
         Charset: 'UTF-8'
       }
     },
-    Source: verifiedEmail
+    Source: senderEmail
   };
   ses.sendEmail(params, done);
 }
