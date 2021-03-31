@@ -35,7 +35,7 @@ export default function ContactUsForm() {
                   className='form-control formInput'
                   placeholder='Name'
                 ></input>
-                {errors.name && <span className='errorMessage'>{errors.name.message}</span>}
+                {errors.name && <span className='text-danger'>{errors.name.message}</span>}
               </Col>
               <Col xs={6}>
                 <input
@@ -49,7 +49,7 @@ export default function ContactUsForm() {
                   placeholder='Email address'
                 ></input>
                 {errors.email && (
-                  <span className='errorMessage'>Please enter a valid email address</span>
+                  <span className='text-danger'>Please enter a valid email address</span>
                 )}
               </Col>
             </Row>
@@ -70,7 +70,7 @@ export default function ContactUsForm() {
                   placeholder='Subject'
                 ></input>
                 {errors.subject && (
-                  <span className='errorMessage'>{errors.subject.message}</span>
+                  <span className='text-danger'>{errors.subject.message}</span>
                 )}
               </Col>
             </Row>
@@ -86,7 +86,7 @@ export default function ContactUsForm() {
                   className='form-control formInput'
                   placeholder='Message'
                 ></textarea>
-                {errors.message && <span className='errorMessage'>Please enter a message</span>}
+                {errors.message && <span className='text-danger'>Please enter a message</span>}
               </Col>
             </Row>
             <Button variant="dark" type="submit" className="w-50">Submit</Button>
