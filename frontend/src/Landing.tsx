@@ -17,7 +17,7 @@ export default function Landing() {
       <Row className="mx-auto">
         <ParallaxBanner style={{height: '380px'}} className="w-100 d-table" layers={[
             {
-              image: '/images/combined.gif',
+              image: '/images/combined.webp',
               amount: 0
             }
           ]}>

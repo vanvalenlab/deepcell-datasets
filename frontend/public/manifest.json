@@ -13,9 +13,9 @@
       "sizes": "1000x1000"
     },
     {
-      "src": "images/combined.gif",
-      "type": "image/gif",
-      "sizes": "1214x509"
+      "src": "images/combined.webp",
+      "type": "image/webp",
+      "sizes": "1024x512"
     }
   ],
   "start_url": ".",
