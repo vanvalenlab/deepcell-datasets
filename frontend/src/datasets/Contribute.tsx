@@ -15,7 +15,7 @@ export default function Contribute() {
       </Row>
 
       <Row className="text-center py-4">
-        <Col xs={12}>
+        <Col xs={12} md={{ span: 8, offset: 2 }}>
           <Container>
             <span>
               We are hard at work on an easy way to upload data and register it with DeepCell Datasets!
@@ -26,7 +26,7 @@ export default function Contribute() {
       </Row>
 
       <Row className="mx-auto pb-2">
-        <Col xs={12}>
+        <Col xs={12} md={{ span: 8, offset: 2 }}>
           <ContactUsForm />
         </Col>
       </Row>
