@@ -6,9 +6,15 @@
  */
 
 const AllDatasets = [
+  // {
+  //   title: 'TissueNet Multiplex',
+  //   object_key: 'multiplex/20201018_multiplex_seed_0.zip',
+  //   thumbnail: '/images/multiplex_overlay.webp',
+  //   text: 'Multiplex tissue images from a variety of platforms (MIBI, Vectra, etc.)',
+  // },
   {
-    title: 'TissueNet Multiplex',
-    object_key: 'multiplex/20201018_multiplex_seed_0.zip',
+    title: 'TissueNet Multiplex (Test Set)',
+    object_key: 'multiplex/20201018_multiplex_seed_0_test_256x256.npz',
     thumbnail: '/images/multiplex_overlay.webp',
     text: 'Multiplex tissue images from a variety of platforms (MIBI, Vectra, etc.)',
   }
