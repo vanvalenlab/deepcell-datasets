@@ -34,8 +34,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 To build and deploy this project:
 
 ```bash
-yarn build
-AWS_PROFILE=vanvalenlab aws s3 sync build/ s3://datasets.deepcell.org --delete --acl public-read
+yarn build && sls s3sync
 ```
 
 ### `yarn eject`
