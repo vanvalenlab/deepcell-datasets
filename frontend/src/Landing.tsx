@@ -15,7 +15,7 @@ export default function Landing() {
 
       {/* .gif banner */}
       <Row className="mx-auto">
-        <ParallaxBanner style={{height: '380px'}} className="w-100 d-table" layers={[
+        <ParallaxBanner style={{height: '450px'}} className="w-100 d-table" layers={[
             {
               image: '/images/combined.webp',
               amount: 0
@@ -55,7 +55,7 @@ export default function Landing() {
       </Row>
 
       {/* Buttons for the icons */}
-      <Row className="mx-auto pb-4 mb-5">
+      <Row className="mx-auto pb-3 mb-5">
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
           <Link to={Constants.Contribute}>
@@ -83,7 +83,7 @@ export default function Landing() {
       
       {/* Parallax scroll image */}
       <Row className="mx-auto">
-        <ParallaxBanner style={{height: '380px'}} layers={[
+        <ParallaxBanner style={{height: '275px'}} layers={[
           {
             image: '/images/multiplex_overlay.webp',
             amount: 1
