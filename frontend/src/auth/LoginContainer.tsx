@@ -38,7 +38,7 @@ export default function Login () {
   };
 
   return (
-    <MaxWidthDiv className="pt-4 mx-auto">
+    <MaxWidthDiv className="py-4 mx-auto">
       <h2 className="text-center">Sign in to DeepCell Datasets</h2>
 
       { (error !== null) ?
