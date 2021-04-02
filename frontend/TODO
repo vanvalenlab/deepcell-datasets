@@ -1,7 +1,0 @@
-- [ ] Custom domain name
-- [ ] HTTPS for all traffic
-- [ ] Send emails with Amazon SES from custom domain
-- [ ] Improve GIF load times (Lighthouse score)
-- [ ] Better lazy loading / code splitting
-- [ ] Fix email in routes for verification / confirmation (Should be passed to State not in URL)
-- [ ] Add serverless.yml to have more IAAS - lots of configuration was done on console and is not version controlled.

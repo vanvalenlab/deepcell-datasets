@@ -8,14 +8,14 @@
       "type": "image/x-icon"
     },
     {
-      "src": "images/multiplex_overlay.webp",
+      "src": "images/RGB_overlay_full.webp",
       "type": "image/webp",
-      "sizes": "1000x1000"
+      "sizes": "1183×887"
     },
     {
-      "src": "images/combined.gif",
-      "type": "image/gif",
-      "sizes": "1214x509"
+      "src": "images/combined.webp",
+      "type": "image/webp",
+      "sizes": "1024x512"
     }
   ],
   "start_url": ".",

@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import { MdInsertDriveFile, MdPhoto, MdPhotoLibrary } from 'react-icons/md';
+import { MdSearch, MdSchool, MdNoteAdd } from 'react-icons/md';
 import { ParallaxBanner } from 'react-scroll-parallax';
 
 import Constants from './Constants';
@@ -15,9 +15,9 @@ export default function Landing() {
 
       {/* .gif banner */}
       <Row className="mx-auto">
-        <ParallaxBanner style={{height: '380px'}} className="w-100 d-table" layers={[
+        <ParallaxBanner style={{height: '450px'}} className="w-100 d-table" layers={[
             {
-              image: '/images/combined.gif',
+              image: '/images/combined.webp',
               amount: 0
             }
           ]}>
@@ -28,66 +28,64 @@ export default function Landing() {
       </Row>
 
       {/* feature icons */}
-      <Row className="mx-auto">
+      <Row className="mx-auto mt-5">
 
         {/* section title */}
-        <Col xs={12} className="py-4">
-          <h1 className="text-center">Browse Data</h1>
+        {/* <Col xs={12} className="py-4"> */}
+          {/* <h1 className="text-center">Browse Data</h1> */}
+        {/* </Col> */}
+
+        <Col xs={12} md={4} className="text-center mb-2">
+          <MdNoteAdd size={70} />
+          <h5>Contribute Data</h5>
+          <p className="small">Expand DeepCell Datasets by uploading new images.</p>
         </Col>
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
-          <MdInsertDriveFile size={70} />
-          <h5>Training Data</h5>
-          <p className="small">Review and download published training datasets.</p>
+          <MdSearch size={70} />
+          <h5>Browse Data</h5>
+          <p className="small">Review and download our published datasets.</p>
         </Col>
 
         <Col xs={12} md={4} className="text-center mb-2">
-          <MdPhotoLibrary size={70} />
-          <h5>Experiments</h5>
-          <p className="small">Explore the samples in published experiments.</p>
-        </Col>
-
-        <Col xs={12} md={4} className="text-center mb-2">
-          <MdPhoto size={70} />
-          <h5>Samples</h5>
-          <p className="small">Query and download individual biological images.</p>
+          <MdSchool size={70} />
+          <h5>Learn More</h5>
+          <p className="small">Learn more about the DeepCell.</p>
         </Col>
       </Row>
 
       {/* Buttons for the icons */}
-      <Row className="mx-auto pb-4 mb-3">
+      <Row className="mx-auto pb-3 mb-5">
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
-          <Link to="/training">
+          <Link to={Constants.Contribute}>
             <Button variant="dark" className="w-75">
-              Browse Training Data
+              Contribute
             </Button>
           </Link>
         </Col>
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
-          <Link to="/experiments">
+          <Link to={Constants.Data}>
             <Button variant="dark" className="w-75">
-              Browse Experiments
+              Browse
             </Button>
           </Link>
         </Col>
 
         <Col xs={12} md={4} className="text-center w-100 mb-2">
-          <Link to="/samples" className="w-50">
-            <Button variant="dark" className="w-75">
-              Browse Samples
-            </Button>
-          </Link>
+          <Button variant="dark"  className="w-75" href="https://deepcell.org/about">
+            Learn More
+          </Button>
         </Col>
 
       </Row>
       
       {/* Parallax scroll image */}
       <Row className="mx-auto">
-        <ParallaxBanner style={{height: '380px'}} layers={[
+        <ParallaxBanner style={{height: '275px'}} layers={[
           {
-            image: '/images/multiplex_overlay.webp',
+            image: '/images/RGB_overlay_full.webp',
             amount: 1
           }
         ]} />
@@ -97,11 +95,11 @@ export default function Landing() {
       <Row className="mx-auto pt-3 pb-5 mb-3 w-75">
 
         <Col xs={12} className="text-center py-4">
-          <h1>Contribute Data</h1>
-          <p className="small">Expand DeepCell Datasets by uploading new images.</p>
+          <h1>Join Now</h1>
+          <p className="small">Access and contribute to the collection of single-cell training data.</p>
         </Col>
 
-        <Col xs={12} md={4} className="text-center mb-2 w-100">
+        <Col xs={12} md={6} className="text-center mb-2 w-100">
           <Link to={Constants.SignUp}>
             <Button block variant="dark">
               Create an Account
@@ -109,18 +107,12 @@ export default function Landing() {
           </Link>
         </Col>
 
-        <Col xs={12} md={4} className="text-center mb-2 w-100">
+        <Col xs={12} md={6} className="text-center mb-2 w-100">
           <Link to={Constants.SignIn}>
             <Button block variant="dark">
               Login
             </Button>
           </Link>
-        </Col>
-
-        <Col xs={12} md={4} className="text-center mb-2 w-100">
-          <Button block variant="dark" href="https://deepcell.org/about">
-            Learn More
-          </Button>
         </Col>
 
       </Row>

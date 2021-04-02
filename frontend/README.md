@@ -2,6 +2,11 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## AWS Cognito and SES
+
+This project uses AWS Cognito for user authentication and AWS SES to send and receive emails through the application.
+[This guide](https://medium.com/responsetap-engineering/easily-create-email-addresses-for-your-route53-custom-domain-589d099dd0f2) was followed for setting up the custom domain emails.
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -34,8 +39,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 To build and deploy this project:
 
 ```bash
-yarn build
-AWS_PROFILE=vanvalenlab aws s3 sync build/ s3://datasets.deepcell.org 
+yarn build && sls s3sync
 ```
 
 ### `yarn eject`

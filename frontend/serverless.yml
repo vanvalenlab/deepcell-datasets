@@ -11,11 +11,18 @@ plugins:
   - serverless-s3-sync
 
 custom:
+  bucket: datasets.deepcell.org
   s3Sync:
     # A simple configuration for copying static assets
-    - bucketName: datasets.deepcell.org
+    - bucketName: ${self:custom.bucket}
       localDir: build
       acl: public-read
+      deleteRemoved: true
+      params: # optional
+        - index.html:
+          CacheControl: 'no-cache'
+        - "*.js":
+          CacheControl: 'public, max-age=31536000'
 
 resources:
   Resources:
@@ -23,4 +30,4 @@ resources:
     DeploymentBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: datasets.deepcell.org
+        BucketName: ${self:custom.bucket}

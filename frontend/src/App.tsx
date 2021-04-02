@@ -18,6 +18,7 @@ const ForgotPasswordContainer = lazy(() => import('./auth/ForgotPasswordContaine
 const PasswordResetContainer = lazy(() => import('./auth/PasswordResetContainer'));
 const Landing = lazy(() => import('./Landing'));
 const Data = lazy(() => import('./datasets/Data'));
+const Contribute = lazy(() => import('./datasets/Contribute'));
 const PrivacyPolicy = lazy(() => import('./PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./TermsAndConditions'));
 const NotFound = lazy(() => import('./NotFound'));
@@ -110,6 +111,7 @@ export default function App() {
               <RouterPage path={Constants.SignOut} pageComponent={<LogoutContainer />} />
               <RouterPage path={Constants.ForgotPassword} pageComponent={<ForgotPasswordContainer />} />
               <RouterPage path={`${Constants.ResetPassword}/:email`} pageComponent={<PasswordResetContainer />} />
+              <RouterPage path={Constants.Contribute} pageComponent={<Contribute />} />
               {/* Pages only accessible when logged in */}
               <ProtectedRouterPage path={Constants.Data} isLoggedIn={user !== null} pageComponent={<Data />} />
               {/* Pages only accessible when NOT logged in */}

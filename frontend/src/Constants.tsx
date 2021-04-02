@@ -1,6 +1,7 @@
 const Constants = {
   Index: '/',
   Data: '/data',
+  Contribute: '/contribute',
   NotFound: '/notfound',
   SignUp: '/join',
   SignIn: '/login',
