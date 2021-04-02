@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "serverless deploy",
+    "deploy": "serverless s3sync",
     "remove": "serverless remove"
   },
   "eslintConfig": {
