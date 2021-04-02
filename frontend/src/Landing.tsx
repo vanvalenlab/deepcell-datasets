@@ -85,7 +85,7 @@ export default function Landing() {
       <Row className="mx-auto">
         <ParallaxBanner style={{height: '275px'}} layers={[
           {
-            image: '/images/multiplex_overlay.webp',
+            image: '/images/RGB_overlay_full.webp',
             amount: 1
           }
         ]} />
