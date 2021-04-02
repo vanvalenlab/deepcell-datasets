@@ -125,7 +125,7 @@ export default function SignUpContainer() {
               isInvalid={email.length > 0 && !isValidEmail}
               isValid={email.length > 0 && isValidEmail} />
             <Form.Text muted>
-              Enter a valid .edu email address.
+              Enter a valid university email address.
             </Form.Text>
           </Form.Group>
 
