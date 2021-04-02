@@ -32,7 +32,7 @@ provider:
       Action:
         - "ses:SendEmail"
       Resource: "*"
-  environment: 
+  environment:
     RECEIVER_EMAIL: ${self:custom.receiverEmailAddress}
     SENDER_EMAIL: ${self:custom.senderEmailAddress}
 

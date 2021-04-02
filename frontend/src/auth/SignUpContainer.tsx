@@ -15,7 +15,25 @@ const MaxWidthDiv = styled.div`
   max-width: 880px;
 `;
 
-const eduRegEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+edu))$/i;
+const DOMAIN_WHITELIST = process.env.REACT_APP_DOMAIN_WHITELIST || '.edu';
+
+const testEmail = (email) => {
+  // check that the input string is an well formed email
+  email = email.toString().toLowerCase();
+  const emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+  if (!emailFilter.test(email)) {
+    return false;
+  }
+
+  const whitelist = DOMAIN_WHITELIST.split(',');
+  for (let s of whitelist) {
+    if (email.endsWith(s)) {
+      return true;
+    }
+  } 
+  // email is well formed but not in the whitelist
+  return false;
+};
 
 export default function SignUpContainer() {
   const navigate = useNavigate();
@@ -35,7 +53,7 @@ export default function SignUpContainer() {
     setEmail(value);
     if (value.length === 0) {
       setIsValidEmail(undefined);
-    } else if (eduRegEx.test(value)) {
+    } else if (testEmail(value)) {
       setIsValidEmail(true);
     } else {
       setIsValidEmail(false);
@@ -107,7 +125,7 @@ export default function SignUpContainer() {
               isInvalid={email.length > 0 && !isValidEmail}
               isValid={email.length > 0 && isValidEmail} />
             <Form.Text muted>
-              Enter a valid .edu email address.
+              Enter a valid university email address.
             </Form.Text>
           </Form.Group>
 
