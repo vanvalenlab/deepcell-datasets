@@ -2,6 +2,8 @@ service: EduEmailValidationService
 
 frameworkVersion: '2'
 
+useDotenv: true
+
 custom:
   bucket: ${env:DEPLOYMENT_BUCKET}
 
