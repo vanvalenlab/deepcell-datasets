@@ -20,9 +20,9 @@ function testEmail(email) {
 };
 
 exports.handler = (event, context, callback) => {
-    var error = null;
-    if (!testEmail(event.userName)) {
-      error = new Error('Only university/academic email domains are supported.');
-    }
-    callback(error, event);
+  var error = null;
+  if (!testEmail(event.userName)) {
+    error = new Error('Only university/academic email domains are supported.');
+  }
+  callback(error, event);
 };
