@@ -1,4 +1,5 @@
 function testEmail(email) {
+  // https://stackoverflow.com/a/54088130
   // check that the input string is an well formed email
   email = email.toString().toLowerCase();
   var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
