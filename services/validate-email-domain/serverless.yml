@@ -1,4 +1,4 @@
-service: EduEmailValidationService
+service: ValidateEmailDomainService
 
 frameworkVersion: '2'
 
@@ -33,10 +33,10 @@ package:
   individually: true
 
 functions:
-  EduEmailValidation:
+  ValidateEmailDomain:
     handler: index.handler
-    name: EduEmailValidation
-    description: Raise an error if the email address is not a .edu domain.
+    name: ValidateEmailDomain
+    description: Raise an error if the email address domain is not in DOMAIN_WHITELIST.
     memorySize: 128
     package:
       include:
