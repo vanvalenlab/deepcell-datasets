@@ -2,6 +2,8 @@
 
 An AWS Lambda function that forwards emails from a verified email or domain to a list of subscriber emails. This is based upon [`aws-lambda-ses-forwarder`](https://github.com/arithmetric/aws-lambda-ses-forwarder) and it's Serverless wrapper [`serverless-ses-forwarder`](https://github.com/tonycapone/serverless-ses-forwarder).
 
+[This blog post](https://medium.com/responsetap-engineering/easily-create-email-addresses-for-your-route53-custom-domain-589d099dd0f2) was very helpful in setting up verified emails in AWS SES.
+
 ## Configuration
 
 While `serverless-ses-forwarder` uses a `config.yml` file to configure multiple mappings and receivers, this function relies on environment variables to create the mapping. We chose to configure via environment variables for better security, as the environment variables will never be committed to git.
