@@ -6,7 +6,7 @@ useDotenv: true
 
 custom:
   bucket: ${env:DEPLOYMENT_BUCKET}
-  fromEmail: ${env:FROM_EMAIL}
+  # fromEmail: ${env:FROM_EMAIL}
   forwardedEmail: ${env:FORWARDED_EMAIL}
   receiverEmails: ${env:RECEIVER_EMAILS}
   subjectPrefix: ${env:SUBJECT_PREFIX, ""}
@@ -42,7 +42,7 @@ provider:
       Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "SesForwarderBucket" }, "/*" ] ]  }
 
   environment:
-    FROM_EMAIL: ${self:custom.fromEmail}
+    # FROM_EMAIL: ${self:custom.fromEmail}
     FORWARDED_EMAIL: ${self:custom.forwardedEmail}
     RECEIVER_EMAILS: ${self:custom.receiverEmails}
     SUBJECT_PREFIX: ${self:custom.subjectPrefix}

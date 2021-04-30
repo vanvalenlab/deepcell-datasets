@@ -12,7 +12,6 @@ Unfortunately, this means that currently only one forwarding mapping is supporte
 
 | Name | Description | Default Value |
 | :--- | :--- | :--- |
-| `FROM_EMAIL` | **Required** The email AWS SES will use to send emails.  | `"no-reply@example.com"` |
 | `FORWARDED_EMAIL` | **Required** Emails sent to this address will be forwarded to `RECEIVER_EMAILS`.  | `info@example.com` |
 | `RECEIVER_EMAILS` | **Required** Comma-separated whitelist of email domains to validate.  | `john.doe@example.com` |
 | `SUBJECT_PREFIX` | Prefix the subject of each email that is forwarded.  | `""` |
