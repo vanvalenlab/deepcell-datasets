@@ -10,5 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "aws-lambda-ses-forwarder": "^5.0.0"
+  },
+  "devDependencies": {
+    "serverless-plugin-monorepo": "^0.10.0"
   }
 }

@@ -12,6 +12,9 @@ custom:
   subjectPrefix: ${env:SUBJECT_PREFIX, ""}
   emailKeyPrefix: ${env:EMAIL_KEY_PREFIX, ""}
 
+plugins:
+  - serverless-plugin-monorepo
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -54,6 +57,7 @@ package:
   exclude:
     - README.md
   individually: true
+  excludeDevDependencies: false
 
 functions:
   SesEmailForwarder:
