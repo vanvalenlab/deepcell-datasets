@@ -1,6 +1,6 @@
 {
   "name": "ses-forwarder",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Serverless wrapper around https://github.com/arithmetric/aws-lambda-ses-forwarder",
   "main": "index.js",
   "scripts": {
