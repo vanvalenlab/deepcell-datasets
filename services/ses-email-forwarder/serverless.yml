@@ -9,8 +9,8 @@ custom:
   fromEmail: ${env:FROM_EMAIL}
   forwardedEmail: ${env:FORWARDED_EMAIL}
   receiverEmails: ${env:RECEIVER_EMAILS}
-  subjectPrefix: ${env:SUBJECT_PREFIX}
-  emailKeyPrefix: ${env:EMAIL_KEY_PREFIX}
+  subjectPrefix: ${env:SUBJECT_PREFIX, ""}
+  emailKeyPrefix: ${env:EMAIL_KEY_PREFIX, ""}
 
 provider:
   name: aws
