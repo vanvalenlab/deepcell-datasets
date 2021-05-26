@@ -20,8 +20,14 @@ export default function Data() {
       <Row>
         {AllDatasets.map(d => {
           return (
-            <Col xs={12} md={4} key={d.object_key} className="mx-auto mb-4">
-              <DataCard title={d.title} objectKey={d.object_key} text={d.text} thumbnail={d.thumbnail} />
+            <Col xs={12} md={4} key={d.objectKey} className="mx-auto mb-4">
+              <DataCard
+                title={d.title}
+                objectKey={d.objectKey}
+                description={d.description}
+                imagingPlatform={d.imagingPlatform}
+                samples={d.samples}
+                thumbnail={d.thumbnail} />
             </Col>
           );
         })}
