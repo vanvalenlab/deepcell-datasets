@@ -7,10 +7,12 @@
 
 const AllDatasets = [
   {
-    title: 'TissueNet Multiplex',
-    object_key: 'multiplex/20201018_multiplex_seed_0.zip',
+    title: 'TissueNet Version 1.0',
+    objectKey: 'tissuenet/tissuenet_v1.0.zip',
     thumbnail: '/images/multiplex_overlay.webp',
-    text: 'Multiplex tissue images from a variety of platforms (MIBI, Vectra, etc.)',
+    imagingPlatform: 'Multiplexed imaging',
+    samples: '2D tissue',
+    description: 'This is the first release of the TissueNet dataset from Greenwald, Miller et al.',
   }
 ];
 
