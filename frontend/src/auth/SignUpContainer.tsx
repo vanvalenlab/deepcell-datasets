@@ -126,6 +126,7 @@ export default function SignUpContainer() {
               isValid={email.length > 0 && isValidEmail} />
             <Form.Text muted>
               Enter a valid university email address.
+              Please contact <a href={'mailto:info@deepcell.org'}>info@deepcell.org</a> if your academic domain is not supported.
             </Form.Text>
           </Form.Group>
 
