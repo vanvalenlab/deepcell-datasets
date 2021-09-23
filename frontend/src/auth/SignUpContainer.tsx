@@ -15,24 +15,11 @@ const MaxWidthDiv = styled.div`
   max-width: 880px;
 `;
 
-const DOMAIN_WHITELIST = process.env.REACT_APP_DOMAIN_WHITELIST || '.edu';
-
 const testEmail = (email) => {
   // check that the input string is an well formed email
   email = email.toString().toLowerCase();
-  const emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-  if (!emailFilter.test(email)) {
-    return false;
-  }
-
-  const whitelist = DOMAIN_WHITELIST.split(',');
-  for (let s of whitelist) {
-    if (email.endsWith(s)) {
-      return true;
-    }
-  } 
-  // email is well formed but not in the whitelist
-  return false;
+  const emailFilter = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailFilter.test(email);
 };
 
 export default function SignUpContainer() {
