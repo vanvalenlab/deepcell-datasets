@@ -81,4 +81,3 @@ The React application can be configured via several environment variables. These
 | `REACT_APP_USER_POOL_WEB_CLIENT_ID` | **REQUIRED**: Cognito user pool web client ID. | `""` |
 | `REACT_APP_S3_BUCKET` | **REQUIRED**: The bucket where the login-protected data is stored. | `""` |
 | `REACT_APP_SEND_EMAIL_API_ENDPOINT` | **REQUIRED**: API endpoint of the `send-email` service. | `""` |
-| `REACT_APP_DOMAIN_WHITELIST` | Comma-separated whitelist of email domains to validate.  | `.edu` |
