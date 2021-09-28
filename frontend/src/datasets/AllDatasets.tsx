@@ -13,7 +13,15 @@ const AllDatasets = [
     imagingPlatform: 'Multiplexed imaging',
     samples: '2D tissue',
     description: 'This is the first release of the TissueNet dataset from Greenwald, Miller et al.',
-  }
+  },
+  {
+    title: 'Tracked Nuclei 0.1',
+    objectKey: 'tracking-nuclear/val.trks',
+    thumbnail: '/images/3t3_nuclear_outlines.webp',
+    imagingPlatform: 'Fluorescent Microscopy',
+    samples: '2D culture',
+    description: 'This is a subset of the Nuclear Tracking dataset.',
+  },
 ];
 
 export default AllDatasets;
