@@ -7,7 +7,7 @@
 
 const AllDatasets = [
   {
-    title: 'TissueNet Version 1.0',
+    title: 'TissueNet Version v1.0',
     objectKey: 'tissuenet/tissuenet_v1.0.zip',
     thumbnail: '/images/multiplex_overlay.webp',
     imagingPlatform: 'Multiplexed imaging',
@@ -15,7 +15,7 @@ const AllDatasets = [
     description: 'This is the first release of the TissueNet dataset from Greenwald, Miller et al.',
   },
   {
-    title: 'Tracked Nuclei 0.1',
+    title: 'LiveCellNet v0.1',
     objectKey: 'tracking-nuclear/val.trks',
     thumbnail: '/images/3t3_nuclear_outlines.webp',
     imagingPlatform: 'Fluorescent Microscopy',
