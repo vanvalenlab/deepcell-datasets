@@ -4,3 +4,5 @@ flask-mongoengine==0.9.5
 mongoengine<0.20.0
 python-decouple==3.1
 Flask-Security-Too>=3.4.3,<4
+# wtforms 3.0 has breaking changes.
+wtforms<3
