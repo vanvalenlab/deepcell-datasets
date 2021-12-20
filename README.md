@@ -1,4 +1,4 @@
-# DeepCell Datasets: Master Data Management for DeepCell
+# DeepCell Datasets
 
 [![Actions Status](https://github.com/vanvalenlab/deepcell-datasets/workflows/Test%20API/badge.svg)](https://github.com/vanvalenlab/deepcell-datasets/actions)
 [![Coverage Status](https://coveralls.io/repos/github/vanvalenlab/deepcell-datasets/badge.svg?branch=master)](https://coveralls.io/github/vanvalenlab/deepcell-datasets?branch=master)
