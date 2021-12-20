@@ -27,9 +27,20 @@ The application implements a microservice architecture made up of the following 
 - [`send-email`](services/send-email): an AWS Lambda service that can send email to admins on behalf of new users.
 - [`validate-email-domain`](services/validate-email-domain): a deprecated service that whitelists certain domains for account creation. This is used as a pre-signup hook for AWS Cognito.
 
-### Contact Us Form
+### How to update with new data
 
-The Contact Us Form uses a separate service, deployed on AWS Lambda, to send emails on behalf of users.
+Data is saved in a protected S3 bucket, but to enable users to view and download these datasets, the details must be saved in [`frontend/src/datasets/AllDatasets.tsx`](frontend/src/datasets/AllDatasets.tsx).
+
+This is a simple JSON object that has the following fields:
+
+| Name | Description |
+| :--- | :--- |
+| `title` | The name of the dataset. |
+| `objectKey` | The path to the dataset inside the S3 bucket. |
+| `thumbnail` | The path to the thumbnail example, which must be saved in `frontend/public/images`. |
+| `imagingPlatform` | The imaging platform that created the dataset. |
+| `samples` | The type of image data. |
+| `description` | A brief description of the data. |
 
 ## Copyright
 
