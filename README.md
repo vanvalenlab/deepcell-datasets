@@ -3,20 +3,33 @@
 [![Actions Status](https://github.com/vanvalenlab/deepcell-datasets/workflows/Test%20API/badge.svg)](https://github.com/vanvalenlab/deepcell-datasets/actions)
 [![Coverage Status](https://coveralls.io/repos/github/vanvalenlab/deepcell-datasets/badge.svg?branch=master)](https://coveralls.io/github/vanvalenlab/deepcell-datasets?branch=master)
 
-DeepCell Datasets is a collection of data engineering and versioning tools for the management of optical microscopy images and its associated metadata. This Master Data Management allows for a single entry point for access to the lab's raw data and provides to means to pair them with crowdsourced annotations to create custom training data for [DeepCell](https://github.com/vanvalenlab/deepcell-tf).
-
 ## Getting Started
 
-DeepCell Datasets uses a serverless architecture with a static webpage consuming several services.
+DeepCell Datasets is a serverless applicatioin that allows authenticated users to access published datasets.
 This is aided by using `lectra` as well as the `serverless` framework.
 `lerna` enables us to easily control all of the services from the root directory, while `serverless` allows us to deploy and manage AWS infrastructure through `.yml` configuration files.
 
 ### Deployment
 
+`lectra` is used to manage and deploy both the frontend and the application services with a simple `yarn` or `npm` command:
+
 ```bash
 yarn deploy:dev
 # yarn deploy:prod
 ```
+
+### Architecture
+
+The application implements a microservice architecture made up of the following components:
+
+- [`frontend`](frontend/): a static webpage that is the primary interface of the application.
+- [AWS Congito](https://aws.amazon.com/cognito): An AWS service that handles all user authentication. Users that have confirmed their email address are authenticated to download data in a protected S3 bucket. The authentication React components have been overridden in `frontend/src/auth` to provide the application with a cohesive style.
+- [`send-email`](services/send-email): an AWS Lambda service that can send email to admins on behalf of new users.
+- [`validate-email-domain`](services/validate-email-domain): a deprecated service that whitelists certain domains for account creation. This is used as a pre-signup hook for AWS Cognito.
+
+### Contact Us Form
+
+The Contact Us Form uses a separate service, deployed on AWS Lambda, to send emails on behalf of users.
 
 ## Copyright
 
