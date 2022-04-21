@@ -29,6 +29,7 @@ import random
 
 import pytest
 from mongoengine import DoesNotExist
+from mongomock import ObjectId
 
 from deepcell_datasets.database import models
 
@@ -62,7 +63,7 @@ def test_get_experiment(client):
     assert response.json['doi'] == experiment.doi
 
     # test bad experiment ID
-    response = client.get('/api/experiments/%s' % 5)
+    response = client.get('/api/experiments/%s' % ObjectId())
     assert response.status_code == 404
     experiment.delete()
 
@@ -95,7 +96,7 @@ def test_update_experiment(client):
     assert updated.doi == new_doi
 
     # test bad experiment ID
-    response = client.put('/api/experiments/%s' % 1, json=payload)
+    response = client.put('/api/experiments/%s' % ObjectId(), json=payload)
     assert response.status_code == 404
     experiment.delete()
 

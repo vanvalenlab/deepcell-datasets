@@ -29,6 +29,7 @@ import random
 
 import pytest
 from mongoengine import DoesNotExist
+from mongomock import ObjectId
 
 from deepcell_datasets.database import models
 
@@ -66,7 +67,7 @@ def test_get_training_data(client):
     assert response.json['cloud_storage_loc'] == training_data.cloud_storage_loc
 
     # test bad training_data ID
-    response = client.get('/api/training/%s' % 5)
+    response = client.get('/api/training/%s' % ObjectId())
     assert response.status_code == 404
     training_data.delete()
 
@@ -99,7 +100,7 @@ def test_get_training_data(client):
 #     assert updated.cloud_storage_loc == new_url
 
 #     # test bad training_data ID
-#     response = client.put('/api/training/%s' % 1, json=payload)
+#     response = client.put('/api/training/%s' % ObjectId(), json=payload)
 #     assert response.status_code == 404
 #     training_data.delete()
 
