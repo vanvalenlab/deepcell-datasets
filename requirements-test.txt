@@ -1,5 +1,6 @@
 pytest~=6.2.5
-pytest-cov
-pytest-pep8
-mongomock
-pytest-flask
+pytest-cov~=3.0.0
+pytest-pep8~=1.0.6
+mongomock~=4.0.0
+pytest-flask~=1.2.0
+pre-commit~=2.18.1
