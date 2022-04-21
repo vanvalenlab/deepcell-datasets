@@ -1,0 +1,2 @@
+# Ignore static assets
+deepcell_datasets/static/*
