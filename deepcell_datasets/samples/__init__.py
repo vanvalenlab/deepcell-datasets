@@ -24,3 +24,5 @@
 # limitations under the License.
 # ==============================================================================
 """DeepCell Datasets: Samples Blueprint"""
+
+from deepcell_datasets.samples import api, views
