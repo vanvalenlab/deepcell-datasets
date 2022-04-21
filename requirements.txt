@@ -3,6 +3,6 @@ flask~=2.1.1
 flask-mongoengine~=1.0.0
 mongoengine~=0.24.1
 python-decouple~=3.6
-Flask-Security-Too~=4.1.4
+Flask-Security-Too~=3.4.5
 # wtforms 3.0 has breaking changes.
 wtforms<3
