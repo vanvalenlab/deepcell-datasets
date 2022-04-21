@@ -25,5 +25,4 @@
 # ==============================================================================
 """DeepCell Datasets: Experiments Blueprint"""
 
-from deepcell_datasets.training import api
-from deepcell_datasets.training import views
+from deepcell_datasets.training import api, views

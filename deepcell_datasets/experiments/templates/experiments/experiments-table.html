@@ -1,21 +1,17 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% from "macros/_pagination.html" import render_pagination %} {% block
+content %}
 
-{% from "macros/_pagination.html" import render_pagination %}
-
-{% block content %}
-
-<h3 class="title center-align">{{ experiments }} Experiments </h3>
+<h3 class="title center-align">{{ experiments }} Experiments</h3>
 
 <table>
-
   <thead>
     <tr>
-        <th>Date Collected</th>
-        <th>DOI</th>
-        <th>Subtype</th>
-        <th>Culture</th>
-        <th>Labeling</th>
-        <th>Imaging</th>
+      <th>Date Collected</th>
+      <th>DOI</th>
+      <th>Subtype</th>
+      <th>Culture</th>
+      <th>Labeling</th>
+      <th>Imaging</th>
     </tr>
   </thead>
 
@@ -31,9 +27,6 @@
     </tr>
     {% endfor %}
   </tbody>
-
 </table>
 
-{{ render_pagination(paginated_experiments, 'experiments_bp.view_all_experiments') }}
-
-{% endblock %}
+{{ render_pagination(paginated_experiments, 'experiments_bp.view_all_experiments') }} {% endblock %}

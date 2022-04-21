@@ -5,7 +5,7 @@ import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
 import Constants from '../Constants';
 import PasswordSchema from './PasswordSchema';
@@ -26,9 +26,9 @@ export default function SignUpContainer() {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
   const [email, setEmail] = useState('');
-  const [isValidEmail, setIsValidEmail] = useState<boolean|undefined>(true);
+  const [isValidEmail, setIsValidEmail] = useState<boolean | undefined>(true);
   const [password, setPassword] = useState('');
-  const [isValidPassword, setIsValidPassword] = useState<boolean|undefined>(true);
+  const [isValidPassword, setIsValidPassword] = useState<boolean | undefined>(true);
   const [agreedToTerms, setAgreedToTerms] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState(false);
   const [error, setError] = useState(null);
@@ -76,8 +76,8 @@ export default function SignUpContainer() {
         username: email,
         password: password,
         attributes: {
-          email: email
-        }
+          email: email,
+        },
       });
       if (res.userConfirmed) {
         navigate(Constants.Data);
@@ -88,75 +88,90 @@ export default function SignUpContainer() {
       setError(err.message);
       setIsClicked(false);
     }
-
   };
 
   return (
-    <MaxWidthDiv className="mx-auto">
-      <Container className="text-center py-4 w-75">
-        <h6 className="text-muted">Join DeepCell Datasets</h6>
+    <MaxWidthDiv className='mx-auto'>
+      <Container className='text-center py-4 w-75'>
+        <h6 className='text-muted'>Join DeepCell Datasets</h6>
         <h1>Create your account</h1>
 
-        { (error !== null) ?
-          <Alert variant="danger" dismissible onClose={() => setError(null)}>
+        {error !== null ? (
+          <Alert variant='danger' dismissible onClose={() => setError(null)}>
             {error}
           </Alert>
-          : null
-        }
+        ) : null}
 
-        <Form noValidate validated={validated} onSubmit={handleSubmit} className="text-left">
-          <Form.Group controlId="formEmail">
-            <Form.Label className="font-weight-bold small">Email address<span className="text-danger">*</span></Form.Label>
-            <Form.Control required type="email" placeholder="Enter email"
+        <Form noValidate validated={validated} onSubmit={handleSubmit} className='text-left'>
+          <Form.Group controlId='formEmail'>
+            <Form.Label className='font-weight-bold small'>
+              Email address<span className='text-danger'>*</span>
+            </Form.Label>
+            <Form.Control
+              required
+              type='email'
+              placeholder='Enter email'
               onChange={handleEmailChange}
               isInvalid={email.length > 0 && !isValidEmail}
-              isValid={email.length > 0 && isValidEmail} />
+              isValid={email.length > 0 && isValidEmail}
+            />
             <Form.Text muted>
-              Enter a valid university email address.
-              Please contact <a href={'mailto:info@deepcell.org'}>info@deepcell.org</a> if your academic domain is not supported.
+              Enter a valid university email address. Please contact{' '}
+              <a href={'mailto:info@deepcell.org'}>info@deepcell.org</a> if your academic domain is
+              not supported.
             </Form.Text>
           </Form.Group>
 
-          <Form.Group controlId="formPassword">
-            <Form.Label className="font-weight-bold small">Password<span className="text-danger">*</span></Form.Label>
-            <Form.Control required type="password" placeholder="Password"
+          <Form.Group controlId='formPassword'>
+            <Form.Label className='font-weight-bold small'>
+              Password<span className='text-danger'>*</span>
+            </Form.Label>
+            <Form.Control
+              required
+              type='password'
+              placeholder='Password'
               onChange={handlePasswordChange}
               isInvalid={password.length > 0 && !isValidPassword}
-              isValid={password.length > 0 && isValidPassword} />
-            <Form.Text id="passwordHelpBlock" muted>
-              Your password must be between 8 and 128 characters and contain a digit, an uppercase letter, a lowercase letter, and a special character.
+              isValid={password.length > 0 && isValidPassword}
+            />
+            <Form.Text id='passwordHelpBlock' muted>
+              Your password must be between 8 and 128 characters and contain a digit, an uppercase
+              letter, a lowercase letter, and a special character.
             </Form.Text>
           </Form.Group>
 
-          <Form.Group controlId="formTermsAndConditions">
-            <Form.Check inline required type="checkbox" onChange={e => setAgreedToTerms(!agreedToTerms)} />
-            <Form.Label className="font-weight-bold small">
-              {/* eslint-disable-next-line */} 
-              I agree to the <a href="#" onClick={() => setShowTOC(true)}>Terms & Conditions</a>.<span className="text-danger">*</span>
+          <Form.Group controlId='formTermsAndConditions'>
+            <Form.Check
+              inline
+              required
+              type='checkbox'
+              onChange={(e) => setAgreedToTerms(!agreedToTerms)}
+            />
+            <Form.Label className='font-weight-bold small'>
+              {/* eslint-disable-next-line */}I agree to the{' '}
+              <a href='#' onClick={() => setShowTOC(true)}>
+                Terms & Conditions
+              </a>
+              .<span className='text-danger'>*</span>
             </Form.Label>
           </Form.Group>
 
-          <Modal
-            show={showTOC}
-            onHide={() => setShowTOC(false)}
-            backdrop="static"
-            size="lg"
-          >
+          <Modal show={showTOC} onHide={() => setShowTOC(false)} backdrop='static' size='lg'>
             <Modal.Header closeButton />
             <Modal.Body>
               <TermsAndConditions />
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowTOC(false)}>
+              <Button variant='secondary' onClick={() => setShowTOC(false)}>
                 Close
               </Button>
             </Modal.Footer>
           </Modal>
 
-          <Button variant="primary" type="submit" disabled={isClicked}>
-            { isClicked ? "Submitting..." : "Submit" }
+          <Button variant='primary' type='submit' disabled={isClicked}>
+            {isClicked ? 'Submitting...' : 'Submit'}
           </Button>
-          <div className="pt-2">
+          <div className='pt-2'>
             <Link to={Constants.SignIn}>Already have an account?</Link>
           </div>
         </Form>

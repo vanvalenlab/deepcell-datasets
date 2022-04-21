@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { Redirect } from '@reach/router';
-import Spinner from 'react-bootstrap/Spinner'
+import Spinner from 'react-bootstrap/Spinner';
 import { Auth } from '@aws-amplify/auth';
 import Constants from '../Constants';
 
 export default function LogoutContainer() {
-
-  const [isLoggedOut, setIsLoggedOut] = useState(false)
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
 
   const signOut = async () => {
     try {
@@ -20,10 +19,11 @@ export default function LogoutContainer() {
 
   signOut();
 
-  return (
-    isLoggedOut ? <Redirect to={Constants.Index} noThrow /> :
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
+  return isLoggedOut ? (
+    <Redirect to={Constants.Index} noThrow />
+  ) : (
+    <Spinner animation='border' role='status'>
+      <span className='sr-only'>Loading...</span>
+    </Spinner>
   );
 }

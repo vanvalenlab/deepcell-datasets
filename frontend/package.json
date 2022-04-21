@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "http://datasets.deepcell.org",
+  "homepage": "http://datasets.deepcell.org",
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",
     "@reach/router": "^1.3.4",

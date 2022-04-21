@@ -10,7 +10,7 @@ const Constants = {
   ConfirmEmail: '/verify',
   ResetPassword: '/reset',
   Terms: '/terms',
-  Privacy: '/privacy'
+  Privacy: '/privacy',
 };
 
 export default Constants;

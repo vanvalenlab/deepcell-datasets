@@ -6,13 +6,11 @@ var ses = new AWS.SES();
 var receiverEmail = process.env.RECEIVER_EMAIL || 'example@example.com';
 var senderEmail = process.env.SENDER_EMAIL || 'example@example.com';
 
-function sendEmail (event, done) {
+function sendEmail(event, done) {
   var data = JSON.parse(event.body);
   var params = {
     Destination: {
-      ToAddresses: [
-        receiverEmail,
-      ]
+      ToAddresses: [receiverEmail],
     },
     Message: {
       Body: {
@@ -25,15 +23,15 @@ function sendEmail (event, done) {
 
             Body:
             ${data.message}`,
-          Charset: 'UTF-8'
-        }
+          Charset: 'UTF-8',
+        },
       },
       Subject: {
         Data: `DeepCell Datasets Contact Form: ${data.name}`,
-        Charset: 'UTF-8'
-      }
+        Charset: 'UTF-8',
+      },
     },
-    Source: senderEmail
+    Source: senderEmail,
   };
   ses.sendEmail(params, done);
 }

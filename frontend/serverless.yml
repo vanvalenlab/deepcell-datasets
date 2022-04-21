@@ -21,12 +21,11 @@ custom:
       params: # optional
         - index.html:
           CacheControl: 'no-cache'
-        - "*.js":
+        - '*.js':
           CacheControl: 'public, max-age=31536000'
 
 resources:
   Resources:
-
     DeploymentBucket:
       Type: AWS::S3::Bucket
       Properties:

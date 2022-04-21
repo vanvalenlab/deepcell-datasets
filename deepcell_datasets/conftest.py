@@ -27,13 +27,11 @@
 
 import random
 
-from flask_security import hash_password
+import pytest
 from mongoengine import connect, disconnect
 
-import pytest
-
-from deepcell_datasets.database import models
 from deepcell_datasets import create_app
+from deepcell_datasets.database import models
 
 
 @pytest.fixture
@@ -46,7 +44,7 @@ def app():
         'DB': 'mongoenginetest',
         'HOST': 'mongomock://localhost',
         # 'PORT': 27017,
-        'alias': 'testdb'
+        'alias': 'testdb',
     }
 
     yield create_app(
@@ -75,9 +73,13 @@ def sample(mongodb, experiment):
     spatial_dim = random.choice(['2d', '3d'])
     kinetics = random.choice(['static', 'dynamic'])
 
-    sample = models.Samples(session=session, position=position,
-                            spatial_dim=spatial_dim, kinetics=kinetics,
-                            experiment=experiment.id)
+    sample = models.Samples(
+        session=session,
+        position=position,
+        spatial_dim=spatial_dim,
+        kinetics=kinetics,
+        experiment=experiment.id,
+    )
 
     sample.save()
     yield sample
@@ -89,9 +91,7 @@ def sample(mongodb, experiment):
 def experiment(mongodb):
     doi = 'a specific DOI number'
     created_by = models.Users(
-        first_name='first',
-        last_name='last',
-        facility='test facility'
+        first_name='first', last_name='last', facility='test facility'
     )
     created_by.save()
 

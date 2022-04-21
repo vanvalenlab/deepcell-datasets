@@ -25,15 +25,12 @@
 # ==============================================================================
 """Flask blueprint for modular routes."""
 
-from flask import Blueprint
-from flask import jsonify
-from flask import render_template
-
+from flask import Blueprint, jsonify, render_template
 from flask_security import auth_required, roles_required
 
-
-general_bp = Blueprint('general_bp', __name__,  # pylint: disable=C0103
-                       template_folder='templates')
+general_bp = Blueprint(
+    'general_bp', __name__, template_folder='templates'  # pylint: disable=C0103
+)
 
 
 @general_bp.route('/health')

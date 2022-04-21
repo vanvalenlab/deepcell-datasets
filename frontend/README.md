@@ -73,11 +73,11 @@ yarn deploy:frontend:dev
 
 The React application can be configured via several environment variables. These variables must be prefixed with `REACT_APP` to be parsed during the build process.
 
-| Name | Description | Default Value |
-| :--- | :--- | :--- |
-| `REACT_APP_REGION` | **REQUIRED**: AWS region where the Cognito user pool is located. | `""` |
-| `REACT_APP_USER_POOL_ID` | **REQUIRED**: Cognito user pool ID. | `""` |
-| `REACT_APP_IDENTITY_POOL_ID` | **REQUIRED**: Cognito identity pool ID. | `""` |
-| `REACT_APP_USER_POOL_WEB_CLIENT_ID` | **REQUIRED**: Cognito user pool web client ID. | `""` |
-| `REACT_APP_S3_BUCKET` | **REQUIRED**: The bucket where the login-protected data is stored. | `""` |
-| `REACT_APP_SEND_EMAIL_API_ENDPOINT` | **REQUIRED**: API endpoint of the `send-email` service. | `""` |
+| Name                                | Description                                                        | Default Value |
+| :---------------------------------- | :----------------------------------------------------------------- | :------------ |
+| `REACT_APP_REGION`                  | **REQUIRED**: AWS region where the Cognito user pool is located.   | `""`          |
+| `REACT_APP_USER_POOL_ID`            | **REQUIRED**: Cognito user pool ID.                                | `""`          |
+| `REACT_APP_IDENTITY_POOL_ID`        | **REQUIRED**: Cognito identity pool ID.                            | `""`          |
+| `REACT_APP_USER_POOL_WEB_CLIENT_ID` | **REQUIRED**: Cognito user pool web client ID.                     | `""`          |
+| `REACT_APP_S3_BUCKET`               | **REQUIRED**: The bucket where the login-protected data is stored. | `""`          |
+| `REACT_APP_SEND_EMAIL_API_ENDPOINT` | **REQUIRED**: API endpoint of the `send-email` service.            | `""`          |

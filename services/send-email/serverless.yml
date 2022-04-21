@@ -23,15 +23,15 @@ provider:
   deploymentPrefix: serverless # The S3 prefix under which deployed artifacts should be stored. Default is serverless
   apiGateway:
     shouldStartNameWithService: true
-  usagePlan:
-    throttle:
-      burstLimit: 1
-      rateLimit: 1
+    usagePlan:
+      throttle:
+        burstLimit: 1
+        rateLimit: 1
   iamRoleStatements:
-    - Effect: "Allow"
+    - Effect: 'Allow'
       Action:
-        - "ses:SendEmail"
-      Resource: "*"
+        - 'ses:SendEmail'
+      Resource: '*'
   environment:
     RECEIVER_EMAIL: ${self:custom.receiverEmailAddress}
     SENDER_EMAIL: ${self:custom.senderEmailAddress}

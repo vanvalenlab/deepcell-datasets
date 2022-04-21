@@ -2,6 +2,7 @@
   "name": "send-email-service",
   "version": "0.0.1",
   "description": "Send email service for the contact form.",
+  "license": "SEE LICENSE IN ../LICENSE",
   "scripts": {
     "deploy": "serverless deploy",
     "remove": "serverless remove"

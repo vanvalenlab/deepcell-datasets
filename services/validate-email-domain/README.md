@@ -9,6 +9,6 @@ This is intended to be deployed using as a [pre sign-up Lambda trigger](https://
 
 The service can be configured via environment variables.
 
-| Name | Description | Default Value |
-| :--- | :--- | :--- |
-| `DOMAIN_WHITELIST` | Comma-separated whitelist of email domains to validate.  | `.edu` |
+| Name               | Description                                             | Default Value |
+| :----------------- | :------------------------------------------------------ | :------------ |
+| `DOMAIN_WHITELIST` | Comma-separated whitelist of email domains to validate. | `.edu`        |

@@ -1,6 +1,6 @@
 /**
  * For the POC the "data" will just be hard coded.
- * 
+ *
  * The next step would be to load this from a Data API
  * Hopefully a Lambda+DynamoDB serverless API!
  */

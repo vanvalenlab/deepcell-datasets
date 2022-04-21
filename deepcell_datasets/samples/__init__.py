@@ -25,5 +25,4 @@
 # ==============================================================================
 """DeepCell Datasets: Samples Blueprint"""
 
-from deepcell_datasets.samples import api
-from deepcell_datasets.samples import views
+from deepcell_datasets.samples import api, views

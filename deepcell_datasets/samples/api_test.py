@@ -29,6 +29,7 @@ import random
 
 import pytest
 from mongoengine import DoesNotExist
+from mongomock import ObjectId
 
 from deepcell_datasets.database import models
 
@@ -76,7 +77,7 @@ def test_get_sample(client, experiment):
     assert response.json['position'] == sample.position
 
     # test bad sample ID
-    response = client.get('/api/samples/%s' % 5)
+    response = client.get('/api/samples/%s' % ObjectId())
     assert response.status_code == 404
     sample.delete()
 
@@ -118,7 +119,7 @@ def test_update_sample(client, experiment):
     assert updated.session == new_session
 
     # test bad sample ID
-    response = client.put('/api/samples/%s' % 1, json=payload)
+    response = client.put('/api/samples/%s' % ObjectId(), json=payload)
     assert response.status_code == 404
     sample.delete()
 
