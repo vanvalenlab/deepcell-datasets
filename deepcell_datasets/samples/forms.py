@@ -25,19 +25,24 @@
 # ==============================================================================
 """Forms for Samples."""
 
-from wtforms import fields, validators
 from flask_wtf import FlaskForm
+from wtforms import fields, validators
 
 
 class ImagingParametersForm(FlaskForm):
     microscope = fields.StringField('Microscope')
     camera = fields.StringField('Camera')
     magnification = fields.FloatField(
-        'Magnification (e.g. 40x)', validators=[validators.NumberRange(0)])
+        'Magnification (e.g. 40x)', validators=[validators.NumberRange(0)]
+    )
     na = fields.FloatField('NA', validators=[validators.NumberRange(0, 5)])
     binning = fields.StringField('Binning', validators=[validators.Length(0, 1000)])
-    pixel_size = fields.StringField('Pixel Size', validators=[validators.Length(0, 255)])
-    exposure_time = fields.StringField('Exposure Time', validators=[validators.Length(0, 255)])
+    pixel_size = fields.StringField(
+        'Pixel Size', validators=[validators.Length(0, 255)]
+    )
+    exposure_time = fields.StringField(
+        'Exposure Time', validators=[validators.Length(0, 255)]
+    )
 
 
 class DimensionsForm(FlaskForm):
@@ -49,25 +54,28 @@ class DimensionsForm(FlaskForm):
 
 class ModalityInformationForm(FlaskForm):
     imaging_modality = fields.StringField(
-        'Imaging Modality', validators=[validators.required()])
+        'Imaging Modality', validators=[validators.required()]
+    )
     compartment = fields.StringField(
-        'Compartment of Interest', validators=[validators.Length(0, 1000)])
+        'Compartment of Interest', validators=[validators.Length(0, 1000)]
+    )
     marker = fields.StringField('Marker', validators=[validators.Length(0, 1000)])
 
 
 class SampleForm(FlaskForm):
     """Form for creating a new Samples document."""
 
-    session = fields.IntegerField('Session',
-                                  validators=[validators.required()])
-    position = fields.IntegerField('Sample Position/FOV',
-                                   validators=[validators.required()])
+    session = fields.IntegerField('Session', validators=[validators.required()])
+    position = fields.IntegerField(
+        'Sample Position/FOV', validators=[validators.required()]
+    )
 
     time_step = fields.StringField('Time Step', validators=[validators.Length(0, 255)])
     z_step = fields.StringField('Z Step', validators=[validators.Length(0, 255)])
 
-    specimen = fields.StringField('Specimen Name',
-                                  validators=[validators.Length(0, 1000)])
+    specimen = fields.StringField(
+        'Specimen Name', validators=[validators.Length(0, 1000)]
+    )
 
     # imaging parameters (embedded document fields)
     imaging_params = fields.FormField(ImagingParametersForm)
@@ -79,10 +87,12 @@ class SampleForm(FlaskForm):
     modality = fields.FormField(ModalityInformationForm)
 
     # location in the ontology
-    kinetics = fields.RadioField(choices=('static', 'dynamic'),
-                                 validators=[validators.required()])
-    spatial_dim = fields.RadioField(choices=('2d', '3d'),
-                                    validators=[validators.required()])
+    kinetics = fields.RadioField(
+        choices=('static', 'dynamic'), validators=[validators.required()]
+    )
+    spatial_dim = fields.RadioField(
+        choices=('2d', '3d'), validators=[validators.required()]
+    )
 
 
 class SampleFilterForm(FlaskForm):

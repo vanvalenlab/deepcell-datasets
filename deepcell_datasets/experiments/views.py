@@ -25,27 +25,27 @@
 # ==============================================================================
 """Flask blueprint for modular routes."""
 
-from werkzeug.exceptions import HTTPException
-from flask import Blueprint
-from flask import jsonify
-from flask import request
-from flask import current_app
-from flask import render_template
-from flask import url_for, redirect
-
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user
 from flask_security import login_required
-
 from mongoengine import ValidationError
+from werkzeug.exceptions import HTTPException
 
 from deepcell_datasets.database.models import Experiments
 from deepcell_datasets.experiments.forms import ExperimentForm
 from deepcell_datasets.utils import nest_dict
-from deepcell_datasets.samples.views import samples_bp
 
-
-experiments_bp = Blueprint('experiments_bp', __name__,  # pylint: disable=C0103
-                           template_folder='templates')
+experiments_bp = Blueprint(
+    'experiments_bp', __name__, template_folder='templates'  # pylint: disable=C0103
+)
 
 
 @experiments_bp.errorhandler(Exception)
@@ -60,8 +60,9 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
-    current_app.logger.error('Encountered unexpected %s: %s.',
-                             err.__class__.__name__, err)
+    current_app.logger.error(
+        'Encountered unexpected %s: %s.', err.__class__.__name__, err
+    )
     return jsonify({'error': str(err)}), 500
 
 
@@ -88,9 +89,9 @@ def add_experiment():
         #       collection here
 
         return redirect(url_for('samples_bp.add_sample', exp_id=unique_id))
-    return render_template('experiments/data_entry.html',
-                           form=form,
-                           current_user=current_user)
+    return render_template(
+        'experiments/data_entry.html', form=form, current_user=current_user
+    )
 
 
 @experiments_bp.route('/', methods=['GET'])
@@ -112,16 +113,17 @@ def view_all_experiments():
     experiments = Experiments.objects(**kwargs)
 
     paginated_experiments = experiments.paginate(page=page, per_page=per_page)
-    return render_template('experiments/experiments-table.html',
-                           paginated_experiments=paginated_experiments)
+    return render_template(
+        'experiments/experiments-table.html',
+        paginated_experiments=paginated_experiments,
+    )
 
 
 @experiments_bp.route('/<experiment_id>', methods=['GET'])
 @login_required
 def view_experiment(experiment_id):
     experiment = Experiments.objects.get_or_404(id=experiment_id)
-    return render_template('experiments/experiment-detail.html',
-                           experiment=experiment)
+    return render_template('experiments/experiment-detail.html', experiment=experiment)
 
 
 @experiments_bp.route('/success')

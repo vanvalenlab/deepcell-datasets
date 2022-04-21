@@ -27,8 +27,6 @@
 
 from mongoengine import disconnect
 
-import pytest
-
 from deepcell_datasets import create_app
 
 

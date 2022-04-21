@@ -28,7 +28,7 @@
 # from mongoengine.document import Document
 # from mongoengine.fields import ListField, StringField
 
-from flask_security import UserMixin, RoleMixin, MongoEngineUserDatastore
+from flask_security import MongoEngineUserDatastore, RoleMixin, UserMixin
 
 from deepcell_datasets.database.db import db
 
@@ -38,6 +38,7 @@ class Roles(db.Document, RoleMixin):
 
     From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
     """
+
     name = db.StringField(max_length=80, unique=True)
     description = db.StringField(max_length=255)
 
@@ -47,6 +48,7 @@ class Users(db.Document, UserMixin):
 
     From flask-security-too mognoengine example: https://tinyurl.com/ybc2mslx
     """
+
     email = db.StringField(max_length=255)
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)
@@ -85,8 +87,12 @@ class Methods(db.EmbeddedDocument):
 class Experiments(db.Document):
     created_by = db.ReferenceField(Users)
     doi = db.StringField(max_length=1000)  # Name/ID field in addtion to this?
-    date_collected = db.StringField()  # Date on microscope (date added auto-saved by mongo)
-    methods = db.EmbeddedDocumentField(Methods)  # Each experiment should have the same methods
+    date_collected = (
+        db.StringField()
+    )  # Date on microscope (date added auto-saved by mongo)
+    methods = db.EmbeddedDocumentField(
+        Methods
+    )  # Each experiment should have the same methods
     copyright = db.StringField()
     # Specimen + modality + compartment + marker
     # subjects = db.EmbeddedDocumentListField(SpecimenInformation)
@@ -123,6 +129,7 @@ class Samples(db.Document):
 
     This must be a separate collection to facilitate searching across Samples.
     """
+
     session = db.IntField(required=True)
     position = db.IntField(required=True)
     imaging_params = db.EmbeddedDocumentField(ImagingParameters)
@@ -139,7 +146,9 @@ class Samples(db.Document):
     spatial_dim = db.StringField(choices=('2d', '3d'), required=True)
 
     # each sample belongs to an Experiment
-    experiment = db.ReferenceField(Experiments, required=True, reverse_delete_rule=db.NULLIFY)
+    experiment = db.ReferenceField(
+        Experiments, required=True, reverse_delete_rule=db.NULLIFY
+    )
 
 
 # TODO: Finish Crowdsourcing
@@ -175,7 +184,10 @@ class Crowdsourcing(db.Document):
 
     subsections = db.EmbeddedDocumentField(Subsection)
 
-    split_seed = db.IntField()  # Fed into caliban-toolbox to create train/val/test split
+    split_seed = (
+        db.IntField()
+    )  # Fed into caliban-toolbox to create train/val/test split
+
 
 # TODO: Finish Training data
 
@@ -189,9 +201,8 @@ class annotation_stats(db.EmbeddedDocument):
 
 
 class Training_Data(db.Document):
-    """A collection of pointers to each npz containing paired X(raw) and y(annotations) data.
+    """A collection of pointers to each npz containing paired X(raw) and y(annotations) data."""
 
-    """
     # location in the ontology (the annotation could be different than the raw data
     # e.g. movies vs indpendent imgs)
     kinetics = db.StringField(choices=('static', 'dynamic'), required=True)
@@ -199,12 +210,18 @@ class Training_Data(db.Document):
     annotation_type = db.StringField()  # whole cell, cyto, nuc, AM, tracking, dots?
 
     # ID information
-    doi = db.StringField(max_length=1000)  # DOI may be different than raw (compliation of multiple)
-    title = db.StringField()  # Human-readable for display purpose (eg. smith et al. nuclear study)
+    doi = db.StringField(
+        max_length=1000
+    )  # DOI may be different than raw (compliation of multiple)
+    title = (
+        db.StringField()
+    )  # Human-readable for display purpose (eg. smith et al. nuclear study)
     copyright = db.StringField()
 
     # Samples contained or link to crowdsourcing (individual annotated pieces of samples)?
-    samples_contained = db.ListField(db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY)
+    samples_contained = db.ListField(
+        db.ReferenceField(Samples), reverse_delete_rule=db.NULLIFY
+    )
     # TODO: Should have coordinates that follow samples and subsamples
     # TODO: Is samples_contained sufficient? Should keys like tissue/platform list be stored here?
     # TODO: does channel_list violate our data ontology? shouldnt it be 1-to-1?

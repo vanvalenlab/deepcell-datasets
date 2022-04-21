@@ -27,8 +27,6 @@
 
 import random
 
-import pytest
-from mongoengine import DoesNotExist
 from mongomock import ObjectId
 
 from deepcell_datasets.database import models

@@ -25,27 +25,27 @@
 # ==============================================================================
 """Flask blueprint for modular routes."""
 
-from werkzeug.exceptions import HTTPException
-from flask import Blueprint
-from flask import jsonify
-from flask import request
-from flask import current_app
-from flask import render_template
-from flask import url_for, redirect
-from mongoengine import ValidationError
-
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user
 from flask_security import login_required
+from mongoengine import ValidationError
+from werkzeug.exceptions import HTTPException
 
-from deepcell_datasets.database.models import Samples
-from deepcell_datasets.database.models import Experiments
-
-from deepcell_datasets.samples.forms import SampleForm, SampleFilterForm
+from deepcell_datasets.database.models import Experiments, Samples
+from deepcell_datasets.samples.forms import SampleFilterForm, SampleForm
 from deepcell_datasets.utils import nest_dict
 
-
-samples_bp = Blueprint('samples_bp', __name__,  # pylint: disable=C0103
-                       template_folder='templates')
+samples_bp = Blueprint(
+    'samples_bp', __name__, template_folder='templates'  # pylint: disable=C0103
+)
 
 
 @samples_bp.errorhandler(Exception)
@@ -95,10 +95,9 @@ def add_sample(exp_id):
 
         return redirect(url_for('samples_bp.success'))
 
-    return render_template('samples/data_entry.html',
-                           form=form,
-                           current_user=current_user,
-                           exp_id=exp_id)
+    return render_template(
+        'samples/data_entry.html', form=form, current_user=current_user, exp_id=exp_id
+    )
 
 
 @samples_bp.route('/', methods=['GET'])
@@ -128,10 +127,12 @@ def view_all_samples():
 
     per_page = current_app.config['ITEMS_PER_PAGE']
     paginated_samples = samples.paginate(page=page, per_page=per_page)
-    return render_template('samples/samples-table.html',
-                           paginated_samples=paginated_samples,
-                           form=form,
-                           **kwargs)
+    return render_template(
+        'samples/samples-table.html',
+        paginated_samples=paginated_samples,
+        form=form,
+        **kwargs
+    )
 
 
 @samples_bp.route('/success')

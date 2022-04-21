@@ -19,20 +19,21 @@ export default function ContactUsForm() {
         name: data.name,
         email: data.email,
         subject: data.subject,
-        message: data.message
+        message: data.message,
       };
       fetch(REACT_APP_SEND_EMAIL_API_ENDPOINT, {
         method: 'POST',
         body: JSON.stringify(payload),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
       })
-        .then(res => res.json())
-        .then((result) => {
-          setSuccessText('Message Sent! Thanks for reaching out!')
-          reset();
-        },
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setSuccessText('Message Sent! Thanks for reaching out!');
+            reset();
+          },
           // Note: it's important to handle errors here
           // instead of a catch() block so that we don't swallow
           // exceptions from actual bugs in components.
@@ -40,7 +41,6 @@ export default function ContactUsForm() {
             setErrorText(error.toString());
           }
         );
-
     } catch (e) {
       setErrorText(e.toString());
     }
@@ -61,8 +61,8 @@ export default function ContactUsForm() {
                     required: { value: true, message: 'Please enter your name' },
                     maxLength: {
                       value: 30,
-                      message: 'Please use 30 characters or less'
-                    }
+                      message: 'Please use 30 characters or less',
+                    },
                   })}
                   className='form-control formInput'
                   placeholder='Name'
@@ -75,7 +75,7 @@ export default function ContactUsForm() {
                   name='email'
                   ref={register({
                     required: true,
-                    pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+                    pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                   })}
                   className='form-control formInput'
                   placeholder='Email address'
@@ -95,15 +95,13 @@ export default function ContactUsForm() {
                     required: { value: true, message: 'Please enter a subject' },
                     maxLength: {
                       value: 75,
-                      message: 'Subject cannot exceed 75 characters'
-                    }
+                      message: 'Subject cannot exceed 75 characters',
+                    },
                   })}
                   className='form-control formInput'
                   placeholder='Subject'
                 ></input>
-                {errors.subject && (
-                  <span className='text-danger'>{errors.subject.message}</span>
-                )}
+                {errors.subject && <span className='text-danger'>{errors.subject.message}</span>}
               </Col>
             </Row>
             {/* Row 3 of form */}
@@ -113,7 +111,7 @@ export default function ContactUsForm() {
                   rows={3}
                   name='message'
                   ref={register({
-                    required: true
+                    required: true,
                   })}
                   className='form-control formInput'
                   placeholder='Message'
@@ -121,25 +119,27 @@ export default function ContactUsForm() {
                 {errors.message && <span className='text-danger'>Please enter a message</span>}
               </Col>
             </Row>
-            { successText.length > 0 && 
-            <Row>
-              <Col xs={12}>
-                <Alert variant="success" onClose={() => setSuccessText('')} dismissible>
-                  {successText}
-                </Alert>
-              </Col>
-            </Row>
-            }
-            { errorText.length > 0 && 
-            <Row>
-              <Col xs={12}>
-                <Alert variant="danger" onClose={() => setErrorText('')} dismissible>
-                  {errorText}
-                </Alert>
-              </Col>
-            </Row>
-            }
-            <Button variant="dark" type="submit" className="w-50">Submit</Button>
+            {successText.length > 0 && (
+              <Row>
+                <Col xs={12}>
+                  <Alert variant='success' onClose={() => setSuccessText('')} dismissible>
+                    {successText}
+                  </Alert>
+                </Col>
+              </Row>
+            )}
+            {errorText.length > 0 && (
+              <Row>
+                <Col xs={12}>
+                  <Alert variant='danger' onClose={() => setErrorText('')} dismissible>
+                    {errorText}
+                  </Alert>
+                </Col>
+              </Row>
+            )}
+            <Button variant='dark' type='submit' className='w-50'>
+              Submit
+            </Button>
           </form>
         </Col>
       </Row>

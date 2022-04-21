@@ -25,20 +25,15 @@
 # ==============================================================================
 """Flask blueprint for Sample data API."""
 
-from werkzeug.exceptions import HTTPException
-from flask import Blueprint
-from flask import jsonify
-from flask import request
-from flask import Response
-from flask import current_app
-
+from flask import Blueprint, Response, current_app, jsonify, request
 from mongoengine import ValidationError
+from werkzeug.exceptions import HTTPException
 
 from deepcell_datasets.database.models import Samples
 
-
-samples_api_bp = Blueprint('samples_api_bp', __name__,  # pylint: disable=C0103
-                           template_folder='templates')
+samples_api_bp = Blueprint(
+    'samples_api_bp', __name__, template_folder='templates'  # pylint: disable=C0103
+)
 
 
 @samples_api_bp.errorhandler(Exception)
@@ -53,8 +48,9 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
-    current_app.logger.error('Encountered unexpected %s: %s.',
-                             err.__class__.__name__, err)
+    current_app.logger.error(
+        'Encountered unexpected %s: %s.', err.__class__.__name__, err
+    )
     return jsonify({'error': str(err)}), 500
 
 

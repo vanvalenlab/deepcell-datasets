@@ -28,18 +28,16 @@
 from flask import Flask
 from flask_mail import Mail
 from flask_security import Security, hash_password
-# from flask_debugtoolbar import DebugToolbarExtension
 
-from deepcell_datasets import config
-from deepcell_datasets import database
+from deepcell_datasets import config, database, experiments, samples, training
 from deepcell_datasets.general import general
-from deepcell_datasets import experiments
-from deepcell_datasets import samples
-from deepcell_datasets import training
+
+# from flask_debugtoolbar import DebugToolbarExtension
 
 
 class ReverseProxied(object):
     """Reverse proxy for serving static files over https"""
+
     def __init__(self, app):
         self.app = app
 
@@ -79,16 +77,19 @@ def create_app(**config_overrides):
     def create_admin_user():
         database.models.user_datastore.create_user(
             email=app.config['ADMIN_EMAIL'],
-            password=hash_password(app.config['ADMIN_PASSWORD']))
+            password=hash_password(app.config['ADMIN_PASSWORD']),
+        )
 
         admin_role = database.models.user_datastore.find_or_create_role(name='admin')
 
         database.models.user_datastore.add_role_to_user(
-            user=app.config['ADMIN_EMAIL'],
-            role=admin_role)
+            user=app.config['ADMIN_EMAIL'], role=admin_role
+        )
 
     app.register_blueprint(general.general_bp, url_prefix='/')
-    app.register_blueprint(experiments.api.experiments_api_bp, url_prefix='/api/experiments')
+    app.register_blueprint(
+        experiments.api.experiments_api_bp, url_prefix='/api/experiments'
+    )
     app.register_blueprint(experiments.views.experiments_bp, url_prefix='/experiments')
     app.register_blueprint(samples.api.samples_api_bp, url_prefix='/api/samples')
     app.register_blueprint(samples.views.samples_bp, url_prefix='/samples')

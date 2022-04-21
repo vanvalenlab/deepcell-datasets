@@ -17,7 +17,7 @@ function testEmail(email) {
   }
   // email is well formed but not in the whitelist
   return false;
-};
+}
 
 exports.handler = (event, context, callback) => {
   var error = null;

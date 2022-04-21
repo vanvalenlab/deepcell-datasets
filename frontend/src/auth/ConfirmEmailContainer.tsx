@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from '@reach/router'
+import { useNavigate, useParams } from '@reach/router';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -14,12 +14,12 @@ const MaxWidthDiv = styled.div`
 
 export default function ConfirmEmailContainer() {
   const navigate = useNavigate();
-  const params = useParams()
+  const params = useParams();
   const email = params?.email;
 
   if (email === undefined || email === null || email.length === 0) {
-      // invalid - just redirect to home
-      navigate(Constants.Index);
+    // invalid - just redirect to home
+    navigate(Constants.Index);
   }
 
   const [code, setCode] = useState<string>('');
@@ -33,7 +33,7 @@ export default function ConfirmEmailContainer() {
     } catch (err) {
       setError(err.message);
     }
-  }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -51,46 +51,50 @@ export default function ConfirmEmailContainer() {
   };
 
   return (
-    <MaxWidthDiv className="pt-4 mx-auto">
-      <h2 className="text-center">Confirm your Email</h2>
+    <MaxWidthDiv className='pt-4 mx-auto'>
+      <h2 className='text-center'>Confirm your Email</h2>
 
-      { (error !== null) ?
-        <Alert variant="danger" dismissible onClose={() => setError(null)}>
+      {error !== null ? (
+        <Alert variant='danger' dismissible onClose={() => setError(null)}>
           {error}
         </Alert>
-        : null
-      }
+      ) : null}
 
-      { (isResent) ?
-        <Alert variant="success" dismissible onClose={() => setIsResent(false)}>
+      {isResent ? (
+        <Alert variant='success' dismissible onClose={() => setIsResent(false)}>
           Confirmation Code resent to your email.
         </Alert>
-        : null
-      }
+      ) : null}
 
-      <Container className="text-center mb-3 py-3 bg-light border rounded">
-
-        <Form className="text-left" onSubmit={handleSubmit}>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label className="font-weight-bold small">Email address</Form.Label>
-            <Form.Control required readOnly type="email" defaultValue={email} />
+      <Container className='text-center mb-3 py-3 bg-light border rounded'>
+        <Form className='text-left' onSubmit={handleSubmit}>
+          <Form.Group controlId='formBasicEmail'>
+            <Form.Label className='font-weight-bold small'>Email address</Form.Label>
+            <Form.Control required readOnly type='email' defaultValue={email} />
           </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label className="font-weight-bold small">Confirmation Code</Form.Label>
-            <Form.Control required type="text" placeholder="Enter your code" onChange={e => setCode(e.target.value)} />
+          <Form.Group controlId='formBasicPassword'>
+            <Form.Label className='font-weight-bold small'>Confirmation Code</Form.Label>
+            <Form.Control
+              required
+              type='text'
+              placeholder='Enter your code'
+              onChange={(e) => setCode(e.target.value)}
+            />
           </Form.Group>
 
-          <Button variant="success" type="submit" block>
+          <Button variant='success' type='submit' block>
             Confirm
           </Button>
         </Form>
       </Container>
-      <Container className="text-center py-1 border rounded">
-        <div className="m-2">
+      <Container className='text-center py-1 border rounded'>
+        <div className='m-2'>
           Lost your code?
           <br />
-          <Button variant="link" size="sm" onClick={resendConfirmationCode}>Resend code.</Button>
+          <Button variant='link' size='sm' onClick={resendConfirmationCode}>
+            Resend code.
+          </Button>
         </div>
       </Container>
     </MaxWidthDiv>

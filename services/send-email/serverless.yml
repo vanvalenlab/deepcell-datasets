@@ -28,10 +28,10 @@ provider:
       burstLimit: 1
       rateLimit: 1
   iamRoleStatements:
-    - Effect: "Allow"
+    - Effect: 'Allow'
       Action:
-        - "ses:SendEmail"
-      Resource: "*"
+        - 'ses:SendEmail'
+      Resource: '*'
   environment:
     RECEIVER_EMAIL: ${self:custom.receiverEmailAddress}
     SENDER_EMAIL: ${self:custom.senderEmailAddress}

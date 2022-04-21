@@ -25,28 +25,27 @@
 # ==============================================================================
 """Flask application entrypoint for DeepCell MDM"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import logging
 
 from flask.logging import default_handler
 
-from deepcell_datasets import config
-from deepcell_datasets import create_app
+from deepcell_datasets import config, create_app
 
 
 def initialize_logger():
     """Set up logger format and level"""
     formatter = logging.Formatter(
-        '[%(asctime)s]:[%(levelname)s]:[%(name)s]: %(message)s')
+        '[%(asctime)s]:[%(levelname)s]:[%(name)s]: %(message)s'
+    )
 
     default_handler.setFormatter(formatter)
     default_handler.setLevel(logging.DEBUG)
 
     wsgi_handler = logging.StreamHandler(
-        stream='ext://flask.logging.wsgi_errors_stream')
+        stream='ext://flask.logging.wsgi_errors_stream'
+    )
     wsgi_handler.setFormatter(formatter)
     wsgi_handler.setLevel(logging.DEBUG)
 

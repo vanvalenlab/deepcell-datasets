@@ -25,8 +25,8 @@
 # ==============================================================================
 """Forms for Training_Data."""
 
-from wtforms import fields, validators
 from flask_wtf import FlaskForm
+from wtforms import fields
 
 
 class TrainingDataFilterForm(FlaskForm):

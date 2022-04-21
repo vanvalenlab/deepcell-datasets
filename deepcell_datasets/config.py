@@ -27,14 +27,15 @@
 
 import decouple
 
-
 DEBUG = decouple.config('DEBUG', cast=bool, default=True)
 PORT = decouple.config('PORT', cast=int, default=5000)
 
 # Pagination - how many rows to show per page.
 ITEMS_PER_PAGE = 20
 
-TEMPLATES_AUTO_RELOAD = decouple.config('TEMPLATES_AUTO_RELOAD', cast=bool, default=True)
+TEMPLATES_AUTO_RELOAD = decouple.config(
+    'TEMPLATES_AUTO_RELOAD', cast=bool, default=True
+)
 
 # Flask-Mail settings: https://tinyurl.com/y3db5s3h
 MAIL_SERVER = decouple.config('MAIL_SERVER', default='localhost')
@@ -43,7 +44,9 @@ MAIL_USE_TLS = decouple.config('MAIL_USE_TLS', default=True, cast=bool)
 MAIL_USE_SSL = decouple.config('MAIL_USE_SSL', default=False, cast=bool)
 MAIL_USERNAME = decouple.config('MAIL_USERNAME', default=None)
 MAIL_PASSWORD = decouple.config('MAIL_PASSWORD', default=None)
-MAIL_DEFAULT_SENDER = decouple.config('MAIL_DEFAULT_SENDER', default='datasets@mail.deepcell.org')
+MAIL_DEFAULT_SENDER = decouple.config(
+    'MAIL_DEFAULT_SENDER', default='datasets@mail.deepcell.org'
+)
 MAIL_MAX_EMAILS = decouple.config('MAIL_MAX_EMAILS', default=None)
 
 # Flask-Security-Too settings: https://tinyurl.com/y5d2n9ry
@@ -83,7 +86,7 @@ MONGODB_SETTINGS = {
     'PORT': decouple.config('MONGODB_PORT', cast=int, default=27017),
     'USERNAME': decouple.config('MONGODB_USERNAME', default=None),
     'PASSWORD': decouple.config('MONGODB_PASSWORD', default=None),
-    'AUTHENTICATION_SOURCE': decouple.config('ADMIN_DB', default=None)
+    'AUTHENTICATION_SOURCE': decouple.config('ADMIN_DB', default=None),
 }
 
 # Explain loading only if in DEBUG mode.

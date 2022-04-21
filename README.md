@@ -33,14 +33,14 @@ Data is saved in a protected S3 bucket, but to enable users to view and download
 
 This is a simple JSON object that has the following fields:
 
-| Name | Description |
-| :--- | :--- |
-| `title` | The name of the dataset. |
-| `objectKey` | The path to the dataset inside the S3 bucket. |
-| `thumbnail` | The path to the thumbnail example, which must be saved in `frontend/public/images`. |
-| `imagingPlatform` | The imaging platform that created the dataset. |
-| `samples` | The type of image data. |
-| `description` | A brief description of the data. |
+| Name              | Description                                                                         |
+| :---------------- | :---------------------------------------------------------------------------------- |
+| `title`           | The name of the dataset.                                                            |
+| `objectKey`       | The path to the dataset inside the S3 bucket.                                       |
+| `thumbnail`       | The path to the thumbnail example, which must be saved in `frontend/public/images`. |
+| `imagingPlatform` | The imaging platform that created the dataset.                                      |
+| `samples`         | The type of image data.                                                             |
+| `description`     | A brief description of the data.                                                    |
 
 ## Copyright
 

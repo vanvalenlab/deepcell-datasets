@@ -25,25 +25,17 @@
 # ==============================================================================
 """Flask blueprint for modular routes."""
 
-from werkzeug.exceptions import HTTPException
-from flask import Blueprint
-from flask import jsonify
-from flask import request
-from flask import current_app
-from flask import render_template
-from flask import url_for, redirect
-
-from flask_login import current_user
+from flask import Blueprint, current_app, jsonify, render_template, request
 from flask_security import login_required
-
 from mongoengine import ValidationError
+from werkzeug.exceptions import HTTPException
 
 from deepcell_datasets.database.models import Training_Data
 from deepcell_datasets.training.forms import TrainingDataFilterForm
 
-
-training_bp = Blueprint('training_bp', __name__,  # pylint: disable=C0103
-                        template_folder='templates')
+training_bp = Blueprint(
+    'training_bp', __name__, template_folder='templates'  # pylint: disable=C0103
+)
 
 
 @training_bp.errorhandler(Exception)
@@ -58,8 +50,9 @@ def handle_exception(err):
     elif isinstance(err, ValidationError):
         return jsonify({'error': str(err)}), 400
     # now you're handling non-HTTP exceptions only
-    current_app.logger.error('Encountered unexpected %s: %s.',
-                             err.__class__.__name__, err)
+    current_app.logger.error(
+        'Encountered unexpected %s: %s.', err.__class__.__name__, err
+    )
     return jsonify({'error': str(err)}), 500
 
 
@@ -88,14 +81,15 @@ def view_all_training_data():
 
     per_page = current_app.config['ITEMS_PER_PAGE']
     paginated_results = results.paginate(page=page, per_page=per_page)
-    return render_template('training/training-table.html',
-                           paginated_training_data=paginated_results,
-                           form=form,
-                           **kwargs)
+    return render_template(
+        'training/training-table.html',
+        paginated_training_data=paginated_results,
+        form=form,
+        **kwargs
+    )
 
 
 @training_bp.route('/<training_data_id>')
 def view_training_data(training_data_id):
     training_data = Training_Data.objects.get_or_404(id=training_data_id)
-    return render_template('training/training-detail.html',
-                           training_data=training_data)
+    return render_template('training/training-detail.html', training_data=training_data)

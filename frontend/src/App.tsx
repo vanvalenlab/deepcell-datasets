@@ -1,9 +1,9 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
-import { Redirect, Router, RouteComponentProps } from '@reach/router'
+import { Redirect, Router, RouteComponentProps } from '@reach/router';
 import { Amplify, Hub } from '@aws-amplify/core';
 import { Auth } from '@aws-amplify/auth';
 import { ParallaxProvider } from 'react-scroll-parallax';
-import  styled  from  'styled-components';
+import styled from 'styled-components';
 
 import Constants from './Constants';
 import LoadingPage from './LoadingPage';
@@ -23,19 +23,18 @@ const PrivacyPolicy = lazy(() => import('./PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./TermsAndConditions'));
 const NotFound = lazy(() => import('./NotFound'));
 
-const RouterPage = (
-  props: { pageComponent: JSX.Element } & RouteComponentProps
-) => props.pageComponent;
+const RouterPage = (props: { pageComponent: JSX.Element } & RouteComponentProps) =>
+  props.pageComponent;
 
 const AnonymousRouterPage = (
-  props: { pageComponent: JSX.Element, isLoggedIn: boolean } & RouteComponentProps
+  props: { pageComponent: JSX.Element; isLoggedIn: boolean } & RouteComponentProps
 ) => {
   const { ...rest } = props; // eslint-disable-line
   return props.isLoggedIn ? <Redirect to={Constants.Data} noThrow /> : props.pageComponent;
 };
 
 const ProtectedRouterPage = (
-  props: { pageComponent: JSX.Element, isLoggedIn: boolean } & RouteComponentProps
+  props: { pageComponent: JSX.Element; isLoggedIn: boolean } & RouteComponentProps
 ) => {
   const { ...rest } = props; // eslint-disable-line
   return props.isLoggedIn ? props.pageComponent : <Redirect to={Constants.SignIn} noThrow />;
@@ -52,13 +51,12 @@ const Main = styled.main`
 `;
 
 export default function App() {
-
   /**
    * Currently authentication happens here and the user is propogated into each
    * of the components in the routes. Another method that would provide the
-   * rest of the components with more user information would be using a 
+   * rest of the components with more user information would be using a
    * UserContext and UserProvider.
-   * 
+   *
    * A couple examples:
    * https://itnext.io/creating-reusable-abstractions-with-amplify-and-react-hooks-97784c8b5c2a
    * https://www.rockyourcode.com/custom-react-hook-use-aws-amplify-auth/
@@ -75,13 +73,13 @@ export default function App() {
       Storage: {
         AWSS3: {
           bucket: process.env.REACT_APP_S3_BUCKET,
-          region: process.env.REACT_APP_REGION
-        }
-      }
+          region: process.env.REACT_APP_REGION,
+        },
+      },
     });
   }, []);
 
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
 
   const updateUser = async () => {
     try {
@@ -109,15 +107,37 @@ export default function App() {
               <RouterPage path={Constants.Terms} pageComponent={<TermsAndConditions />} />
               <RouterPage path={Constants.Privacy} pageComponent={<PrivacyPolicy />} />
               <RouterPage path={Constants.SignOut} pageComponent={<LogoutContainer />} />
-              <RouterPage path={Constants.ForgotPassword} pageComponent={<ForgotPasswordContainer />} />
-              <RouterPage path={`${Constants.ResetPassword}/:email`} pageComponent={<PasswordResetContainer />} />
+              <RouterPage
+                path={Constants.ForgotPassword}
+                pageComponent={<ForgotPasswordContainer />}
+              />
+              <RouterPage
+                path={`${Constants.ResetPassword}/:email`}
+                pageComponent={<PasswordResetContainer />}
+              />
               <RouterPage path={Constants.Contribute} pageComponent={<Contribute />} />
               {/* Pages only accessible when logged in */}
-              <ProtectedRouterPage path={Constants.Data} isLoggedIn={user !== null} pageComponent={<Data />} />
+              <ProtectedRouterPage
+                path={Constants.Data}
+                isLoggedIn={user !== null}
+                pageComponent={<Data />}
+              />
               {/* Pages only accessible when NOT logged in */}
-              <AnonymousRouterPage path={`${Constants.ConfirmEmail}/:email`} isLoggedIn={user !== null} pageComponent={<ConfirmEmailContainer />} />
-              <AnonymousRouterPage path={Constants.SignIn} isLoggedIn={user !== null} pageComponent={<LoginContainer />} />
-              <AnonymousRouterPage path={Constants.SignUp} isLoggedIn={user !== null} pageComponent={<SignUpContainer />} />
+              <AnonymousRouterPage
+                path={`${Constants.ConfirmEmail}/:email`}
+                isLoggedIn={user !== null}
+                pageComponent={<ConfirmEmailContainer />}
+              />
+              <AnonymousRouterPage
+                path={Constants.SignIn}
+                isLoggedIn={user !== null}
+                pageComponent={<LoginContainer />}
+              />
+              <AnonymousRouterPage
+                path={Constants.SignUp}
+                isLoggedIn={user !== null}
+                pageComponent={<SignUpContainer />}
+              />
               <RouterPage default pageComponent={<NotFound />} />
             </Router>
           </Main>
@@ -126,4 +146,4 @@ export default function App() {
       </Suspense>
     </Root>
   );
-};
+}
