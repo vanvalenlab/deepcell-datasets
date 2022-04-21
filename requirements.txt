@@ -6,3 +6,5 @@ python-decouple==3.1
 Flask-Security-Too>=3.4.3,<4
 # wtforms 3.0 has breaking changes.
 wtforms<3
+# Prevent breaking changes in jinja over 3.1
+Jinja2<3.1
