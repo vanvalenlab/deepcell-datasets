@@ -31,4 +31,4 @@ jobs:
 
     - name: Test
       run: |
-        pytest deepcell_datasets --cov deepcell_datasets --pep8
+        pytest deepcell_datasets --cov deepcell_datasets
