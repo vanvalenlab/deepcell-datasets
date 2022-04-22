@@ -41,8 +41,6 @@ export default function DataCard({ dataset }: DataCardProps) {
     }
   };
 
-  // const onVersionClick = (v: Dataset['versions'][0]) => {
-
   return (
     <Card>
       <Card.Img variant='top' src={thumbnail} />
