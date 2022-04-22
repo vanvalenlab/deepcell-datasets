@@ -1,24 +1,31 @@
 import { useState } from 'react';
 import { Storage } from '@aws-amplify/storage';
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/ListGroupItem';
+import { Dataset } from './AllDatasets';
+import {
+  Alert,
+  Button,
+  Card,
+  ListGroup,
+  ListGroupItem,
+  Container,
+  Dropdown,
+  Row,
+} from 'react-bootstrap';
 
 const openInNewTab = (url: string) => {
   const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
   if (newWindow) newWindow.opener = null;
 };
 
-export default function DataCard(props: any) {
+type DataCardProps = {
+  dataset: Dataset;
+};
+
+export default function DataCard({ dataset }: DataCardProps) {
   const [error, setError] = useState<string | null>(null);
-  const title = props.title || 'Data Title';
-  const description = props.description || 'Data description';
-  const samples = props.samples || 'Types of images';
-  const imagingPlatform = props.imagingPlatform || 'Imaging Platform';
-  const thumbnail = props.thumbnail || '';
-  const objectKey = props.objectKey || '';
+  const { title, samples, imagingPlatform, thumbnail, versions } = dataset;
+  const [version, setVersion] = useState(versions[0]);
+  const { version: versionNumber, description, objectKey } = version;
 
   const onClick = async () => {
     try {
@@ -56,9 +63,25 @@ export default function DataCard(props: any) {
             </Card.Text>
           </ListGroupItem>
         </ListGroup>
-        <Button variant='dark' onClick={onClick}>
-          Download
-        </Button>
+        <Container>
+          <Row className='justify-content-between'>
+            <Dropdown>
+              <Dropdown.Toggle variant='dark' id='dropdown-basic'>
+                Version: {versionNumber}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {versions.map((v) => (
+                  <Dropdown.Item key={v.version} onClick={() => setVersion(v)}>
+                    {v.version}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+            <Button variant='dark' onClick={onClick}>
+              Download
+            </Button>
+          </Row>
+        </Container>
         {error !== null ? (
           <Alert variant='danger' dismissible onClose={() => setError(null)}>
             {error}
