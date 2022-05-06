@@ -6,12 +6,14 @@
 ## Getting Started
 
 DeepCell Datasets is a serverless applicatioin that allows authenticated users to access published datasets.
-This is aided by using `lectra` as well as the `serverless` framework.
+This is aided by using `lerna` as well as the `serverless` framework.
 `lerna` enables us to easily control all of the services from the root directory, while `serverless` allows us to deploy and manage AWS infrastructure through `.yml` configuration files.
+
+Make sure serverless is installed by running `npm install -g serverless@2`.
 
 ### Deployment
 
-`lectra` is used to manage and deploy both the frontend and the application services with a simple `yarn` or `npm` command:
+`lerna` is used to manage and deploy both the frontend and the application services with a simple `yarn` or `npm` command:
 
 ```bash
 yarn deploy:dev

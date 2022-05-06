@@ -24,7 +24,7 @@ type DataCardProps = {
 export default function DataCard({ dataset }: DataCardProps) {
   const [error, setError] = useState<string | null>(null);
   const { title, samples, imagingPlatform, thumbnail, versions } = dataset;
-  const [version, setVersion] = useState(versions[0]);
+  const [version, setVersion] = useState(versions[versions.length - 1]);
   const { version: versionNumber, description, objectKey } = version;
 
   const onClick = async () => {
