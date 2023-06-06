@@ -41,15 +41,28 @@ const AllDatasets: Dataset[] = [
     ],
   },
   {
-    title: 'LiveCellNet',
+    title: 'DynamicNuclearNet Segmentation',
     thumbnail: '/images/3t3_nuclear_outlines.webp',
     imagingPlatform: 'Fluorescent Microscopy',
-    samples: '2D culture',
+    samples: '2D cell culture',
     versions: [
       {
-        version: '0.1',
-        description: 'This is a subset of the Nuclear Tracking dataset.',
-        objectKey: 'tracking-nuclear/val.trks',
+        version: '1.0',
+        description: 'This is the first release of the DynamicNuclearNet segmentation dataset from Schwartz et al. 2023',
+        objectKey: 'dynamic_nuclear_net/DynamicNuclearNet-segmentation-v1_0.zip',
+      },
+    ],
+  },
+  {
+    title: 'DynamicNuclearNet Tracking',
+    thumbnail: '/images/3t3_nuclear_outlines.webp',
+    imagingPlatform: 'Fluorescent Microscopy',
+    samples: '2D cell culture',
+    versions: [
+      {
+        version: '1.0',
+        description: 'This is the first release of the DynamicNuclearNet tracking dataset from Schwartz et al. 2023',
+        objectKey: 'dynamic_nuclear_net/DynamicNuclearNet-tracking-v1_0.zip',
       },
     ],
   },
